@@ -1,0 +1,18 @@
+.checkbox label {
+    margin-left: 20px;
+}
+
+.jumbotron {
+  background-image: url('/sgm/web/images/LogoAlcaldia.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 300px;
+}
+
+@media only screen and (max-width: 1199px){
+  .btn-primary {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+  }
+}
