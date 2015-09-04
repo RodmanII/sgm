@@ -9,6 +9,16 @@
   height: 300px;
 }
 
+.tit2 {
+  font-weight: bold;
+  text-align: center;
+}
+
+.txtg {
+  font-size: 16px;
+  text-align: justify;
+}
+
 @media only screen and (max-width: 1199px){
   .btn-primary {
     width: 100%;

@@ -9,7 +9,6 @@ use yii\web\HttpException;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\mant\Usuario;
-use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -95,21 +94,7 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    public function actionAbout()
+    public function actionMision()
     {
         return $this->render('about');
     }

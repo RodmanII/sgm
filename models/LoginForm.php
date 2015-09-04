@@ -4,7 +4,6 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
-use yii\db\Query;
 use app\models\mant\Usuario;
 use app\models\mant\Persona;
 use app\models\mant\Empleado;
@@ -53,7 +52,7 @@ class LoginForm extends Model
             $this->addError('usuario', 'El usuario ingresado no está asociado con ningún empleado o se encuentra inactivo');
             return false;
           }else{
-            if(hash('sha512',$this->password.$dbUsuario->salt) === $dbUsuario->contrasenya){              
+            if(hash('sha512',$this->password.$dbUsuario->salt) === $dbUsuario->contrasenya){
               $nombrePersona = $dbUsuario->empleado->codPersona->nombre.' '.$dbUsuario->empleado->codPersona->apellido;
               Yii::$app->session->setFlash('success', '¡Bienvenid@! '.$nombrePersona);
               return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);

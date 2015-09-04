@@ -36,6 +36,7 @@ AppAsset::register($this);
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
                     ['label' => 'Inicio', 'url' => ['/site/index']],
+                    ['label' => 'Misión y Visión', 'url' => ['/site/mision']],
                     ['label' => 'Registro Familiar', 'visible'=>!Yii::$app->user->isGuest &&
                     (Yii::$app->user->identity->codRol->nombre=='EmpleadoRF'||Yii::$app->user->identity->codRol->nombre=='Administrador'), 'items'=>[
                       ['label' => 'Nacimiento', 'url' => ['/registro/nacimiento']],

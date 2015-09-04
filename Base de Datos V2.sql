@@ -135,12 +135,14 @@ insert into unidad(nombre) values('Recolección de Desechos Sólidos');
 create table `informante` (
 	`codigo` int auto_increment,
 	`nombre` varchar(50) not null,
-	`tipo_documento` varchar(20) not null,
-	`numero_documento` varchar(20) not null,
+	`tipo_documento` varchar(50) not null,
+	`numero_documento` varchar(100) not null,
 	constraint pk_Informante primary key(`codigo`),
 	constraint unq_Informante_nombre unique(nombre),
 	constraint unq_Informante_numero_documento unique(numero_documento)
 );
+insert into informante(nombre,tipo_documento,numero_documento) values('Fabián Ernesto Clavico Fútil','Documento Único de Identidad','cero cuatro nueve cinco cinco cuatro nueve siete-tres');
+insert into informante(nombre,tipo_documento,numero_documento) values('Sarina Valentina Rios Luna','Documento Único de Identidad','cero cuatro ocho tres dos cuatro cero siete-tres');
 
 create table `modalidad_divorcio` (
 	`codigo` int auto_increment,
@@ -317,7 +319,6 @@ create table `partida` (
 		`cod_municipio` int not null,-- Municipio del suceso
 		`cod_informante` int not null,
 		`cod_libro` int not null,
-		`fk_codigo` int not null,
 		constraint pk_Partida primary key(`numero`),
 		constraint unq_Partida_folio_cod_libro unique(folio,cod_libro)
 );
