@@ -8,3 +8,4 @@ composer.phar
 phpunit.phar
 # local phpunit config
 /phpunit.xml
+vendor/kartik-v/yii2-grid/

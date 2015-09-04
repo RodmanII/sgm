@@ -9,6 +9,17 @@
   height: 300px;
 }
 
+.cflex {
+  display:flex;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.form-group {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
 .tit2 {
   font-weight: bold;
   text-align: center;
