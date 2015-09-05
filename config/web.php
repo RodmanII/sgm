@@ -66,7 +66,8 @@ $config = [
                 'forceTranslation' => true
             ]
         ]
-    ]
+    ],
+    'timeZone' => 'America/El_Salvador'
 ];
 
 if (YII_ENV_DEV) {

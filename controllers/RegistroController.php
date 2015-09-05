@@ -10,6 +10,8 @@ use yii\web\HttpException;
 use yii\filters\VerbFilter;
 use app\models\mant\Nacimiento;
 use app\models\mant\Defuncion;
+use app\models\mant\Matrimonio;
+use app\models\mant\MatrimonioPersona;
 use app\models\mant\Partida;
 
 class RegistroController extends Controller
@@ -94,5 +96,37 @@ class RegistroController extends Controller
       }
 
       return $this->render('rdefuncion', ['model'=> $model,'partida'=>$partidaModelo]);
+    }
+
+    public function actionMatrimonio()
+    {
+      $model = new Matrimonio();
+      $partidaModelo = new Partida();
+      $mpersonaModelo = new MatrimonioPersona();
+
+      if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())
+      && $mpersonaModelo->load(Yii::$app->request->post()) && Model::validateMultiple([$model, $partidaModelo])) {
+         if ($model->validate()) {
+             // form inputs are valid, do something here
+             return;
+         }
+      }
+
+      return $this->render('rmatrimonio', ['model'=> $model,'partida'=>$partidaModelo,'mpersona'=>$mpersonaModelo]);
+    }
+
+    public function actionDivorcio()
+    {
+      $model = new Divorcio();
+      $partidaModelo = new Partida();
+
+      if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post()) && Model::validateMultiple([$model, $partidaModelo])) {
+         if ($model->validate()) {
+             // form inputs are valid, do something here
+             return;
+         }
+      }
+
+      return $this->render('rdivorcio', ['model'=> $model,'partida'=>$partidaModelo);
     }
 }

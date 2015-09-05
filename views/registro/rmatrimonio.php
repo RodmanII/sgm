@@ -10,8 +10,9 @@ use app\models\mant\Persona;
 use app\models\mant\Informante;
 use app\models\mant\Departamento;
 use app\models\mant\Municipio;
-use app\models\mant\Hospital;
-use app\models\mant\CausaDefuncion;
+use app\models\mant\Matrimonio;
+use app\models\mant\MatrimonioPersona;
+use app\models\mant\RegimenPatrimonial;
 use kartik\grid\GridView;
 use yii\data\ArrayDataProvider;
 use yii\grid\ActionColumn;
@@ -19,34 +20,25 @@ use yii\grid\ActionColumn;
 /* @var $this yii\web\View */
 /* @var $model app\models\mant\Nacimiento */
 /* @var $form ActiveForm */
-$this->title = 'Inscripción de Defunción';
+$this->title = 'Inscripción de Matrimonio';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="rdefuncion">
+<div class="rnacimiento">
     <?php $form = ActiveForm::begin(); ?>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'cod_libro')->textInput(array('readOnly'=>true,'value'=>4)) ?>
+        <?= $form->field($partida, 'cod_libro')->textInput(array('readOnly'=>true,'value'=>2)) ?>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'folio')->textInput(array('readOnly'=>true,'value'=>17)) ?>
+        <?= $form->field($partida, 'folio')->textInput(array('readOnly'=>true,'value'=>3)) ?>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'numero')->textInput(array('readOnly'=>true,'value'=>19)) ?>
+        <?= $form->field($partida, 'numero')->textInput(array('readOnly'=>true,'value'=>1)) ?>
       </span>
     </div>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'cod_difunto')->dropDownList(ArrayHelper::map(Persona::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique al difunto']) ?>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
-      </span>
-      <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'cod_causa')->dropDownList(ArrayHelper::map(CausaDefuncion::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique la causa']) ?>
+        <?= $form->field($mpersona, 'cod_persona')->dropDownList(ArrayHelper::map(Persona::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique al contrayente'])->label('Contrayente Hombre') ?>
         <button type="submit" class="btn btn-primary">
           <i class="glyphicon glyphicon-edit"></i>
         </button>
@@ -55,21 +47,34 @@ $this->params['breadcrumbs'][] = $this->title;
         </button>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'determino_causa')->textArea(array('rows'=>3,'style'=>'resize:none;')) ?>
+        <?= $form->field($mpersona, 'cod_persona')->dropDownList(ArrayHelper::map(Persona::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique a la contrayente'])->label('Contrayente Mujer') ?>
+        <button type="submit" class="btn btn-primary">
+          <i class="glyphicon glyphicon-edit"></i>
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="glyphicon glyphicon-search"></i>
+        </button>
+      </span>
+    </div>
+    <div class="cflex">
+      <span style="order: 1; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'notario')->textInput(array('placeholder'=>'Especifique al notario')) ?>
+      </span>
+      <span style="order: 2; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'cod_reg_patrimonial')->dropDownList(ArrayHelper::map(RegimenPatrimonial::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el régimen']) ?>
       </span>
     </div>
     <?php
       $proveedor = [
-      array("nombre"=>"Ernesto Javier Calvo Fuentes","relacion"=>"Padre"),
-      array("nombre"=>"Georgina Maribel Valle de Fuentes","relacion"=>"Madre"),
-      array("nombre"=>"Mónica Roxana Beltrán Cruz","relacion"=>"Esposa"),
+      array("nombre"=>"Gloria Anabel","apellido"=>"Castillo Nevarra"),
+      array("nombre"=>"Wendy Yesenia","apellido"=>"Henríquez de Rivera"),
       ];
 
       $dataProvider = new ArrayDataProvider([
           'key'=>'nombre',
           'allModels' => $proveedor,
           'sort' => [
-              'attributes' => ['nombre', 'relacion'],
+              'attributes' => ['nombre', 'apellido'],
           ],
       ]);
       $isFa = true;
@@ -82,8 +87,8 @@ $this->params['breadcrumbs'][] = $this->title;
               'value'=>'nombre',
           ],
           [
-              'attribute'=>'relacion',
-              'value'=>'relacion',
+              'attribute'=>'apellido',
+              'value'=>'apellido',
           ],
           [
               'class' => 'yii\grid\ActionColumn',
@@ -103,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;
       ],
       'toolbar'=> [
           ['content'=>
-              Html::button('<i class="glyphicon glyphicon-plus"></i>', ['type'=>'button', 'title'=>'Agregar familiar', 'class'=>'btn btn-success', 'onclick'=>'alert("Esto lanzara la interfaz de adición de familiares");']) . ' '.
+              Html::button('<i class="glyphicon glyphicon-plus"></i>', ['type'=>'button', 'title'=>'Agregar testigo', 'class'=>'btn btn-success', 'onclick'=>'alert("Esto lanzara la interfaz de adición de familiares");']) . ' '.
               Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'Limpiar'])
           ],
       ],
@@ -118,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
       'showPageSummary'=>false,
       'panel'=>[
           'type'=>GridView::TYPE_PRIMARY,
-          'heading'=>"Familiares",
+          'heading'=>"Testigos",
       ],
       'persistResize'=>false,
       ]);
@@ -136,6 +141,22 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'padre_contrayente_h')->textInput(array('placeholder'=>'Especifique al padre')) ?>
+      </span>
+      <span style="order: 2; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'madre_contrayente_h')->textInput(array('placeholder'=>'Especifique a la madre')) ?>
+      </span>
+    </div>
+    <div class="cflex">
+      <span style="order: 1; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'padre_contrayente_m')->textInput(array('placeholder'=>'Especifique al padre')) ?>
+      </span>
+      <span style="order: 2; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'madre_contrayente_m')->textInput(array('placeholder'=>'Especifique a la madre')) ?>
+      </span>
+    </div>
+    <div class="cflex">
+      <span style="order: 1; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Departamento::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el departamento'])->label('Departamento') ?>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
@@ -147,13 +168,8 @@ $this->params['breadcrumbs'][] = $this->title;
           <i class="glyphicon glyphicon-search"></i>
         </button>
       </span>
-    </div>
-    <div class="cflex">
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'lugar_suceso')->textInput(array('placeholder'=>'Especifique el lugar'))->label('Lugar de Defunción') ?>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-search"></i> Hospital
-        </button>
+        <?= $form->field($partida, 'lugar_suceso')->textInput(array('placeholder'=>'Especifique el lugar'))->label('Lugar de Matrimonio') ?>
       </span>
     </div>
     <div class="cflex">
@@ -166,13 +182,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     'readonly'=>true,
                     'options'=>['placeholder'=>'Especifique la fecha'],
                     'pluginOptions'=>['format'=>'dd/mm/yyyy','autoclose'=>true],
-                    ])->label('Fecha de Defunción');
+                    ])->label('Fecha de Nacimiento');
                 ?>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida, 'hora_suceso')->widget(TimePicker::className(), ['language'=>'es', 'pluginOptions'=>[
             'showMeridian'=>true, 'autoclose'=>true], 'options'=>['readonly'=>true]
-            ])->label('Hora de Defunción');
+            ])->label('Hora de Nacimiento');
         ?>
       </span>
     </div>

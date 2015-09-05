@@ -6,58 +6,59 @@ use kartik\widgets\DatePicker;
 use kartik\widgets\TimePicker;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-use app\models\mant\Persona;
 use app\models\mant\Informante;
 use app\models\mant\Departamento;
 use app\models\mant\Municipio;
-use app\models\mant\Hospital;
+use app\models\mant\Matrimonio;
+use app\models\mant\ModalidadDivorcio;
+use kartik\grid\GridView;
+use yii\data\ArrayDataProvider;
+use yii\grid\ActionColumn;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\mant\Nacimiento */
 /* @var $form ActiveForm */
-$this->title = 'Inscripción de Nacimiento';
+$this->title = 'Inscripción de Divorcio';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="rmatrimonio">
+<div class="rdivorcio">
     <?php $form = ActiveForm::begin(); ?>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'cod_libro')->textInput(array('readOnly'=>true,'value'=>3)) ?>
+        <?= $form->field($partida, 'cod_libro')->textInput(array('readOnly'=>true,'value'=>4)) ?>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'folio')->textInput(array('readOnly'=>true,'value'=>21)) ?>
+        <?= $form->field($partida, 'folio')->textInput(array('readOnly'=>true,'value'=>56)) ?>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'numero')->textInput(array('readOnly'=>true,'value'=>22)) ?>
+        <?= $form->field($partida, 'numero')->textInput(array('readOnly'=>true,'value'=>59)) ?>
       </span>
     </div>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'cod_asentado')->dropDownList(ArrayHelper::map(Persona::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique al inscrito']) ?>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
+        <?= $form->field($model, 'juez')->textArea(array('rows'=>3,'style'=>'resize:none')) ?>
       </span>
-      <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'cod_madre')->dropDownList(ArrayHelper::map(Persona::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique a la madre']) ?>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
+      <span style="order: 1; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'fecha_ejecucion')->widget(DatePicker::className(),[
+                    'language'=>'es',
+                    'readonly'=>true,
+                    'options'=>['placeholder'=>'Especifique la fecha'],
+                    'pluginOptions'=>['format'=>'dd/mm/yyyy','autoclose'=>true],
+                    ])->label('Fecha de Nacimiento');
+        ?>
       </span>
-      <span style="order: 3; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'cod_padre')->dropDownList(ArrayHelper::map(Persona::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique al padre']) ?>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
+    </div>
+    <div class="cflex">
+      <span style="order: 1; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'detalle')->textArea(array('rows'=>4,'style'=>'resize:none')) ?>
+      </span>
+      <span style="order: 1; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'cod_mod_divorcio')->dropDownList(ArrayHelper::map(ModalidadDivorcio::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique la modalidad']) ?>
+      </span>
+    </div>
+    <div class="cflex">
+      <span style="order: 1; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'cod_matrimonio')->dropDownList(ArrayHelper::map(Matrimonio::find()->all(), 'codigo', 'num_partida'), ['prompt'=>'Especifique la partida de matrimonio']) ?>
       </span>
     </div>
     <div class="cflex">
@@ -69,6 +70,22 @@ $this->params['breadcrumbs'][] = $this->title;
         <button type="submit" class="btn btn-primary">
           <i class="glyphicon glyphicon-search"></i>
         </button>
+      </span>
+    </div>
+    <div class="cflex">
+      <span style="order: 1; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'padre_contrayente_h')->textInput(array('placeholder'=>'Especifique al padre')) ?>
+      </span>
+      <span style="order: 2; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'madre_contrayente_h')->textInput(array('placeholder'=>'Especifique a la madre')) ?>
+      </span>
+    </div>
+    <div class="cflex">
+      <span style="order: 1; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'padre_contrayente_m')->textInput(array('placeholder'=>'Especifique al padre')) ?>
+      </span>
+      <span style="order: 2; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'madre_contrayente_m')->textInput(array('placeholder'=>'Especifique a la madre')) ?>
       </span>
     </div>
     <div class="cflex">
@@ -85,7 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </button>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'lugar_suceso')->textInput(array('placeholder'=>'Especifique el lugar'))->label('Lugar de Nacimiento') ?>
+        <?= $form->field($partida, 'lugar_suceso')->textInput(array('placeholder'=>'Especifique el lugar'))->label('Lugar de Matrimonio') ?>
       </span>
     </div>
     <div class="cflex">
@@ -106,17 +123,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'showMeridian'=>true, 'autoclose'=>true], 'options'=>['readonly'=>true]
             ])->label('Hora de Nacimiento');
         ?>
-      </span>
-    </div>
-    <div class="cflex">
-      <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'cod_hospital')->dropDownList(ArrayHelper::map(Hospital::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el hospital']) ?>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
       </span>
     </div>
     <div class="form-group">
