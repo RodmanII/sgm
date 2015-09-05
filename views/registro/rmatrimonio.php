@@ -149,7 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Departamento::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el departamento'])->label('Departamento') ?>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el municipio']) ?>        
+        <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el municipio']) ?>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida, 'lugar_suceso')->textInput(array('placeholder'=>'Especifique el lugar'))->label('Lugar de Matrimonio') ?>
@@ -165,13 +165,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     'readonly'=>true,
                     'options'=>['placeholder'=>'Especifique la fecha'],
                     'pluginOptions'=>['format'=>'dd/mm/yyyy','autoclose'=>true],
-                    ])->label('Fecha de Nacimiento');
+                    ])->label('Fecha de Matrimonio');
                 ?>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida, 'hora_suceso')->widget(TimePicker::className(), ['language'=>'es', 'pluginOptions'=>[
             'showMeridian'=>true, 'autoclose'=>true], 'options'=>['readonly'=>true]
-            ])->label('Hora de Nacimiento');
+            ])->label('Hora de Matrimonio');
         ?>
       </span>
     </div>

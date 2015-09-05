@@ -14,16 +14,20 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
     <p>
         <?php
-        echo "<select class='selectpicker' id='mant'>";
+        echo "<select class='selectpicker' id='opciones'>";
             foreach ($data as $fila) {
               echo "<option value='".$fila['tabla']."'>".capitalizar($fila['tabla'])."</option>";
             }
         echo "</select>";
         ?>
     </p>
-    <button class="btn btn-primary">Ir a mantenimiento</button>
+    <button class="btn btn-primary" id="viajar">Ir a mantenimiento</button>
     <script type="text/javascript">
       $('.selectpicker').selectpicker();
     </script>
-
+    <script type="text/javascript">
+    	viajar.addEventListener('click',function(){
+    		window.location.href = "/sgm/web/"+opciones.value;
+    	});
+    </script>
 </div>
