@@ -13,6 +13,7 @@ use app\models\mant\Defuncion;
 use app\models\mant\Matrimonio;
 use app\models\mant\MatrimonioPersona;
 use app\models\mant\Partida;
+use app\models\mant\Divorcio;
 
 class RegistroController extends Controller
 {
@@ -127,6 +128,6 @@ class RegistroController extends Controller
          }
       }
 
-      return $this->render('rdivorcio', ['model'=> $model,'partida'=>$partidaModelo);
+      return $this->render('rdivorcio', ['model'=> $model,'partida'=>$partidaModelo]);
     }
 }

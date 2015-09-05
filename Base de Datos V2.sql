@@ -12,6 +12,7 @@ create table `libro` (
 	`anyo` year not null,
 	`tipo` varchar(50) not null,-- Nacimiento,Defuncion,Matrimonio,Divorcio
 	`cerrado` tinyint(1) not null default 0,
+	`folio_actual` int not null default 2,
 	constraint pk_Libro primary key(`codigo`),
 	constraint unq_Libro_num_anyo_tipo unique(numero,anyo,tipo)
 );
@@ -314,10 +315,10 @@ create table `partida` (
 		`fecha_emision` date not null,
 		`fecha_suceso` date not null,
 		`hora_suceso` time not null,
-		`lugar_suceso` varchar(100) not null,
+		`lugar_suceso` varchar(100) null,
 		`cod_empleado` int not null,
 		`cod_municipio` int not null,-- Municipio del suceso
-		`cod_informante` int not null,
+		`cod_informante` int null,
 		`cod_libro` int not null,
 		constraint pk_Partida primary key(`numero`),
 		constraint unq_Partida_folio_cod_libro unique(folio,cod_libro)
@@ -354,6 +355,7 @@ create table `matrimonio` (
 	`madre_contrayente_m` varchar(50) null,
 	`cod_reg_patrimonial` int not null,
 	`num_partida` int not null,
+	`num_etr_publica` int not null,
 	constraint pk_Matrimonio primary key(`codigo`),
 	constraint unq_Matrimonio_num_partida unique(num_partida)
 );

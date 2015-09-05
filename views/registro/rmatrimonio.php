@@ -130,17 +130,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'cod_informante')->dropDownList(ArrayHelper::map(Informante::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique al informante']) ?>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
-      </span>
-    </div>
-    <div class="cflex">
-      <span style="order: 1; flex-grow: 1; margin-right:10px;">
         <?= $form->field($model, 'padre_contrayente_h')->textInput(array('placeholder'=>'Especifique al padre')) ?>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
@@ -160,13 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Departamento::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el departamento'])->label('Departamento') ?>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el municipio']) ?>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
+        <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el municipio']) ?>        
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida, 'lugar_suceso')->textInput(array('placeholder'=>'Especifique el lugar'))->label('Lugar de Matrimonio') ?>

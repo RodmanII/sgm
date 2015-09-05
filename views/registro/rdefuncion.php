@@ -140,12 +140,6 @@ $this->params['breadcrumbs'][] = $this->title;
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->all(), 'codigo', 'nombre'), ['prompt'=>'Especifique el municipio']) ?>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-search"></i>
-        </button>
       </span>
     </div>
     <div class="cflex">
