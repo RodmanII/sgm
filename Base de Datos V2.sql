@@ -17,14 +17,14 @@ create table `libro` (
 	constraint unq_Libro_num_anyo_tipo unique(numero,anyo,tipo)
 );
 -- Inserción de Registros
-insert into libro(numero,anyo,tipo,cerrado) values(1,2015,'Nacimiento',0);
-insert into libro(numero,anyo,tipo,cerrado) values(2,2015,'Nacimiento',0);
-insert into libro(numero,anyo,tipo,cerrado) values(1,2015,'Defuncion',0);
-insert into libro(numero,anyo,tipo,cerrado) values(2,2015,'Defuncion',0);
-insert into libro(numero,anyo,tipo,cerrado) values(1,2015,'Matrimonio',0);
-insert into libro(numero,anyo,tipo,cerrado) values(2,2015,'Matrimonio',0);
-insert into libro(numero,anyo,tipo,cerrado) values(1,2015,'Divorcio',0);
-insert into libro(numero,anyo,tipo,cerrado) values(2,2015,'Divorcio',0);
+insert into libro(numero,anyo,tipo,cerrado,folio_actual) values(1,2015,'Nacimiento',0,2);
+insert into libro(numero,anyo,tipo,cerrado,folio_actual) values(2,2015,'Nacimiento',0,2);
+insert into libro(numero,anyo,tipo,cerrado,folio_actual) values(1,2015,'Defuncion',0,2);
+insert into libro(numero,anyo,tipo,cerrado,folio_actual) values(2,2015,'Defuncion',0,2);
+insert into libro(numero,anyo,tipo,cerrado,folio_actual) values(1,2015,'Matrimonio',0,2);
+insert into libro(numero,anyo,tipo,cerrado,folio_actual) values(2,2015,'Matrimonio',0,2);
+insert into libro(numero,anyo,tipo,cerrado,folio_actual) values(1,2015,'Divorcio',0,2);
+insert into libro(numero,anyo,tipo,cerrado,folio_actual) values(2,2015,'Divorcio',0,2);
 
 create table `departamento` (
 	`codigo` int auto_increment,
@@ -35,7 +35,7 @@ create table `departamento` (
 -- Inserción de Registros
 insert into departamento(nombre) values('Ahuachapán');-- 1
 insert into departamento(nombre) values('Sonsonate');-- 2
-insert into departamento(nombre) values('Santa Ana');-- 3
+insert into departamento(nombre) values('38);');-- 3
 insert into departamento(nombre) values('Cabañas');-- 4
 insert into departamento(nombre) values('Chalatenango');-- 5
 insert into departamento(nombre) values('Cuscatlán');-- 6
@@ -88,6 +88,133 @@ insert into municipio(nombre,cod_departamento) values('Santo Domingo Guzmán',2)
 insert into municipio(nombre,cod_departamento) values('Sonsonate',2);
 insert into municipio(nombre,cod_departamento) values('Sonzacate',2);
 
+-- Inserción de Registros para Santa Ana
+insert into municipio(nombre,cod_departamento) values('Candelaria de la Frontera',3);
+insert into municipio(nombre,cod_departamento) values('Chalchuapa',3);
+insert into municipio(nombre,cod_departamento) values('Coatepeque',3);
+insert into municipio(nombre,cod_departamento) values('El Congo',3);
+insert into municipio(nombre,cod_departamento) values('El Porvenir',3);
+insert into municipio(nombre,cod_departamento) values('Masahuat',3);
+insert into municipio(nombre,cod_departamento) values('Metapán',3);
+insert into municipio(nombre,cod_departamento) values('San Antonio Pajonal',3);
+insert into municipio(nombre,cod_departamento) values('San Sebastián Salitrillo',3);
+insert into municipio(nombre,cod_departamento) values('Santa Ana',3);
+insert into municipio(nombre,cod_departamento) values('Santa Rosa Guachipilín',3);
+insert into municipio(nombre,cod_departamento) values('Santiago de la Frontera',3);
+insert into municipio(nombre,cod_departamento) values('Texistepeque',3);
+
+-- Inserción de Registros para Cabañas
+insert into municipio(nombre,cod_departamento) values('Cinquera',4);
+insert into municipio(nombre,cod_departamento) values('Dolores',4);
+insert into municipio(nombre,cod_departamento) values('Guacotecti',4);
+insert into municipio(nombre,cod_departamento) values('Ilobasco',4);
+insert into municipio(nombre,cod_departamento) values('Jutiapa',4);
+insert into municipio(nombre,cod_departamento) values('San Isidro',4);
+insert into municipio(nombre,cod_departamento) values('Sensuntepeque',4);
+insert into municipio(nombre,cod_departamento) values('Tejutepeque',4);
+insert into municipio(nombre,cod_departamento) values('Victoria',4);
+
+-- Inserción de Registros para Chalatenango
+insert into municipio(nombre,cod_departamento) values('Agua Caliente',5);
+insert into municipio(nombre,cod_departamento) values('Arcatao',5);
+insert into municipio(nombre,cod_departamento) values('Azacualpa',5);
+insert into municipio(nombre,cod_departamento) values('Chalatenango',5);
+insert into municipio(nombre,cod_departamento) values('Comalapa',5);
+insert into municipio(nombre,cod_departamento) values('Citalá',5);
+insert into municipio(nombre,cod_departamento) values('Concepción Quezaltepeque',5);
+insert into municipio(nombre,cod_departamento) values('Dulce Nombre de María',5);
+insert into municipio(nombre,cod_departamento) values('El Carrizal',5);
+insert into municipio(nombre,cod_departamento) values('El Paraíso',5);
+insert into municipio(nombre,cod_departamento) values('La Laguna',5);
+insert into municipio(nombre,cod_departamento) values('La Palma',5);
+insert into municipio(nombre,cod_departamento) values('La Reina',5);
+insert into municipio(nombre,cod_departamento) values('Las Vueltas',5);
+insert into municipio(nombre,cod_departamento) values('Nueva Concepción',5);
+insert into municipio(nombre,cod_departamento) values('Nueva Trinidad',5);
+insert into municipio(nombre,cod_departamento) values('Nombre de Jesús',5);
+insert into municipio(nombre,cod_departamento) values('Ojos de Agua',5);
+insert into municipio(nombre,cod_departamento) values('Potonico',5);
+insert into municipio(nombre,cod_departamento) values('San Antonio de la Cruz',5);
+insert into municipio(nombre,cod_departamento) values('San Antonio Los Ranchos',5);
+insert into municipio(nombre,cod_departamento) values('San Fernando',5);
+insert into municipio(nombre,cod_departamento) values('San Francisco Lempa',5);
+insert into municipio(nombre,cod_departamento) values('San Francisco Morazán',5);
+insert into municipio(nombre,cod_departamento) values('San Ignacio',5);
+insert into municipio(nombre,cod_departamento) values('San Isidro Labrador',5);
+insert into municipio(nombre,cod_departamento) values('San José Cancasque',5);
+insert into municipio(nombre,cod_departamento) values('San José Las Flores',5);
+insert into municipio(nombre,cod_departamento) values('San Luis del Carmen',5);
+insert into municipio(nombre,cod_departamento) values('San Miguel de Mercedes',5);
+insert into municipio(nombre,cod_departamento) values('San Rafael',5);
+insert into municipio(nombre,cod_departamento) values('Santa Rita',5);
+insert into municipio(nombre,cod_departamento) values('Tejutla',5);
+
+-- Inserción de Registros para Cuscatlán
+insert into municipio(nombre,cod_departamento) values('Candelaria',6);
+insert into municipio(nombre,cod_departamento) values('Cojutepeque',6);
+insert into municipio(nombre,cod_departamento) values('El Carmen',6);
+insert into municipio(nombre,cod_departamento) values('El Rosario',6);
+insert into municipio(nombre,cod_departamento) values('Monte San Juan',6);
+insert into municipio(nombre,cod_departamento) values('Oratorio de Concepción',6);
+insert into municipio(nombre,cod_departamento) values('San Bartolomé Perulapía',6);
+insert into municipio(nombre,cod_departamento) values('San Cristóbal',6);
+insert into municipio(nombre,cod_departamento) values('San José Guayabal',6);
+insert into municipio(nombre,cod_departamento) values('San Pedro Perulapán',6);
+insert into municipio(nombre,cod_departamento) values('San Rafael Cedros',6);
+insert into municipio(nombre,cod_departamento) values('San Ramón',6);
+insert into municipio(nombre,cod_departamento) values('Santa Cruz Analquito',6);
+insert into municipio(nombre,cod_departamento) values('Santa Cruz Michapa',6);
+insert into municipio(nombre,cod_departamento) values('Suchitoto',6);
+insert into municipio(nombre,cod_departamento) values('Tenancingo',6);
+
+-- Inserción de Registros para La Libertad
+insert into municipio(nombre,cod_departamento) values('Antiguo Cuscatlán',7);
+insert into municipio(nombre,cod_departamento) values('Chiltiupán',7);
+insert into municipio(nombre,cod_departamento) values('Ciudad Arce',7);
+insert into municipio(nombre,cod_departamento) values('Colón',7);
+insert into municipio(nombre,cod_departamento) values('Comasagua',7);
+insert into municipio(nombre,cod_departamento) values('Huizúcar',7);
+insert into municipio(nombre,cod_departamento) values('Jayaque',7);
+insert into municipio(nombre,cod_departamento) values('Jicalapa',7);
+insert into municipio(nombre,cod_departamento) values('La Libertad',7);
+insert into municipio(nombre,cod_departamento) values('Santa Tecla',7);
+insert into municipio(nombre,cod_departamento) values('Nuevo Cuscatlán',7);
+insert into municipio(nombre,cod_departamento) values('San Juan Opico',7);
+insert into municipio(nombre,cod_departamento) values('Quezaltepeque',7);
+insert into municipio(nombre,cod_departamento) values('Sacacoyo',7);
+insert into municipio(nombre,cod_departamento) values('San José Villanueva',7);
+insert into municipio(nombre,cod_departamento) values('San Matías',7);
+insert into municipio(nombre,cod_departamento) values('San Pablo Tacachico',7);
+insert into municipio(nombre,cod_departamento) values('Talnique',7);
+insert into municipio(nombre,cod_departamento) values('Tamanique',7);
+insert into municipio(nombre,cod_departamento) values('Teotepeque',7);
+insert into municipio(nombre,cod_departamento) values('Tepecoyo',7);
+insert into municipio(nombre,cod_departamento) values('Zaragoza',7);
+
+-- Inserción de Registros para La Paz
+insert into municipio(nombre,cod_departamento) values('Cuyultitán',8);
+insert into municipio(nombre,cod_departamento) values('El Rosario',8);
+insert into municipio(nombre,cod_departamento) values('Jerusalén',8);
+insert into municipio(nombre,cod_departamento) values('Mercedes La Ceiba',8);
+insert into municipio(nombre,cod_departamento) values('Olocuilta',8);
+insert into municipio(nombre,cod_departamento) values('Paraíso de Osorio',8);
+insert into municipio(nombre,cod_departamento) values('San Antonio Masahuat',8);
+insert into municipio(nombre,cod_departamento) values('San Emigdio',8);
+insert into municipio(nombre,cod_departamento) values('San Francisco Chinameca',8);
+insert into municipio(nombre,cod_departamento) values('San Juan Nonualco',8);
+insert into municipio(nombre,cod_departamento) values('San Juan Talpa',8);
+insert into municipio(nombre,cod_departamento) values('San Juan Tepezontes',8);
+insert into municipio(nombre,cod_departamento) values('San Luis Talpa',8);
+insert into municipio(nombre,cod_departamento) values('San Luis La Herradura',8);
+insert into municipio(nombre,cod_departamento) values('San Miguel Tepezontes',8);
+insert into municipio(nombre,cod_departamento) values('San Pedro Masahuat',8);
+insert into municipio(nombre,cod_departamento) values('San Pedro Nonualco',8);
+insert into municipio(nombre,cod_departamento) values('San Rafael Obrajuelo',8);
+insert into municipio(nombre,cod_departamento) values('Santa María Ostuma',8);
+insert into municipio(nombre,cod_departamento) values('Santiago Nonualco',8);
+insert into municipio(nombre,cod_departamento) values('Tapalhuaca',8);
+insert into municipio(nombre,cod_departamento) values('Zacatecoluca',8);
+
 -- Inserción de Registros para San Salvador
 insert into municipio(nombre,cod_departamento) values('Aguilares',9);
 insert into municipio(nombre,cod_departamento) values('Apopa',9);
@@ -109,6 +236,116 @@ insert into municipio(nombre,cod_departamento) values('Santo Tomás',9);
 insert into municipio(nombre,cod_departamento) values('Soyapango',9);
 insert into municipio(nombre,cod_departamento) values('Tonacatepeque',9);
 
+-- Inserción de Registros para San Vicente
+insert into municipio(nombre,cod_departamento) values('Apastepeque',10);
+insert into municipio(nombre,cod_departamento) values('Guadalupe',10);
+insert into municipio(nombre,cod_departamento) values('San Cayetano Istepeque',10);
+insert into municipio(nombre,cod_departamento) values('San Esteban Catarina',10);
+insert into municipio(nombre,cod_departamento) values('San Ildefonso',10);
+insert into municipio(nombre,cod_departamento) values('San Lorenzo',10);
+insert into municipio(nombre,cod_departamento) values('San Sebastián',10);
+insert into municipio(nombre,cod_departamento) values('San Vicente',10);
+insert into municipio(nombre,cod_departamento) values('Santa Clara',10);
+insert into municipio(nombre,cod_departamento) values('Santo Domingo',10);
+insert into municipio(nombre,cod_departamento) values('Tecoluca',10);
+insert into municipio(nombre,cod_departamento) values('Tepetitán',10);
+insert into municipio(nombre,cod_departamento) values('Verapaz',10);
+
+-- Inserción de Registros para Morazán
+insert into municipio(nombre,cod_departamento) values('Arambala',11);
+insert into municipio(nombre,cod_departamento) values('Cacaopera',11);
+insert into municipio(nombre,cod_departamento) values('Chilanga',11);
+insert into municipio(nombre,cod_departamento) values('Corinto',11);
+insert into municipio(nombre,cod_departamento) values('Delicias de Concepción',11);
+insert into municipio(nombre,cod_departamento) values('El Divisadero',11);
+insert into municipio(nombre,cod_departamento) values('El Rosario',11);
+insert into municipio(nombre,cod_departamento) values('Gualococti',11);
+insert into municipio(nombre,cod_departamento) values('Guatajiagua',11);
+insert into municipio(nombre,cod_departamento) values('Joateca',11);
+insert into municipio(nombre,cod_departamento) values('Jocoaitique',11);
+insert into municipio(nombre,cod_departamento) values('Jocoro',11);
+insert into municipio(nombre,cod_departamento) values('Lolotiquillo',11);
+insert into municipio(nombre,cod_departamento) values('Meanguera',11);
+insert into municipio(nombre,cod_departamento) values('Osicala',11);
+insert into municipio(nombre,cod_departamento) values('Perquín',11);
+insert into municipio(nombre,cod_departamento) values('San Carlos',11);
+insert into municipio(nombre,cod_departamento) values('San Fernando',11);
+insert into municipio(nombre,cod_departamento) values('San Francisco Gotera',11);
+insert into municipio(nombre,cod_departamento) values('San Isidro',11);
+insert into municipio(nombre,cod_departamento) values('San Simón',11);
+insert into municipio(nombre,cod_departamento) values('Sensembra',11);
+insert into municipio(nombre,cod_departamento) values('Sociedad',11);
+insert into municipio(nombre,cod_departamento) values('Torola',11);
+insert into municipio(nombre,cod_departamento) values('Yamabal',11);
+insert into municipio(nombre,cod_departamento) values('Yoloaiquín',11);
+
+-- Inserción de Registros para San Miguel
+insert into municipio(nombre,cod_departamento) values('Carolina',12);
+insert into municipio(nombre,cod_departamento) values('Chapeltique',12);
+insert into municipio(nombre,cod_departamento) values('Chinameca',12);
+insert into municipio(nombre,cod_departamento) values('Chirilagua',12);
+insert into municipio(nombre,cod_departamento) values('Ciudad Barrios',12);
+insert into municipio(nombre,cod_departamento) values('Comacarán',12);
+insert into municipio(nombre,cod_departamento) values('El Tránsito',12);
+insert into municipio(nombre,cod_departamento) values('Lolotique',12);
+insert into municipio(nombre,cod_departamento) values('Moncagua',12);
+insert into municipio(nombre,cod_departamento) values('Nueva Guadalupe',12);
+insert into municipio(nombre,cod_departamento) values('Nuevo Edén de San Juan',12);
+insert into municipio(nombre,cod_departamento) values('Quelepa',12);
+insert into municipio(nombre,cod_departamento) values('San Antonio del Mosco',12);
+insert into municipio(nombre,cod_departamento) values('San Gerardo',12);
+insert into municipio(nombre,cod_departamento) values('San Jorge',12);
+insert into municipio(nombre,cod_departamento) values('San Luis de la Reina',12);
+insert into municipio(nombre,cod_departamento) values('San Miguel',12);
+insert into municipio(nombre,cod_departamento) values('San Rafael Oriente',12);
+insert into municipio(nombre,cod_departamento) values('Sesori',12);
+insert into municipio(nombre,cod_departamento) values('Uluazapa',12);
+
+-- Inserción de Registros para Usulután
+insert into municipio(nombre,cod_departamento) values('Alegría',13);
+insert into municipio(nombre,cod_departamento) values('Berlín',13);
+insert into municipio(nombre,cod_departamento) values('California',13);
+insert into municipio(nombre,cod_departamento) values('Concepción Batres',13);
+insert into municipio(nombre,cod_departamento) values('El Triunfo',13);
+insert into municipio(nombre,cod_departamento) values('Ereguayquín',13);
+insert into municipio(nombre,cod_departamento) values('Estanzuelas',13);
+insert into municipio(nombre,cod_departamento) values('Jiquilisco',13);
+insert into municipio(nombre,cod_departamento) values('Jucuapa',13);
+insert into municipio(nombre,cod_departamento) values('Jucuarán',13);
+insert into municipio(nombre,cod_departamento) values('Mercedes Umaña',13);
+insert into municipio(nombre,cod_departamento) values('Nueva Granada',13);
+insert into municipio(nombre,cod_departamento) values('Ozatlán',13);
+insert into municipio(nombre,cod_departamento) values('Puerto El Triunfo',13);
+insert into municipio(nombre,cod_departamento) values('San Agustín',13);
+insert into municipio(nombre,cod_departamento) values('San Buenaventura',13);
+insert into municipio(nombre,cod_departamento) values('San Dionisio',13);
+insert into municipio(nombre,cod_departamento) values('San Francisco Javier',13);
+insert into municipio(nombre,cod_departamento) values('Santa Elena',13);
+insert into municipio(nombre,cod_departamento) values('Santa María',13);
+insert into municipio(nombre,cod_departamento) values('Santiago de María',13);
+insert into municipio(nombre,cod_departamento) values('Tecapán',13);
+insert into municipio(nombre,cod_departamento) values('Usulután',13);
+
+-- Inserción de Registros para La Unión
+insert into municipio(nombre,cod_departamento) values('Anamorós',14);
+insert into municipio(nombre,cod_departamento) values('Bolivar',14);
+insert into municipio(nombre,cod_departamento) values('Concepción de Oriente',14);
+insert into municipio(nombre,cod_departamento) values('Conchagua',14);
+insert into municipio(nombre,cod_departamento) values('El Carmen',14);
+insert into municipio(nombre,cod_departamento) values('El Sauce',14);
+insert into municipio(nombre,cod_departamento) values('Intipucá',14);
+insert into municipio(nombre,cod_departamento) values('La Unión',14);
+insert into municipio(nombre,cod_departamento) values('Lislique',14);
+insert into municipio(nombre,cod_departamento) values('Meanguera del Golfo',14);
+insert into municipio(nombre,cod_departamento) values('Nueva Esparta',14);
+insert into municipio(nombre,cod_departamento) values('Pasaquina',14);
+insert into municipio(nombre,cod_departamento) values('Polorós',14);
+insert into municipio(nombre,cod_departamento) values('San Alejo',14);
+insert into municipio(nombre,cod_departamento) values('San José',14);
+insert into municipio(nombre,cod_departamento) values('Santa Rosa de Lima',14);
+insert into municipio(nombre,cod_departamento) values('Yayantique',14);
+insert into municipio(nombre,cod_departamento) values('Yucuaiquín',14);
+
 create table `hospital` (
 	`codigo` int auto_increment,
 	`nombre` varchar(100) not null,
@@ -119,9 +356,36 @@ create table `hospital` (
 );
 alter table `hospital` add constraint `fk_hospital_municipio_cod_municipio` foreign key (`cod_municipio`) references `municipio`(`codigo`) on delete no action on update cascade;
 -- Inserción de Registros para Hospital
-insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital del Divino Salvador del Mundo','Santo Tomás',1);
-insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional "Enfermera Angélica Vidal de Najarro"','San Bartolo',1);
-insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional "Cabo Antonio Marcos Eusebio Galvez"','San Rodrigo',1);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional Especializado "Rosales"','San Salvador',158);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Juan José Fernández"','Zacamil',158);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional de la Mujer','San Salvador',158);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional Especializado de Niños "Benjamín Bloom"','San Salvador',158);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General y de Psiquiatría "Doctor José Molina Martínez"','Soyapango', 158);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Neumología y Medicina Familiar "Doctor José Antonio Saldaña"','San Salvador',158);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Enfermera Angélica Vidal de Najarro"','San Bartolo', 151);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional Regional "San Juan de Dios"','Santa Ana',38);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Chalchuapa','Santa Ana',38);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Arturo Morales"','Metapán',38);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Francisco Menéndez"','Ahuachapán',1);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Jorge Mazzini Villacorta"','Sonsonate',27);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "San Rafael"','Santa Tecla',109);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Luis Edmundo Vásquez"','Chalatenango',54);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Nueva Concepción','Chalatenango',54);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Cojutepeque','Cuscatlán',100);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Suchitoto','Cuscatlán',100);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Santa Teresa"','Zacatecoluca',143);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Sensuntepeque','Sensuntepeque',48);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor José Luís Saca"','Ilobasco',45);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Santa Gertrudis"','San Vicente',170);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Jiquilisco','Usulután',244);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "San Pedro"','Usulután',244);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Jorge Arturo Mena"','Santiago de María',,244);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional Regional "San Juan de Dios"','San Miguel',218);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Nueva Guadalupe','San Miguel',218);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Monseñor Oscar Arnulfo Romero y Galdámez"','Ciudad Barrios',218);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Héctor Antonio Hernández Flores"','San Francisco Gotera',194);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de La Unión','La Unión',252);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Santa Rosa de Lima','La Unión',252);
 
 create table `unidad` (
 	`codigo` int auto_increment,
@@ -132,6 +396,9 @@ create table `unidad` (
 -- Inserción de Registros para Unidad
 insert into unidad(nombre) values('Registro del Estado Familiar');
 insert into unidad(nombre) values('Recolección de Desechos Sólidos');
+insert into unidad(nombre) values('Registro Tributario');
+insert into unidad(nombre) values('Desarrollo Urbano y Rural');
+insert into unidad(nombre) values('Desarrollo Ciudadano Municipal');
 
 create table `informante` (
 	`codigo` int auto_increment,
@@ -143,7 +410,10 @@ create table `informante` (
 	constraint unq_Informante_numero_documento unique(numero_documento)
 );
 insert into informante(nombre,tipo_documento,numero_documento) values('Fabián Ernesto Clavico Fútil','Documento Único de Identidad','cero cuatro nueve cinco cinco cuatro nueve siete-tres');
-insert into informante(nombre,tipo_documento,numero_documento) values('Sarina Valentina Rios Luna','Documento Único de Identidad','cero cuatro ocho tres dos cuatro cero siete-tres');
+insert into informante(nombre,tipo_documento,numero_documento) values('Sandra Valentina Rios Luna','Documento Único de Identidad','cero cuatro ocho tres dos cuatro cero siete-siete');
+insert into informante(nombre,tipo_documento,numero_documento) values('Leonardo Ernesto Fernández Gunter','Documento Nacional de Identidad','uno tres cero tres dos nueveo cero siete-cinco');
+insert into informante(nombre,tipo_documento,numero_documento) values('James Howlet','Pasaporte','e i dos cinco siete nueve nueve tres e');
+insert into informante(nombre,tipo_documento,numero_documento) values('Thomas David Blaskowitz','Pasaporte','a o uno cuatro seis nueve tres');
 
 create table `modalidad_divorcio` (
 	`codigo` int auto_increment,
@@ -222,39 +492,7 @@ create table `rol` (
 insert into rol(nombre) values('Administrador');
 insert into rol(nombre) values('EmpleadoRF');
 insert into rol(nombre) values('EmpleadoRD');
-
-create table `persona` (
-	`codigo` int auto_increment,
-	`nombre` varchar(50) not null,
-	`apellido` varchar(50) not null,
-	`dui` char(9) null,
-	`nit` char(10) null,
-	`fecha_nacimiento` date not null,
-	`genero` varchar(50) not null,
-	`direccion` varchar(200) not null,
-	`profesion` varchar(50) null,
-	`estado` varchar(50) not null default 'Activo',
-	`cod_municipio` int not null,
-	`cod_nacionalidad` int not null,
-	`cod_estado_civil` int not null,
-	constraint pk_Persona primary key(`codigo`),
-	constraint unq_Persona_dui unique(dui),
-	constraint unq_Persona_nit unique(nit)
-);
-alter table `persona` add constraint `fk_persona_estado_civil_cod_estado_civil` foreign key (`cod_estado_civil`) references `estado_civil`(`codigo`) on delete no action on update cascade;
-alter table `persona` add constraint `fk_persona_nacionalidad_cod_nacionalidad` foreign key (`cod_nacionalidad`) references `nacionalidad`(`codigo`) on delete no action on update cascade;
-alter table `persona` add constraint `fk_persona_municipio_cod_municipio` foreign key (`cod_municipio`) references `municipio`(`codigo`) on delete no action on update cascade;
--- Inserción de Registros para Persona
-insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil)
-values('Alicia Guadalupe', 'López', '048501627', '0515103264', '1971-02-25', 'Femenino', 'Direccion del empleado #1', 'Profesora', 1,1,2);
-insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil)
-values('Rodrigo Osvaldo', 'Grijalva López', '048401915', '0515103145', '1993-09-14', 'Masculino', 'Direccion del empleado #2', 'Estudiante', 2,1,4);
-insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil)
-values('Hugo Ernesto', 'Grijalva Pérez', '014501627', '0517103264', '1967-10-09', 'Masculino', 'Direccion del empleado #3', 'Administrativo', 3,3,1);
-insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil)
-values('Claudia Maribel', 'Flores Valle', '562101627', '6230103264', '1995-10-09', 'Femenino', 'Direccion del empleado #4', 'Secretaria', 4,5,3);
-insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
-values('Carla Maria', 'Castillo Navarrete', '565171647', '6232102764', '1992-03-17', 'Femenino', 'Direccion del empleado #5', 'Secretaria', 'Inactivo', 16,6,5);
+insert into rol(nombre) values('Usuario');
 
 create table `usuario` (
 	`nombre` varchar(50),
@@ -270,32 +508,93 @@ insert into usuario(nombre,contrasenya,salt,cod_rol) values('gorflax','7496d87dd
 insert into usuario(nombre,contrasenya,salt,cod_rol) values('girflax','2d6d11f82f408802b03bbedf0e37f16aac5db44d429ded35abecf955807de22bf3dbc0b66353baef5eba0ce1cb7eaf8922cbc34adafd567dcaa9f115d587a688','+4i0|0HIiUq',2);
 insert into usuario(nombre,contrasenya,salt,cod_rol) values('gurflax','b205d37324dcb0f41cb118082dade54766d0a89f6134110597f9d279b4285da6ad80017d861161c65094ac574cacdf50655bf882dab98ef54434a4df2f8aee0f','c8yAVuCB|iq',3);
 insert into usuario(nombre,contrasenya,salt,cod_rol) values('gerflax','8436f145294b4539068d6f73a7c626aa6f62c33c4911af63194ef86415f3f9b1ca229305257ce5fb53c5273132b5f38df22bc731e7026f623e4f2a16cc77bef5','2_Qc7k0rKRb',3);
-insert into `usuario` (`nombre`,`contrasenya`,`salt`,`cod_rol`) values ('rodrigo','50116cb87536c9c9a414f13093fc3a7073d05bb22e68b5249546729d8caea87479ea11ba79cb9c7c5d9f6ca27d21d442a35bbce1dc657b36510b873b2c2e2890','KCma6npWyLQ',1);
-insert into `usuario` (`nombre`,`contrasenya`,`salt`,`cod_rol`) values ('verdugo','cdea91f725d0023cecf95eb2dc352bb09ff174bea76ff9d94e3c71e1708a2501419576172f8e50c96de26f8738e618a7e3feab3981db921cc1df26c8c96cd053','YoSpMe9bwFk',3);
+insert into usuario(nombre,contrasenya,salt,cod_rol) values ('rodrigo','50116cb87536c9c9a414f13093fc3a7073d05bb22e68b5249546729d8caea87479ea11ba79cb9c7c5d9f6ca27d21d442a35bbce1dc657b36510b873b2c2e2890','KCma6npWyLQ',4);
+insert into usuario(nombre,contrasenya,salt,cod_rol) values ('verdugo','cdea91f725d0023cecf95eb2dc352bb09ff174bea76ff9d94e3c71e1708a2501419576172f8e50c96de26f8738e618a7e3feab3981db921cc1df26c8c96cd053','YoSpMe9bwFk',4);
+
+create table `persona` (
+	`codigo` int auto_increment,
+	`nombre` varchar(50) not null,
+	`apellido` varchar(50) not null,
+	`dui` char(9) null,
+	`nit` char(10) null,
+	`fecha_nacimiento` date not null,
+	`genero` varchar(50) not null,
+	`direccion` varchar(200) not null,
+	`profesion` varchar(50) null,
+	`estado` varchar(50) not null default 'Activo',
+	`cod_municipio` int not null,
+	`cod_nacionalidad` int not null,
+	`cod_estado_civil` int not null,
+	`nombre_usuario` varchar(50) null,
+	constraint pk_Persona primary key(`codigo`),
+	constraint unq_Persona_dui unique(dui),
+	constraint unq_Persona_nit unique(nit),
+	constraint unq_Persona_nombre_usuario unique(nombre_usuario)
+);
+alter table `persona` add constraint `fk_persona_usuario_nombre_usuario` foreign key (`nombre_usuario`) references `usuario`(`nombre`) on delete no action on update cascade;
+alter table `persona` add constraint `fk_persona_estado_civil_cod_estado_civil` foreign key (`cod_estado_civil`) references `estado_civil`(`codigo`) on delete no action on update cascade;
+alter table `persona` add constraint `fk_persona_nacionalidad_cod_nacionalidad` foreign key (`cod_nacionalidad`) references `nacionalidad`(`codigo`) on delete no action on update cascade;
+alter table `persona` add constraint `fk_persona_municipio_cod_municipio` foreign key (`cod_municipio`) references `municipio`(`codigo`) on delete no action on update cascade;
+-- Inserción de Registros para Persona
+insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Alicia Guadalupe', 'López', '048501627', '0515103264', '1971-02-25', 'Femenino', 'Direccion del empleado #1', 'Profesora', 158,1,2,'garflax');
+insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Rodrigo Osvaldo', 'Grijalva López', '048401915', '0515103145', '1993-09-14', 'Masculino', 'Direccion del empleado #2', 'Estudiante', 154,1,4,'girflax');
+insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Hugo Ernesto', 'Grijalva Pérez', '014501627', '0517103264', '1967-10-09', 'Masculino', 'Direccion del empleado #3', 'Administrativo', 64,3,1,'gorflax');
+insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Claudia Maribel', 'Flores Valle', '562101627', '6230103264', '1995-10-09', 'Femenino', 'Direccion del empleado #4', 'Secretaria', 74,5,3,'verdugo');
+insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Carla Maria', 'Castillo Navarrete', '565171647', '6232102764', '1992-03-17', 'Femenino', 'Direccion del empleado #5', 'Secretaria', 'Inactivo', 62,6,5,'gerflax');
+insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Andrés Salomón', 'Alvarado Menjivar', '048171542', '0515102713', '1989-08-21', 'Masculino', 'Direccion del empleado #6', 'Secretaria', 'Inactivo', 62,6,5,'gerflax');
+
+create table `solicitud` (
+	`codigo` int auto_increment,
+	`fecha` date not null,
+	`tipo_partida` varchar(50) not null,
+	`nombre_inscrito` varchar(100) not null,
+	`fecha_suceso` date not null,
+	`nombre_padre` varchar(100) null,
+	`nombre_madre` varchar(100) null,
+	`estado` varchar(50) not null,
+	`cod_persona` int not null,
+	constraint pk_Solicitud primary key(`codigo`)
+);
+alter table `solicitud` add constraint `fk_solicitud_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
+-- Inserción de Registros para Solicitud
+insert into solicitud(fecha,tipo_partida,nombre_inscrito,fecha_suceso,nombre_padre,nombre_madre,estado,cod_persona)
+values('2015-04-21','Nacimiento','Juan Ernesto Pérez Cruz','1986-07-11','Carlos Augusto Pérez Cruz','Alicia Magdalena Campos de Pérez','Pendiente',1);
+insert into solicitud(fecha,tipo_partida,nombre_inscrito,fecha_suceso,nombre_padre,nombre_madre,estado,cod_persona)
+values('2015-01-08','Defuncion','Debora Roxana Beltrán Pineda','2011-11-17',null,null,'Finalizada',1);
+insert into solicitud(fecha,tipo_partida,nombre_inscrito,fecha_suceso,nombre_padre,nombre_madre,estado,cod_persona)
+values('2015-05-14','Divorcio','Maria Anastasia Leiva Chacon','2004-01-27',null,null,'Procesada',4);
+insert into solicitud(fecha,tipo_partida,nombre_inscrito,fecha_suceso,nombre_padre,nombre_madre,estado,cod_persona)
+values('2015-04-28','Matrimonio','William Adalberto Mejia Prieto','1998-03-05',null,null,'Pendiente',2);
+insert into solicitud(fecha,tipo_partida,nombre_inscrito,fecha_suceso,nombre_padre,nombre_madre,estado,cod_persona)
+values('2013-08-06','Nacimiento','Francisco Rodrigo Minero Monje','2002-09-10','Carlos Javier Minero Monje','Claudia Guadalupe Sanchez de Monje','Finalizada',5);
 
 create table `empleado` (
 	`codigo` int auto_increment,
 	`cargo` varchar(50) not null,
 	`cod_unidad` int not null,
 	`cod_persona` int not null,
-	`nombre_usuario` varchar(50) null,
 	constraint pk_Empleado primary key(`codigo`),
-	constraint unq_Empleado_cod_persona unique(cod_persona),
-	constraint unq_Empleado_nombre_usuario unique(nombre_usuario)
+	constraint unq_Empleado_cod_persona unique(cod_persona)
 );
-alter table `empleado` add constraint `fk_empleado_usuario_nombre_usuario` foreign key (`nombre_usuario`) references `usuario`(`nombre`) on delete no action on update cascade;
 alter table `empleado` add constraint `fk_empleado_unidad_cod_unidad` foreign key (`cod_unidad`) references `unidad`(`codigo`) on delete cascade on update cascade;
 alter table `empleado` add constraint `fk_empleado_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
 -- Inserción de Registros para Empleado
-insert into empleado(cargo,cod_unidad,cod_persona,nombre_usuario) values('Emisor de Partidas',1,1,'girflax');
-insert into empleado(cargo,cod_unidad,cod_persona,nombre_usuario) values('Emisor de Certificadas',1,2,'gorflax');
-insert into empleado(cargo,cod_unidad,cod_persona,nombre_usuario) values('Supervisor del Registro Familiar',2,3,'garflax');
-insert into empleado(cargo,cod_unidad,cod_persona,nombre_usuario) values('Supervisor de Cuadrillas de Recolección',2,4,'gerflax');
-insert into empleado(cargo,cod_unidad,cod_persona,nombre_usuario) values('Ordo Hereticus',2,5,'verdugo');
+insert into empleado(cargo,cod_unidad,cod_persona) values('Encargado de Inscripciones de Nacimiento',1,1);
+insert into empleado(cargo,cod_unidad,cod_persona) values('Encargado de Inscripciones de Defunción',1,2);
+insert into empleado(cargo,cod_unidad,cod_persona) values('Supervisor del Registro Familiar',1,3);
+insert into empleado(cargo,cod_unidad,cod_persona) values('Supervisor de Cuadrillas de Recolección',2,4);
+insert into empleado(cargo,cod_unidad,cod_persona) values('Miembro de Cuadrilla de Recolección',2,5);
+insert into empleado(cargo,cod_unidad,cod_persona) values('Motorista de Vehículo de Recolección',2,6);
 
 create table `vehiculo` (
 	`numero` int auto_increment,
-	`matricula` varchar(10) not null,
+	`num_placa` varchar(10) not null,
 	`fecha_compra` date not null,
 	`estado` varchar(50) not null,
 	`marca` varchar(50) not null,
@@ -308,6 +607,9 @@ create table `vehiculo` (
 	constraint unq_Vehiculo_matricula unique(matricula)
 );
 alter table `vehiculo` add constraint `fk_vehiculo_empleado_cod_conductor` foreign key (`cod_conductor`) references `empleado`(`codigo`) on delete no action on update cascade;
+-- Inserción de Registros para Vehiculo
+insert into vehiculo(num_placa,fecha_compra,estado,marca,modelo,anyo,capacidad,cod_conductor)
+values('P159988','2005-05-21','Disponible','Kenworth','T470',2011,5000,6);
 
 create table `partida` (
 		`numero` int auto_increment,
