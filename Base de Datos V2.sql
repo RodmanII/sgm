@@ -379,8 +379,7 @@ insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional G
 insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Santa Gertrudis"','San Vicente',170);
 insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Jiquilisco','Usulután',244);
 insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "San Pedro"','Usulután',244);
-insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Jorge Arturo Mena"','Santiago de María',,244);
-insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional Regional "San Juan de Dios"','San Miguel',218);
+insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Jorge Arturo Mena"','Santiago de María',244);
 insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General de Nueva Guadalupe','San Miguel',218);
 insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Monseñor Oscar Arnulfo Romero y Galdámez"','Ciudad Barrios',218);
 insert into hospital(nombre,ubicacion,cod_municipio) values('Hospital Nacional General "Doctor Héctor Antonio Hernández Flores"','San Francisco Gotera',194);
@@ -546,8 +545,6 @@ insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direcc
 values('Claudia Maribel', 'Flores Valle', '562101627', '6230103264', '1995-10-09', 'Femenino', 'Direccion del empleado #4', 'Secretaria', 74,5,3,'verdugo');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Carla Maria', 'Castillo Navarrete', '565171647', '6232102764', '1992-03-17', 'Femenino', 'Direccion del empleado #5', 'Secretaria', 'Inactivo', 62,6,5,'gerflax');
-insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Andrés Salomón', 'Alvarado Menjivar', '048171542', '0515102713', '1989-08-21', 'Masculino', 'Direccion del empleado #6', 'Secretaria', 'Inactivo', 62,6,5,'gerflax');
 
 create table `solicitud` (
 	`codigo` int auto_increment,
@@ -590,7 +587,6 @@ insert into empleado(cargo,cod_unidad,cod_persona) values('Encargado de Inscripc
 insert into empleado(cargo,cod_unidad,cod_persona) values('Supervisor del Registro Familiar',1,3);
 insert into empleado(cargo,cod_unidad,cod_persona) values('Supervisor de Cuadrillas de Recolección',2,4);
 insert into empleado(cargo,cod_unidad,cod_persona) values('Miembro de Cuadrilla de Recolección',2,5);
-insert into empleado(cargo,cod_unidad,cod_persona) values('Motorista de Vehículo de Recolección',2,6);
 
 create table `vehiculo` (
 	`numero` int auto_increment,
@@ -604,12 +600,9 @@ create table `vehiculo` (
 	`cod_conductor` int not null,
 	constraint pk_Vehiculo primary key(`numero`),
 	constraint unq_Vehiculo_cod_conductor unique(cod_conductor),
-	constraint unq_Vehiculo_matricula unique(matricula)
+	constraint unq_Vehiculo_num_placa unique(num_placa)
 );
 alter table `vehiculo` add constraint `fk_vehiculo_empleado_cod_conductor` foreign key (`cod_conductor`) references `empleado`(`codigo`) on delete no action on update cascade;
--- Inserción de Registros para Vehiculo
-insert into vehiculo(num_placa,fecha_compra,estado,marca,modelo,anyo,capacidad,cod_conductor)
-values('P159988','2005-05-21','Disponible','Kenworth','T470',2011,5000,6);
 
 create table `partida` (
 		`numero` int auto_increment,

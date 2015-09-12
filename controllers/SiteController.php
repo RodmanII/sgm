@@ -96,6 +96,6 @@ class SiteController extends Controller
 
     public function actionMision()
     {
-        return $this->render('about');
+        return $this->render('myv');
     }
 }
