@@ -15,7 +15,7 @@ AppAsset::register($this);
 <html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
@@ -97,5 +97,6 @@ AppAsset::register($this);
   $this->registerCssFile(Yii::$app->homeUrl."css/custom.css");
   $this->registerCssFile(Yii::$app->homeUrl."css/bootstrap-select.css");
   $this->registerJsFile(Yii::$app->homeUrl."js/bootstrap-select.min.js");
+  $this->registerJsFile(Yii::$app->homeUrl."js/filtro.js");
   $this->endPage();
 ?>

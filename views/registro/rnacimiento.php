@@ -59,6 +59,10 @@ $this->params['breadcrumbs'][] = $this->title;
           $data = $command->queryAll();
         ?>
         <?= $form->field($model, 'cod_asentado')->dropDownList(ArrayHelper::map($data, 'codigo', 'nombre_completo')) ?>
+        <div class="form-group">
+          <?= Html::textInput('fasentado','',array('id'=>'nrwr1','class'=>'form-control')); ?>
+          <span id="matches1" style="display:none"></span>
+        </div>
         <button type="submit" class="btn btn-primary">
           <i class="glyphicon glyphicon-edit"></i>
         </button>
@@ -71,7 +75,11 @@ $this->params['breadcrumbs'][] = $this->title;
           function($model, $defaultValue) {
             return $model->nombre.' '.$model->apellido;
           }
-        ), ['prompt'=>'Especifique a la madre']) ?>
+        ), ['prompt'=>'Ninguna']) ?>
+        <div class="form-group">
+          <?= Html::textInput('fmadre','',array('id'=>'nrwr','class'=>'form-control')); ?>
+          <span id="matches" style="display:none"></span>
+        </div>
         <button type="submit" class="btn btn-primary">
           <i class="glyphicon glyphicon-edit"></i>
         </button>
@@ -84,7 +92,11 @@ $this->params['breadcrumbs'][] = $this->title;
           function($model, $defaultValue) {
             return $model->nombre.' '.$model->apellido;
           }
-        ), ['prompt'=>'Especifique al padre']) ?>
+        ), ['prompt'=>'Ninguno']) ?>
+        <div class="form-group">
+          <?= Html::textInput('fpadre','',array('id'=>'nrwr2','class'=>'form-control')); ?>
+          <span id="matches2" style="display:none"></span>
+        </div>
         <button type="submit" class="btn btn-primary">
           <i class="glyphicon glyphicon-edit"></i>
         </button>
@@ -96,6 +108,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida, 'cod_informante')->dropDownList(ArrayHelper::map(Informante::find()->orderBy(['nombre'=>SORT_ASC])->all(), 'codigo', 'nombre')) ?>
+        <div class="form-group">
+          <?= Html::textInput('finformante','',array('id'=>'nrwr3','class'=>'form-control')); ?>
+          <span id="matches3" style="display:none"></span>
+        </div>
         <button type="submit" class="btn btn-primary">
           <i class="glyphicon glyphicon-edit"></i>
         </button>
@@ -164,6 +180,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
         <?= $form->field($model, 'cod_hospital')->dropDownList(ArrayHelper::map(Hospital::find()->all(), 'codigo', 'nombre')) ?>
+        <div class="form-group">
+          <?= Html::textInput('fhospital','',array('id'=>'nrwr4','class'=>'form-control')); ?>
+          <span id="matches4" style="display:none"></span>
+        </div>
         <button type="submit" class="btn btn-primary">
           <i class="glyphicon glyphicon-edit"></i>
         </button>
