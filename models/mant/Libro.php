@@ -12,6 +12,7 @@ use Yii;
  * @property string $anyo
  * @property string $tipo
  * @property integer $cerrado
+ * @property integer $folio_actual
  *
  * @property Partida[] $partidas
  */
@@ -32,7 +33,7 @@ class Libro extends \yii\db\ActiveRecord
     {
         return [
             [['numero', 'anyo', 'tipo'], 'required'],
-            [['numero', 'cerrado'], 'integer'],
+            [['numero', 'cerrado', 'folio_actual'], 'integer'],
             [['anyo'], 'safe'],
             [['tipo'], 'string', 'max' => 50],
             [['numero', 'anyo', 'tipo'], 'unique', 'targetAttribute' => ['numero', 'anyo', 'tipo'], 'message' => 'The combination of Numero, Anyo and Tipo has already been taken.']
@@ -50,6 +51,7 @@ class Libro extends \yii\db\ActiveRecord
             'anyo' => 'Anyo',
             'tipo' => 'Tipo',
             'cerrado' => 'Cerrado',
+            'folio_actual' => 'Folio Actual',
         ];
     }
 

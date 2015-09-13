@@ -6,7 +6,6 @@ use Yii;
 use yii\base\Model;
 use app\models\mant\Usuario;
 use app\models\mant\Persona;
-use app\models\mant\Empleado;
 
 class LoginForm extends Model
 {
@@ -20,7 +19,7 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['usuario', 'password'], 'required', 'message'=>'Debe ingresar usuario y contraseña'],
+            [['usuario', 'password'], 'required', 'message'=>'{attribute} es obligatorio'],
             ['usuario', 'match', 'pattern'=>'/^[a-zA-Z-_\d]+$/', 'message'=>'Solo se permiten caracteres alfanúmericos'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
@@ -44,16 +43,16 @@ class LoginForm extends Model
           $this->addError('usuario', 'El usuario ingresado no existe');
           return false;
         }else{
-          //->andWhere('Activo = 1')
-          $dbEmpleado = Empleado::find()->innerJoinWith('codPersona',false)->where('nombre_usuario = :user',[':user'=>$this->usuario])
+          //->innerJoinWith('codPersona',false)
+          $dbPersona = Persona::find()->where('nombre_usuario = :user',[':user'=>$this->usuario])
           ->andWhere('estado = :estado',[':estado'=>'Activo'])->one();
-          if(count($dbEmpleado)<=0){
+          if(count($dbPersona)<=0){
             //Esto me quiere decir que el usuario existe, pero o no esta asociado a ningun empleado o su estado es diferente de activo
-            $this->addError('usuario', 'El usuario ingresado no está asociado con ningún empleado o se encuentra inactivo');
+            $this->addError('usuario', 'El usuario ingresado no está asociado con ninguna persona o se encuentra inactivo');
             return false;
           }else{
             if(hash('sha512',$this->password.$dbUsuario->salt) === $dbUsuario->contrasenya){
-              $nombrePersona = $dbUsuario->empleado->codPersona->nombre.' '.$dbUsuario->empleado->codPersona->apellido;
+              $nombrePersona = $dbUsuario->persona->nombre.' '.$dbUsuario->persona->apellido;
               Yii::$app->session->setFlash('success', '¡Bienvenid@! '.$nombrePersona);
               return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
             }else{

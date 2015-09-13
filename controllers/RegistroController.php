@@ -29,7 +29,7 @@ class RegistroController extends Controller
                       'allow' => true,
                       'roles' => ['@'],
                       'matchCallback'=> function($rule,$function){
-                        if(Yii::$app->user->identity->codRol->nombre=='EmpleadoRD'){
+                        if(Yii::$app->user->identity->codRol->nombre=='EmpleadoRD' || Yii::$app->user->identity->codRol->nombre=='Usuario'){
                           throw new HttpException(403,'Esta página solo es accesible para los empleados de Registro Familiar');
                           //Si no lanzo una excepción podria hacer return false
                         }else{
@@ -73,7 +73,6 @@ class RegistroController extends Controller
     {
       $model = new Nacimiento();
       $partidaModelo = new Partida();
-
       if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post()) && Model::validateMultiple([$model, $partidaModelo])) {
          if ($model->validate()) {
              // form inputs are valid, do something here

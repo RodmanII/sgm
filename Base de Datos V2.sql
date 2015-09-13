@@ -35,7 +35,7 @@ create table `departamento` (
 -- Inserción de Registros
 insert into departamento(nombre) values('Ahuachapán');-- 1
 insert into departamento(nombre) values('Sonsonate');-- 2
-insert into departamento(nombre) values('38);');-- 3
+insert into departamento(nombre) values('Santa Ana');-- 3
 insert into departamento(nombre) values('Cabañas');-- 4
 insert into departamento(nombre) values('Chalatenango');-- 5
 insert into departamento(nombre) values('Cuscatlán');-- 6
@@ -515,7 +515,7 @@ create table `persona` (
 	`nombre` varchar(50) not null,
 	`apellido` varchar(50) not null,
 	`dui` char(9) null,
-	`nit` char(10) null,
+	`nit` char(14) null,
 	`fecha_nacimiento` date not null,
 	`genero` varchar(50) not null,
 	`direccion` varchar(200) not null,
@@ -536,15 +536,15 @@ alter table `persona` add constraint `fk_persona_nacionalidad_cod_nacionalidad` 
 alter table `persona` add constraint `fk_persona_municipio_cod_municipio` foreign key (`cod_municipio`) references `municipio`(`codigo`) on delete no action on update cascade;
 -- Inserción de Registros para Persona
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Alicia Guadalupe', 'López', '048501627', '0515103264', '1971-02-25', 'Femenino', 'Direccion del empleado #1', 'Profesora', 158,1,2,'garflax');
+values('Alicia Guadalupe', 'López', '048501627', '05151032645014', '1971-02-25', 'Femenino', 'Direccion del empleado #1', 'Profesora', 158,1,2,'garflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Rodrigo Osvaldo', 'Grijalva López', '048401915', '0515103145', '1993-09-14', 'Masculino', 'Direccion del empleado #2', 'Estudiante', 154,1,4,'girflax');
+values('Rodrigo Osvaldo', 'Grijalva López', '0484019150023', '0515103145', '1993-09-14', 'Masculino', 'Direccion del empleado #2', 'Estudiante', 154,1,4,'girflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Hugo Ernesto', 'Grijalva Pérez', '014501627', '0517103264', '1967-10-09', 'Masculino', 'Direccion del empleado #3', 'Administrativo', 64,3,1,'gorflax');
+values('Hugo Ernesto', 'Grijalva Pérez', '014501627', '05171032641145', '1967-10-09', 'Masculino', 'Direccion del empleado #3', 'Administrativo', 64,3,1,'gorflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Claudia Maribel', 'Flores Valle', '562101627', '6230103264', '1995-10-09', 'Femenino', 'Direccion del empleado #4', 'Secretaria', 74,5,3,'verdugo');
+values('Claudia Maribel', 'Flores Valle', '562101627', '62301032647801', '1995-10-09', 'Femenino', 'Direccion del empleado #4', 'Secretaria', 74,5,3,'verdugo');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Carla Maria', 'Castillo Navarrete', '565171647', '6232102764', '1992-03-17', 'Femenino', 'Direccion del empleado #5', 'Secretaria', 'Inactivo', 62,6,5,'gerflax');
+values('Carla Maria', 'Castillo Navarrete', '565171647', '62321027642304', '1992-03-17', 'Femenino', 'Direccion del empleado #5', 'Secretaria', 'Inactivo', 62,6,5,'gerflax');
 
 create table `solicitud` (
 	`codigo` int auto_increment,
@@ -605,7 +605,7 @@ create table `vehiculo` (
 alter table `vehiculo` add constraint `fk_vehiculo_empleado_cod_conductor` foreign key (`cod_conductor`) references `empleado`(`codigo`) on delete no action on update cascade;
 
 create table `partida` (
-		`numero` int auto_increment,
+		`codigo` int auto_increment,
 		`folio` int not null,
 		`fecha_emision` date not null,
 		`fecha_suceso` date not null,
@@ -615,7 +615,7 @@ create table `partida` (
 		`cod_municipio` int not null,-- Municipio del suceso
 		`cod_informante` int null,
 		`cod_libro` int not null,
-		constraint pk_Partida primary key(`numero`),
+		constraint pk_Partida primary key(`codigo`),
 		constraint unq_Partida_folio_cod_libro unique(folio,cod_libro)
 );
 alter table `partida` add constraint `fk_partida_empleado_cod_empleado` foreign key (`cod_empleado`) references `empleado`(`codigo`) on delete no action on update cascade;
@@ -629,16 +629,16 @@ create table `nacimiento` (
 	`cod_madre` int null,
 	`cod_asentado` int not null,
 	`cod_hospital` int not null,
-	`num_partida` int not null,
+	`cod_partida` int not null,
 	constraint pk_Nacimiento primary key(`codigo`),
 	constraint unq_Nacimiento_cod_asentado unique(cod_asentado),
-	constraint unq_Nacimiento_num_partida unique(num_partida)
+	constraint unq_Nacimiento_cod_partida unique(cod_partida)
 );
 alter table `nacimiento` add constraint `fk_nacimiento_persona_cod_asentado` foreign key (`cod_asentado`) references `persona`(`codigo`) on delete cascade on update cascade;
 alter table `nacimiento` add constraint `fk_nacimiento_persona_cod_padre` foreign key (`cod_padre`) references `persona`(`codigo`) on delete cascade on update cascade;
 alter table `nacimiento` add constraint `fk_nacimiento_persona_cod_madre` foreign key (`cod_madre`) references `persona`(`codigo`) on delete cascade on update cascade;
 alter table `nacimiento` add constraint `fk_nacimiento_hospital_cod_hospital` foreign key (`cod_hospital`) references `hospital`(`codigo`) on delete no action on update cascade;
-alter table `nacimiento` add constraint `fk_nacimiento_partida_num_partida` foreign key (`num_partida`) references `partida`(`numero`) on delete cascade on update cascade;
+alter table `nacimiento` add constraint `fk_nacimiento_partida_cod_partida` foreign key (`cod_partida`) references `partida`(`codigo`) on delete cascade on update cascade;
 
 create table `matrimonio` (
 	`codigo` int auto_increment,
@@ -649,13 +649,13 @@ create table `matrimonio` (
 	`padre_contrayente_m` varchar(50) null,
 	`madre_contrayente_m` varchar(50) null,
 	`cod_reg_patrimonial` int not null,
-	`num_partida` int not null,
+	`cod_partida` int not null,
 	`num_etr_publica` int not null,
 	constraint pk_Matrimonio primary key(`codigo`),
-	constraint unq_Matrimonio_num_partida unique(num_partida)
+	constraint unq_Matrimonio_cod_partida unique(cod_partida)
 );
 alter table `matrimonio` add constraint `fk_matrimonio_regimen_patrimonial_cod_reg_patrimonial` foreign key (`cod_reg_patrimonial`) references `regimen_patrimonial`(`codigo`) on delete no action on update cascade;
-alter table `matrimonio` add constraint `fk_matrimonio_partida_num_partida` foreign key (`num_partida`) references `partida`(`numero`) on delete cascade on update cascade;
+alter table `matrimonio` add constraint `fk_matrimonio_partida_cod_partida` foreign key (`cod_partida`) references `partida`(`codigo`) on delete cascade on update cascade;
 
 create table `defuncion` (
 	`codigo` int auto_increment,
@@ -663,13 +663,13 @@ create table `defuncion` (
 	`familiares` varchar(300) not null,
 	`cod_difunto` int not null,
 	`cod_causa` int not null,
-	`num_partida` int not null,
+	`cod_partida` int not null,
 	constraint pk_Defuncion primary key(`codigo`),
 	constraint unq_Defuncion_cod_difunto unique(cod_difunto),
-	constraint unq_Defuncion_num_partida unique(num_partida)
+	constraint unq_Defuncion_cod_partida unique(cod_partida)
 );
 alter table `defuncion` add constraint `fk_defuncion_persona_cod_difunto` foreign key (`cod_difunto`) references `persona`(`codigo`) on delete cascade on update cascade;
-alter table `defuncion` add constraint `fk_defuncion_partida_num_partida` foreign key (`num_partida`) references `partida`(`numero`) on delete cascade on update cascade;
+alter table `defuncion` add constraint `fk_defuncion_partida_cod_partida` foreign key (`cod_partida`) references `partida`(`codigo`) on delete cascade on update cascade;
 alter table `defuncion` add constraint `fk_defuncion_causa_cod_causa` foreign key (`cod_causa`) references `causa_defuncion`(`codigo`) on delete no action on update cascade;
 
 create table `divorcio` (
@@ -677,14 +677,14 @@ create table `divorcio` (
 	`juez` varchar(50) not null,
 	`fecha_ejecucion` date not null,
 	`detalle` varchar(300) null,
-	`num_partida` int not null,
+	`cod_partida` int not null,
 	`cod_mod_divorcio` int not null,
 	`cod_matrimonio` int not null,
 	constraint pk_Divorcio primary key(`codigo`),
-	constraint unq_Divorcio_num_partida unique(num_partida),
+	constraint unq_Divorcio_cod_partida unique(cod_partida),
 	constraint unq_Divorcio_cod_matrimonio unique(cod_matrimonio)
 );
-alter table `divorcio` add constraint `fk_divorcio_partida_num_partida` foreign key (`num_partida`) references `partida`(`numero`) on delete cascade on update cascade;
+alter table `divorcio` add constraint `fk_divorcio_partida_cod_partida` foreign key (`cod_partida`) references `partida`(`codigo`) on delete cascade on update cascade;
 alter table `divorcio` add constraint `fk_divorcio_matrimonio_cod_matrimonio` foreign key (`cod_matrimonio`) references `matrimonio`(`codigo`) on delete cascade on update cascade;
 alter table `divorcio` add constraint `fk_divorcio_modalidad_divorcio_cod_mod_divorcio` foreign key (`cod_mod_divorcio`) references `modalidad_divorcio`(`codigo`) on delete no action on update cascade;
 

@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "partida".
  *
- * @property integer $numero
+ * @property integer $codigo
  * @property integer $folio
  * @property string $fecha_emision
  * @property string $fecha_suceso
@@ -43,11 +43,11 @@ class Partida extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['folio', 'fecha_emision', 'fecha_suceso', 'hora_suceso', 'lugar_suceso', 'cod_empleado', 'cod_municipio', 'cod_informante', 'cod_libro'], 'required'],
+            [['folio', 'fecha_emision', 'fecha_suceso', 'hora_suceso', 'cod_empleado', 'cod_municipio', 'cod_libro'], 'required'],
             [['folio', 'cod_empleado', 'cod_municipio', 'cod_informante', 'cod_libro'], 'integer'],
             [['fecha_emision', 'fecha_suceso', 'hora_suceso'], 'safe'],
             [['lugar_suceso'], 'string', 'max' => 100],
-            [['folio', 'cod_libro'], 'unique', 'targetAttribute' => ['folio', 'cod_libro'], 'message' => 'The combination of Folio and Cod Libro has already been taken.']
+            [['folio', 'cod_libro'], 'unique', 'targetAttribute' => ['folio', 'cod_libro'], 'message' => 'La combinación de folio y libro debe de ser única'],            
         ];
     }
 
@@ -57,7 +57,7 @@ class Partida extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'numero' => 'Número',
+            'codigo' => 'Código',
             'folio' => 'Folio',
             'fecha_emision' => 'Fecha de Emisión',
             'fecha_suceso' => 'Fecha de Suceso',
@@ -75,7 +75,7 @@ class Partida extends \yii\db\ActiveRecord
      */
     public function getDefuncion()
     {
-        return $this->hasOne(Defuncion::className(), ['num_partida' => 'numero']);
+        return $this->hasOne(Defuncion::className(), ['cod_partida' => 'codigo']);
     }
 
     /**
@@ -83,7 +83,7 @@ class Partida extends \yii\db\ActiveRecord
      */
     public function getDivorcio()
     {
-        return $this->hasOne(Divorcio::className(), ['num_partida' => 'numero']);
+        return $this->hasOne(Divorcio::className(), ['cod_partida' => 'codigo']);
     }
 
     /**
@@ -91,7 +91,7 @@ class Partida extends \yii\db\ActiveRecord
      */
     public function getMatrimonio()
     {
-        return $this->hasOne(Matrimonio::className(), ['num_partida' => 'numero']);
+        return $this->hasOne(Matrimonio::className(), ['cod_partida' => 'codigo']);
     }
 
     /**
@@ -99,7 +99,7 @@ class Partida extends \yii\db\ActiveRecord
      */
     public function getNacimiento()
     {
-        return $this->hasOne(Nacimiento::className(), ['num_partida' => 'numero']);
+        return $this->hasOne(Nacimiento::className(), ['cod_partida' => 'codigo']);
     }
 
     /**

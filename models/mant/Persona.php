@@ -20,6 +20,7 @@ use Yii;
  * @property integer $cod_municipio
  * @property integer $cod_nacionalidad
  * @property integer $cod_estado_civil
+ * @property string $nombre_usuario
  *
  * @property CarnetMinoridad[] $carnetMinoridads
  * @property Defuncion $defuncion
@@ -31,6 +32,8 @@ use Yii;
  * @property EstadoCivil $codEstadoCivil
  * @property Municipio $codMunicipio
  * @property Nacionalidad $codNacionalidad
+ * @property Usuario $nombreUsuario
+ * @property Solicitud[] $solicituds
  */
 class Persona extends \yii\db\ActiveRecord
 {
@@ -51,12 +54,13 @@ class Persona extends \yii\db\ActiveRecord
             [['nombre', 'apellido', 'fecha_nacimiento', 'genero', 'direccion', 'cod_municipio', 'cod_nacionalidad', 'cod_estado_civil'], 'required'],
             [['fecha_nacimiento'], 'safe'],
             [['cod_municipio', 'cod_nacionalidad', 'cod_estado_civil'], 'integer'],
-            [['nombre', 'apellido', 'genero', 'profesion', 'estado'], 'string', 'max' => 50],
+            [['nombre', 'apellido', 'genero', 'profesion', 'estado', 'nombre_usuario'], 'string', 'max' => 50],
             [['dui'], 'string', 'max' => 9],
             [['nit'], 'string', 'max' => 10],
             [['direccion'], 'string', 'max' => 200],
             [['dui'], 'unique'],
-            [['nit'], 'unique']
+            [['nit'], 'unique'],
+            [['nombre_usuario'], 'unique']
         ];
     }
 
@@ -65,7 +69,7 @@ class Persona extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+      return [
             'codigo' => 'Código',
             'nombre' => 'Nombre',
             'apellido' => 'Apellido',
@@ -79,6 +83,7 @@ class Persona extends \yii\db\ActiveRecord
             'cod_municipio' => 'Municipio',
             'cod_nacionalidad' => 'Nacionalidad',
             'cod_estado_civil' => 'Estado Civil',
+            'nombre_usuario' => 'Usuario',
         ];
     }
 
@@ -160,5 +165,21 @@ class Persona extends \yii\db\ActiveRecord
     public function getCodNacionalidad()
     {
         return $this->hasOne(Nacionalidad::className(), ['codigo' => 'cod_nacionalidad']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNombreUsuario()
+    {
+        return $this->hasOne(Usuario::className(), ['nombre' => 'nombre_usuario']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSolicituds()
+    {
+        return $this->hasMany(Solicitud::className(), ['cod_persona' => 'codigo']);
     }
 }

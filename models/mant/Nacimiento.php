@@ -12,10 +12,10 @@ use Yii;
  * @property integer $cod_madre
  * @property integer $cod_asentado
  * @property integer $cod_hospital
- * @property integer $num_partida
+ * @property integer $cod_partida
  *
  * @property Hospital $codHospital
- * @property Partida $numPartida
+ * @property Partida $codPartida
  * @property Persona $codAsentado
  * @property Persona $codMadre
  * @property Persona $codPadre
@@ -33,13 +33,14 @@ class Nacimiento extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
     public function rules()
     {
         return [
-            [['cod_padre', 'cod_madre', 'cod_asentado', 'cod_hospital', 'num_partida'], 'integer'],
-            [['cod_asentado', 'cod_hospital', 'num_partida'], 'required'],
+            [['cod_padre','cod_madre','cod_asentado', 'cod_hospital', 'cod_partida'], 'integer'],
+            [['cod_asentado', 'cod_hospital', 'cod_partida'], 'required'],
             [['cod_asentado'], 'unique'],
-            [['num_partida'], 'unique']
+            [['cod_partida'], 'unique'],
         ];
     }
 
@@ -52,9 +53,9 @@ class Nacimiento extends \yii\db\ActiveRecord
             'codigo' => 'Código',
             'cod_padre' => 'Padre',
             'cod_madre' => 'Madre',
-            'cod_asentado' => 'Menor Asentado',
+            'cod_asentado' => 'Asentado',
             'cod_hospital' => 'Hospital',
-            'num_partida' => 'Número de Partida',
+            'cod_partida' => 'Partida',
         ];
     }
 
@@ -69,9 +70,9 @@ class Nacimiento extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getNumPartida()
+    public function getCodPartida()
     {
-        return $this->hasOne(Partida::className(), ['numero' => 'num_partida']);
+        return $this->hasOne(Partida::className(), ['codigo' => 'cod_partida']);
     }
 
     /**

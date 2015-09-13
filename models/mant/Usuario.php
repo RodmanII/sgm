@@ -13,7 +13,7 @@ use yii\web\IdentityInterface;
  * @property string $salt
  * @property integer $cod_rol
  *
- * @property Empleado $empleado
+ * @property Persona $persona
  * @property Rol $codRol
  */
 class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
@@ -45,7 +45,7 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function attributeLabels()
     {
-        return [
+      return [
             'nombre' => 'Nombre',
             'contrasenya' => 'Contraseña',
             'salt' => 'Salt',
@@ -81,29 +81,29 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
        return static::findOne([
            'password_reset_token' => $token
        ]);
-   }
+    }
 
-   public function getId()
-   {
+    public function getId()
+    {
        return $this->getPrimaryKey();
-   }
+    }
 
-   public function getAuthKey()
-   {
+    public function getAuthKey()
+    {
        return $this->auth_key;
-   }
+    }
 
-   public function validateAuthKey($authKey)
-   {
+    public function validateAuthKey($authKey)
+    {
        return $this->getAuthKey() === $authKey;
-   }
+    }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEmpleado()
+    public function getPersona()
     {
-        return $this->hasOne(Empleado::className(), ['nombre_usuario' => 'nombre']);
+        return $this->hasOne(Persona::className(), ['nombre_usuario' => 'nombre']);
     }
 
     /**
