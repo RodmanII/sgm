@@ -825,3 +825,200 @@ create table `carnet_minoridad` (
 );
 alter table `carnet_minoridad` add constraint `fk_carnet_minoridad_empleado_cod_empleado` foreign key (`cod_empleado`) references `empleado`(`codigo`) on delete no action on update cascade;
 alter table `carnet_minoridad` add constraint `fk_carnet_minoridad_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
+
+-- Tabla de Auditoria
+create table `auditoria` (
+	`codigo` int auto_increment,
+	`fecha` datetime not null,
+	`accion` varchar(50) not null,
+	`tabla` varchar(80) not null,
+	`campos_afectados` text not null,
+	`valor_anterior` text not null,
+	`valor_nuevo` text not null,
+	`nombre_usuario` varchar(50) not null,
+	constraint pk_Auditoria primary key(`codigo`)
+);
+alter table `auditoria` add constraint `fk_auditoria_usuario_nombre_usuario` foreign key (`nombre_usuario`) references `usuario`(`nombre`) on delete no action on update cascade;
+
+-- Tablas de Registro Histórico
+create table `persona_historico` (
+	`codigo` int auto_increment,
+	`nombre` varchar(50) not null,
+	`apellido` varchar(50) not null,
+	`dui` char(9) null,
+	`nit` char(14) null,
+	`fecha_nacimiento` date not null,
+	`genero` varchar(50) not null,
+	`direccion` varchar(200) not null,
+	`profesion` varchar(50) null,
+	`estado` varchar(50) not null default 'Activo',
+	`cod_municipio` int not null,
+	`cod_nacionalidad` int not null,
+	`cod_estado_civil` int not null,
+	`nombre_usuario` varchar(50) null,
+	constraint pk_PersonaHistorico primary key(`codigo`),
+	constraint unq_PersonaHistorico_dui unique(dui),
+	constraint unq_PersonaHistorico_nit unique(nit),
+	constraint unq_PersonaHistorico_nombre_usuario unique(nombre_usuario)
+);
+alter table `persona_historico` add constraint `fk_persona_his_usuario_nombre_usuario` foreign key (`nombre_usuario`) references `usuario`(`nombre`) on delete no action on update cascade;
+alter table `persona_historico` add constraint `fk_persona_his_estado_civil_cod_estado_civil` foreign key (`cod_estado_civil`) references `estado_civil`(`codigo`) on delete no action on update cascade;
+alter table `persona_historico` add constraint `fk_persona_his_nacionalidad_cod_nacionalidad` foreign key (`cod_nacionalidad`) references `nacionalidad`(`codigo`) on delete no action on update cascade;
+alter table `persona_historico` add constraint `fk_persona_his_municipio_cod_municipio` foreign key (`cod_municipio`) references `municipio`(`codigo`) on delete no action on update cascade;
+
+create table `solicitud_historico` (
+	`codigo` int auto_increment,
+	`fecha` date not null,
+	`tipo_partida` varchar(50) not null,
+	`nombre_inscrito` varchar(100) not null,
+	`fecha_suceso` date not null,
+	`nombre_padre` varchar(100) null,
+	`nombre_madre` varchar(100) null,
+	`estado` varchar(50) not null,
+	`cod_persona` int not null,
+	constraint pk_SolicitudHistorico primary key(`codigo`)
+);
+alter table `solicitud_historico` add constraint `fk_solicitud_his_persona_his_cod_persona` foreign key (`cod_persona`) references `persona_historico`(`codigo`) on delete cascade on update cascade;
+
+create table `informante_historico` (
+	`codigo` int auto_increment,
+	`nombre` varchar(50) not null,
+	`tipo_documento` varchar(50) not null,
+	`numero_documento` varchar(100) not null,
+	constraint pk_InformanteHistorico primary key(`codigo`),
+	constraint unq_InformanteHistorico_nombre unique(nombre),
+	constraint unq_InformanteHistorico_numero_documento unique(numero_documento)
+);
+
+create table `partida_historico` (
+		`codigo` int auto_increment,
+		`folio` int not null,
+		`fecha_emision` date not null,
+		`fecha_suceso` date not null,
+		`hora_suceso` time not null,
+		`lugar_suceso` varchar(100) null,
+		`cod_empleado` int not null,
+		`cod_municipio` int not null,-- Municipio del suceso
+		`cod_informante` int null,
+		`cod_libro` int not null,
+		constraint pk_PartidaHistorico primary key(`codigo`),
+		constraint unq_PartidaHistorico_folio_cod_libro unique(folio,cod_libro)
+);
+alter table `partida_historico` add constraint `fk_partida_his_empleado_cod_empleado` foreign key (`cod_empleado`) references `empleado`(`codigo`) on delete no action on update cascade;
+alter table `partida_historico` add constraint `fk_partida_his_municipio_cod_municipio` foreign key (`cod_municipio`) references `municipio`(`codigo`) on delete no action on update cascade;
+alter table `partida_historico` add constraint `fk_partida_his_informante_his_cod_informante` foreign key (`cod_informante`) references `informante_historico`(`codigo`) on delete no action on update cascade;
+alter table `partida_historico` add constraint `fk_partida_his_libro_cod_libro` foreign key (`cod_libro`) references `libro`(`codigo`) on delete no action on update cascade;
+
+create table `matrimonio_historico` (
+	`codigo` int auto_increment,
+	`notario` varchar(50) not null,
+	`testigos` varchar(300) not null,
+	`padre_contrayente_h` varchar(50) null,
+	`madre_contrayente_h` varchar(50) null,
+	`padre_contrayente_m` varchar(50) null,
+	`madre_contrayente_m` varchar(50) null,
+	`cod_reg_patrimonial` int not null,
+	`cod_partida` int not null,
+	`num_etr_publica` int not null,
+	constraint pk_MatrimonioHistorico primary key(`codigo`),
+	constraint unq_MatrimonioHistorico_cod_partida unique(cod_partida)
+);
+alter table `matrimonio_historico` add constraint `fk_matrimonio_his_regimen_patrimonial_cod_reg_patrimonial` foreign key (`cod_reg_patrimonial`) references `regimen_patrimonial`(`codigo`) on delete no action on update cascade;
+alter table `matrimonio_historico` add constraint `fk_matrimonio_his_partida_his_cod_partida` foreign key (`cod_partida`) references `partida_historico`(`codigo`) on delete cascade on update cascade;
+
+create table `matrimonio_persona_historico` (
+	`codigo` int auto_increment,
+	`cod_persona` int not null,
+	`cod_matrimonio` int not null,
+	constraint pk_MatrimonioPersonaHistorico primary key(`codigo`),
+	constraint unq_MatrimonioPersonaHistorico_cod_persona_cod_matrimonio unique(cod_persona,cod_matrimonio)
+);
+alter table `matrimonio_persona_historico` add constraint `fk_matrimonio_persona_his_persona_his_cod_persona` foreign key (`cod_persona`) references `persona_historico`(`codigo`) on delete cascade on update cascade;
+alter table `matrimonio_persona_historico` add constraint `fk_matrimonio_persona_his_matrimonio_his_cod_matrimonio` foreign key (`cod_matrimonio`) references `matrimonio_historico`(`codigo`) on delete cascade on update cascade;
+
+create table `nacimiento_historico` (
+	`codigo` int auto_increment,
+	`cod_padre` int null,
+	`cod_madre` int null,
+	`cod_asentado` int not null,
+	`cod_hospital` int not null,
+	`cod_partida` int not null,
+	constraint pk_NacimientoHistorico primary key(`codigo`),
+	constraint unq_NacimientoHistorico_cod_asentado unique(cod_asentado),
+	constraint unq_NacimientoHistorico_cod_partida unique(cod_partida)
+);
+alter table `nacimiento_historico` add constraint `fk_nacimiento_his_persona_his_cod_asentado` foreign key (`cod_asentado`) references `persona_historico`(`codigo`) on delete cascade on update cascade;
+alter table `nacimiento_historico` add constraint `fk_nacimiento_his_persona_his_cod_padre` foreign key (`cod_padre`) references `persona_historico`(`codigo`) on delete cascade on update cascade;
+alter table `nacimiento_historico` add constraint `fk_nacimiento_his_persona_his_cod_madre` foreign key (`cod_madre`) references `persona_historico`(`codigo`) on delete cascade on update cascade;
+alter table `nacimiento_historico` add constraint `fk_nacimiento_his_hospital_cod_hospital` foreign key (`cod_hospital`) references `hospital`(`codigo`) on delete no action on update cascade;
+alter table `nacimiento_historico` add constraint `fk_nacimiento_his_partida_his_cod_partida` foreign key (`cod_partida`) references `partida_historico`(`codigo`) on delete cascade on update cascade;
+
+create table `defuncion_historico` (
+	`codigo` int auto_increment,
+	`determino_causa` varchar(100) not null,
+	`familiares` varchar(300) not null,
+	`cod_difunto` int not null,
+	`cod_causa` int not null,
+	`cod_partida` int not null,
+	constraint pk_DefuncionHistorico primary key(`codigo`),
+	constraint unq_DefuncionHistorico_cod_difunto unique(cod_difunto),
+	constraint unq_DefuncionHistorico_cod_partida unique(cod_partida)
+);
+alter table `defuncion_historico` add constraint `fk_defuncion_his_persona_his_cod_difunto` foreign key (`cod_difunto`) references `persona_historico`(`codigo`) on delete cascade on update cascade;
+alter table `defuncion_historico` add constraint `fk_defuncion_his_partida_his_cod_partida` foreign key (`cod_partida`) references `partida_historico`(`codigo`) on delete cascade on update cascade;
+alter table `defuncion_historico` add constraint `fk_defuncion_his_causa_cod_causa` foreign key (`cod_causa`) references `causa_defuncion`(`codigo`) on delete no action on update cascade;
+
+create table `divorcio_historico` (
+	`codigo` int auto_increment,
+	`juez` varchar(50) not null,
+	`fecha_ejecucion` date not null,
+	`detalle` varchar(300) null,
+	`cod_partida` int not null,
+	`cod_mod_divorcio` int not null,
+	`cod_matrimonio` int not null,
+	constraint pk_DivorcioHistorico primary key(`codigo`),
+	constraint unq_DivorcioHistorico_cod_partida unique(cod_partida),
+	constraint unq_DivorcioHistorico_cod_matrimonio unique(cod_matrimonio)
+);
+alter table `divorcio_historico` add constraint `fk_divorcio_his_partida_his_cod_partida` foreign key (`cod_partida`) references `partida_historico`(`codigo`) on delete cascade on update cascade;
+alter table `divorcio_historico` add constraint `fk_divorcio_his_matrimonio_his_cod_matrimonio` foreign key (`cod_matrimonio`) references `matrimonio_historico`(`codigo`) on delete cascade on update cascade;
+alter table `divorcio_historico` add constraint `fk_divorcio_his_modalidad_divorcio_cod_mod_divorcio` foreign key (`cod_mod_divorcio`) references `modalidad_divorcio`(`codigo`) on delete no action on update cascade;
+
+create table `recarga_historico` (
+	`codigo` int auto_increment,
+	`fecha` date not null,
+	`hora` time not null,
+	`galones_suministrados` decimal(8,2) not null,
+	`valor` decimal(12,2) not null,
+	`num_vehiculo` int not null,
+	constraint pk_RecargaHistorico primary key(`codigo`)
+);
+alter table `recarga_historico` add constraint `fk_recarga_his_vehiculo_num_vehiculo` foreign key (`num_vehiculo`) references `vehiculo`(`numero`) on delete cascade on update cascade;
+
+create table `recoleccion_historico` (
+	`codigo` int auto_increment,
+	`fecha` date not null,
+	`hora_salida` time not null,
+	`hora_inicio_ruta` time not null,
+	`hora_regreso` time not null,
+	`kilometraje_entrada` int not null,
+	`kilometraje_salida` int not null,
+	`kilometraje_recorrido` int not null,
+	`observaciones` varchar(300) null,
+	`total_recoleccion` decimal(12,2) not null,
+	`num_vehiculo` int not null,
+	constraint pk_RecoleccionHistorico primary key(`codigo`)
+);
+alter table `recoleccion_historico` add constraint `fk_recoleccion_his_vehiculo_num_vehiculo` foreign key (`num_vehiculo`) references `vehiculo`(`numero`) on delete cascade on update cascade;
+
+create table `recoleccion_ruta_historico` (
+	`codigo` int auto_increment,
+	`estado_ruta` varchar(50) not null,
+	`detalle` varchar(300) null,
+	`cod_ruta` int not null,
+	`cod_recoleccion` int not null,
+	constraint pk_RecoleccionRutaHistorico primary key(`codigo`),
+	constraint unq_RecoleccionRutaHistorico_cod_ruta_cod_recoleccion unique(cod_ruta,cod_recoleccion)
+);
+alter table `recoleccion_ruta_historico` add constraint `fk_recoleccion_ruta_his_ruta_cod_ruta` foreign key (`cod_ruta`) references `ruta`(`codigo`) on delete cascade on update cascade;
+alter table `recoleccion_ruta_historico` add constraint `fk_recoleccion_ruta_his_recoleccion_his_cod_recoleccion` foreign key (`cod_recoleccion`) references `recoleccion_historico`(`codigo`) on delete cascade on update cascade;
