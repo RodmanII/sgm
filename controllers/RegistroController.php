@@ -14,6 +14,7 @@ use app\models\mant\Matrimonio;
 use app\models\mant\MatrimonioPersona;
 use app\models\mant\Partida;
 use app\models\mant\Divorcio;
+use mPDF;
 
 class RegistroController extends Controller
 {
@@ -74,6 +75,7 @@ class RegistroController extends Controller
       $model = new Nacimiento();
       $partidaModelo = new Partida();
       if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post()) && Model::validateMultiple([$model, $partidaModelo])) {
+        if($model->cod_padre == null && $model->cod_madre == null)
          if ($model->validate()) {
              // form inputs are valid, do something here
              return;
@@ -81,6 +83,27 @@ class RegistroController extends Controller
       }
 
       return $this->render('rnacimiento', ['model'=> $model,'partida'=>$partidaModelo]);
+    }
+
+    public function actionGenerar($tipo,$parametros){
+      switch ($tipo) {
+        case 'nacimiento':
+          # code...
+          break;
+        case 'defuncion':
+          break;
+        case 'matrimonio':
+          break;
+        case 'divorcio':
+          break;
+        default:
+          # code...
+          break;
+      }
+      $mpdf = new mPDF;
+      $mpdf->WriteHTML('<p>Hallo World</p>');
+      $mpdf->Output();
+      exit;
     }
 
     public function actionDefuncion()

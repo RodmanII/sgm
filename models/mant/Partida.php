@@ -43,11 +43,11 @@ class Partida extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['folio', 'fecha_emision', 'fecha_suceso', 'hora_suceso', 'cod_empleado', 'cod_municipio', 'cod_libro'], 'required'],
+            [['folio', 'fecha_emision', 'fecha_suceso', 'hora_suceso', 'cod_empleado', 'cod_municipio', 'cod_libro', 'lugar_suceso'], 'required', 'message'=>'Este campo no puede estar vacio'],
             [['folio', 'cod_empleado', 'cod_municipio', 'cod_informante', 'cod_libro'], 'integer'],
             [['fecha_emision', 'fecha_suceso', 'hora_suceso'], 'safe'],
             [['lugar_suceso'], 'string', 'max' => 100],
-            [['folio', 'cod_libro'], 'unique', 'targetAttribute' => ['folio', 'cod_libro'], 'message' => 'La combinación de folio y libro debe de ser única'],            
+            [['folio', 'cod_libro'], 'unique', 'targetAttribute' => ['folio', 'cod_libro'], 'message' => 'La combinación de folio y libro debe de ser única'],
         ];
     }
 

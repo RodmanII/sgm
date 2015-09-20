@@ -47,7 +47,7 @@ class GeneralController extends Controller
       ];
     }
 
-    public function actionListados($id){
+    public function actionMunicipios($id){
       $municipios = Municipio::find()->where(['cod_departamento' => $id])->all();
 
       if(count($municipios)>0){

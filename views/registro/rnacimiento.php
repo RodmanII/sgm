@@ -14,6 +14,7 @@ use app\models\mant\Hospital;
 use app\models\mant\Libro;
 use app\models\mant\Nacimiento;
 use yii\db\Query;
+use yii\web\View;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\mant\Nacimiento */
@@ -22,7 +23,7 @@ $this->title = 'Inscripción de Nacimiento';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rmatrimonio">
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id'=>'inacimiento']); ?>
     <?php
       $dbLibro = Libro::find()->where('tipo = "Nacimiento"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
       $dbNacimiento = Nacimiento::find()->orderBy(['codigo'=>SORT_DESC])->limit(1)->one();
@@ -32,13 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
         $num_partida = 1;
       }
       $partida->cod_libro = $dbLibro->codigo;
-      $partida->folio = $dbLibro->folio_actual;
+      $partida->folio = $dbLibro->folio_actual + 1;
     ?>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
         <div class="form-group">
           <?= Html::label('Libro', 'num_libro'); ?>
-          <?= Html::textInput('nlibro',$dbLibro->numero,array('id'=>'num_libro','class'=>'form-control','readonly'=>'readonly')); ?>
+          <?= Html::textInput('nlibro',$dbLibro->numero,array('id'=>'partida-num_libro', 'class'=>'form-control','readonly'=>'readonly')); ?>
         </div>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
@@ -52,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
         <?php
           $query = new Query;
-          $query	->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
+          $query->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
             ->from('persona p')->leftJoin('nacimiento n', 'p.codigo = n.cod_asentado')
             ->where('p.estado = "Activo"')->orderBy(['p.nombre'=>SORT_ASC]);
           $command = $query->createCommand();
@@ -63,11 +64,8 @@ $this->params['breadcrumbs'][] = $this->title;
           <?= Html::textInput('fasentado','',array('id'=>'nrwr1','class'=>'form-control')); ?>
           <span id="matches1" style="display:none"></span>
         </div>
-        <button type="submit" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" id="edit-asentado">
           <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-refresh"></i>
         </button>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
@@ -80,11 +78,8 @@ $this->params['breadcrumbs'][] = $this->title;
           <?= Html::textInput('fmadre','',array('id'=>'nrwr','class'=>'form-control')); ?>
           <span id="matches" style="display:none"></span>
         </div>
-        <button type="submit" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" id="edit-madre">
           <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-refresh"></i>
         </button>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
@@ -97,11 +92,8 @@ $this->params['breadcrumbs'][] = $this->title;
           <?= Html::textInput('fpadre','',array('id'=>'nrwr2','class'=>'form-control')); ?>
           <span id="matches2" style="display:none"></span>
         </div>
-        <button type="submit" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" id="edit-padre">
           <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-refresh"></i>
         </button>
       </span>
     </div>
@@ -112,11 +104,8 @@ $this->params['breadcrumbs'][] = $this->title;
           <?= Html::textInput('finformante','',array('id'=>'nrwr3','class'=>'form-control')); ?>
           <span id="matches3" style="display:none"></span>
         </div>
-        <button type="submit" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" id="edit-informante">
           <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-refresh"></i>
         </button>
       </span>
     </div>
@@ -125,14 +114,14 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="form-group">
           <?= Html::label('Departamento', 'depto'); ?>
           <?= Html::dropDownList('deptos',null, ArrayHelper::map(Departamento::find()->all(), 'codigo', 'nombre'), ['id'=>'depto','class'=>'form-control','onchange'=>'
-                $.post( "'.Yii::$app->urlManager->createUrl('general/listados?id=').'"+$(this).val(), function( data ) {
-                  $( "select#cod_municipio" ).html( data );
+                $.post( "'.Yii::$app->urlManager->createUrl('general/municipios?id=').'"+$(this).val(), function( data ) {
+                  $( "select#partida-cod_municipio" ).html( data );
                 });
             ']) ?>
         </div>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->where('cod_departamento = 1')->all(), 'codigo', 'nombre'), ['id'=>'cod_municipio']) ?>
+        <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->where('cod_departamento = 1')->all(), 'codigo', 'nombre')) ?>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida, 'lugar_suceso')->textInput(array('placeholder'=>'Especifique el lugar'))->label('Lugar de Nacimiento') ?>
@@ -140,7 +129,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'fecha_emision')->textInput(array('readOnly'=>true,'value'=>date('d/m/Y'),'id'=>'femision')) ?>
+        <?= $form->field($partida, 'fecha_emision')->textInput(array('readOnly'=>true,'value'=>date('d/m/Y'))) ?>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida,'fecha_suceso')->widget(DatePicker::className(),[
@@ -149,7 +138,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'options'=>['placeholder'=>'Especifique la fecha'],
                     'pluginOptions'=>['format'=>'dd/mm/yyyy','autoclose'=>true],
                     'pluginEvents'=>['hide'=>'function(e) {
-                      from = $("#femision").val().split("/");
+                      from = $("#partida-fecha_emision").val().split("/");
                       fe = new Date(from[2], from[1] - 1, from[0]);
                       if(e.date > fe){
                         alert("La fecha de nacimiento no puede ser posterior a la fecha de emisión de la partida");
@@ -184,18 +173,17 @@ $this->params['breadcrumbs'][] = $this->title;
           <?= Html::textInput('fhospital','',array('id'=>'nrwr4','class'=>'form-control')); ?>
           <span id="matches4" style="display:none"></span>
         </div>
-        <button type="submit" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" id="edit-hospital">
           <i class="glyphicon glyphicon-edit"></i>
-        </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="glyphicon glyphicon-refresh"></i>
         </button>
       </span>
     </div>
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
-        <?= Html::submitButton('Vista Previa', ['class' => 'btn btn-primary']) ?>
+        <?= Html::button('Vista Previa', ['class' => 'btn btn-primary', 'id'=>'generar']) ?>
     </div>
     <?php ActiveForm::end(); ?>
-
+    <?php
+      $this->registerJsFile(Yii::$app->homeUrl."js/fnacimiento.js", ['depends' => [\yii\web\JqueryAsset::className()]]);
+    ?>
 </div><!-- rnacimiento -->
