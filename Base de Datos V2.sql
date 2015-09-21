@@ -536,19 +536,19 @@ alter table `persona` add constraint `fk_persona_nacionalidad_cod_nacionalidad` 
 alter table `persona` add constraint `fk_persona_municipio_cod_municipio` foreign key (`cod_municipio`) references `municipio`(`codigo`) on delete no action on update cascade;
 -- Inserción de Registros para Persona
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Alicia Guadalupe', 'López', '048501627', '05151032645014', '1971-02-25', 'Femenino', 'Direccion del empleado #1', 'Profesora', 158,1,2,'garflax');
+values('Alicia Guadalupe', 'López', '048501627', '05151032645014', '1971-02-25', 'Femenino', 'Direccion del empleado #1', 'Profesora', 158, 1, 2, 'garflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Rodrigo Osvaldo', 'Grijalva López', '0484019150023', '0515103145', '1993-09-14', 'Masculino', 'Direccion del empleado #2', 'Estudiante', 154,1,4,'girflax');
+values('Rodrigo Osvaldo', 'Grijalva López', '0484019150023', '0515103145', '1993-09-14', 'Masculino', 'Direccion del empleado #2', 'Estudiante', 154, 1, 4, 'girflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Hugo Ernesto', 'Grijalva Pérez', '014501627', '05171032641145', '1967-10-09', 'Masculino', 'Direccion del empleado #3', 'Administrativo', 64,3,1,'gorflax');
+values('Hugo Ernesto', 'Grijalva Pérez', '014501627', '05171032641145', '1967-10-09', 'Masculino', 'Direccion del empleado #3', 'Administrativo', 64, 3, 1, 'gorflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Claudia Maribel', 'Flores Valle', '562101627', '62301032647801', '1995-10-09', 'Femenino', 'Direccion del empleado #4', 'Secretaria', 74,5,3,'verdugo');
+values('Claudia Maribel', 'Flores Valle', '562101627', '62301032647801', '1995-10-09', 'Femenino', 'Direccion del empleado #4', 'Secretaria', 74, 5, 3, 'verdugo');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Carla Maria', 'Castillo Navarrete', '565171647', '62321027642304', '1992-03-17', 'Femenino', 'Direccion del empleado #5', 'Secretaria', 'Inactivo', 62,6,5,'gerflax');
+values('Carla Maria', 'Castillo Navarrete', '565171647', '62321027642304', '1992-03-17', 'Femenino', 'Direccion del empleado #5', 'Secretaria', 'Inactivo', 62, 6, 5, 'gerflax');
 
 create table `solicitud` (
 	`codigo` int auto_increment,
-	`fecha` date not null,
+	`fecha_emitida` date not null,
 	`tipo_partida` varchar(50) not null,
 	`nombre_inscrito` varchar(100) not null,
 	`fecha_suceso` date not null,
@@ -556,9 +556,13 @@ create table `solicitud` (
 	`nombre_madre` varchar(100) null,
 	`estado` varchar(50) not null,
 	`cod_persona` int not null,
+	`cod_empleado` int null,
+	`fecha_procesada` date null,
+	`fecha_entregada` date null,
 	constraint pk_Solicitud primary key(`codigo`)
 );
 alter table `solicitud` add constraint `fk_solicitud_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
+alter table `solicitud` add constraint `fk_solicitud_empleado_cod_empleado` foreign key (`cod_empleado`) references `empleado`(`codigo`) on delete cascade on update cascade;
 -- Inserción de Registros para Solicitud
 insert into solicitud(fecha,tipo_partida,nombre_inscrito,fecha_suceso,nombre_padre,nombre_madre,estado,cod_persona)
 values('2015-04-21','Nacimiento','Juan Ernesto Pérez Cruz','1986-07-11','Carlos Augusto Pérez Cruz','Alicia Magdalena Campos de Pérez','Pendiente',1);
@@ -868,7 +872,7 @@ alter table `persona_historico` add constraint `fk_persona_his_municipio_cod_mun
 
 create table `solicitud_historico` (
 	`codigo` int auto_increment,
-	`fecha` date not null,
+	`fecha_emitida` date not null,
 	`tipo_partida` varchar(50) not null,
 	`nombre_inscrito` varchar(100) not null,
 	`fecha_suceso` date not null,
@@ -876,9 +880,13 @@ create table `solicitud_historico` (
 	`nombre_madre` varchar(100) null,
 	`estado` varchar(50) not null,
 	`cod_persona` int not null,
+	`cod_empleado` int null,
+	`fecha_procesada` date null,
+	`fecha_entregada` date null,
 	constraint pk_SolicitudHistorico primary key(`codigo`)
 );
 alter table `solicitud_historico` add constraint `fk_solicitud_his_persona_his_cod_persona` foreign key (`cod_persona`) references `persona_historico`(`codigo`) on delete cascade on update cascade;
+alter table `solicitud_historico` add constraint `fk_solicitud_his_empleado_cod_empleado` foreign key (`cod_empleado`) references `empleado`(`codigo`) on delete cascade on update cascade;
 
 create table `informante_historico` (
 	`codigo` int auto_increment,
