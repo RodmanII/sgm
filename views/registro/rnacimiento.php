@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
         <div class="form-group">
           <?= Html::label('Libro', 'num_libro'); ?>
-          <?= Html::textInput('nlibro',$dbLibro->numero,array('id'=>'partida-num_libro', 'class'=>'form-control','readonly'=>'readonly')); ?>
+          <?= Html::textInput('Partida[num_libro]',$dbLibro->numero,array('id'=>'partida-num_libro', 'class'=>'form-control','readonly'=>'readonly')); ?>
         </div>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
@@ -67,6 +67,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <button type="button" class="btn btn-primary" id="edit-asentado">
           <i class="glyphicon glyphicon-edit"></i>
         </button>
+        <button type="button" class="btn btn-primary" id="reload-asentado">
+          <i class="glyphicon glyphicon-refresh"></i>
+        </button>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
         <?= $form->field($model, 'cod_madre')->dropDownList(ArrayHelper::map(Persona::find()->where('genero = "Femenino"')->andWhere('estado = "Activo"')->orderBy(['nombre'=>SORT_ASC])->all(), 'codigo',
@@ -80,6 +83,9 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <button type="button" class="btn btn-primary" id="edit-madre">
           <i class="glyphicon glyphicon-edit"></i>
+        </button>
+        <button type="button" class="btn btn-primary" id="reload-madre">
+          <i class="glyphicon glyphicon-refresh"></i>
         </button>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
@@ -95,6 +101,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <button type="button" class="btn btn-primary" id="edit-padre">
           <i class="glyphicon glyphicon-edit"></i>
         </button>
+        <button type="button" class="btn btn-primary" id="reload-padre">
+          <i class="glyphicon glyphicon-refresh"></i>
+        </button>
       </span>
     </div>
     <div class="cflex">
@@ -107,6 +116,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <button type="button" class="btn btn-primary" id="edit-informante">
           <i class="glyphicon glyphicon-edit"></i>
         </button>
+        <button type="button" class="btn btn-primary" id="reload-informante">
+          <i class="glyphicon glyphicon-refresh"></i>
+        </button>
+      </span>
+      <span style="order: 2; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'rel_informante')->dropDownList(['Padre'=>'Padre','Madre'=>'Madre','Tio'=>'Tio','Tia'=>'Tia']); ?>
       </span>
     </div>
     <div class="cflex">
@@ -175,6 +190,9 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <button type="button" class="btn btn-primary" id="edit-hospital">
           <i class="glyphicon glyphicon-edit"></i>
+        </button>
+        <button type="button" class="btn btn-primary" id="reload-hospital">
+          <i class="glyphicon glyphicon-refresh"></i>
         </button>
       </span>
     </div>

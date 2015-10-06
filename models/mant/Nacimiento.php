@@ -13,6 +13,7 @@ use Yii;
  * @property integer $cod_asentado
  * @property integer $cod_hospital
  * @property integer $cod_partida
+ * @property string $rel_informante
  *
  * @property Hospital $codHospital
  * @property Partida $codPartida
@@ -33,14 +34,14 @@ class Nacimiento extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-
     public function rules()
     {
         return [
-            [['cod_padre','cod_madre','cod_asentado', 'cod_hospital', 'cod_partida'], 'integer'],
-            [['cod_asentado', 'cod_hospital', 'cod_partida'], 'required'],
+            [['cod_padre', 'cod_madre', 'cod_asentado', 'cod_hospital', 'cod_partida'], 'integer'],
+            [['cod_asentado', 'cod_hospital', 'cod_partida', 'rel_informante'], 'required'],
+            [['rel_informante'], 'string', 'max' => 50],
             [['cod_asentado'], 'unique'],
-            [['cod_partida'], 'unique'],
+            [['cod_partida'], 'unique']
         ];
     }
 
@@ -50,12 +51,13 @@ class Nacimiento extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'codigo' => 'Código',
+            'codigo' => 'Número',
             'cod_padre' => 'Padre',
             'cod_madre' => 'Madre',
             'cod_asentado' => 'Asentado',
             'cod_hospital' => 'Hospital',
             'cod_partida' => 'Partida',
+            'rel_informante' => 'Relación del Informante',
         ];
     }
 

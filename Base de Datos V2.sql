@@ -48,6 +48,15 @@ insert into departamento(nombre) values('San Miguel');-- 12
 insert into departamento(nombre) values('Usulután');-- 13
 insert into departamento(nombre) values('La Unión');-- 14
 
+create table `tipo_doc_identidad` (
+	`codigo` int auto_increment,
+	`nombre` varchar(50) not null,
+	constraint pk_TipoDocIdenti primary key(`codigo`),
+	constraint unq_TipoDocIdenti_nombre unique(nombre)
+);
+insert into tipo_doc_identidad(nombre) values('Carnet de Identificación Personal');
+insert into tipo_doc_identidad(nombre) values('Cédula de Identidad');
+
 create table `municipio` (
 	`codigo` int auto_increment,
 	`nombre` varchar(50) not null,
@@ -55,6 +64,7 @@ create table `municipio` (
 	constraint pk_Municipio primary key(`codigo`),
 	constraint unq_Municipio_nombre_cod_departamento unique(nombre,cod_departamento)
 );
+
 alter table `municipio` add constraint `fk_municipio_departamento_cod_departamento` foreign key (`cod_departamento`) references `departamento`(`codigo`) on delete cascade on update cascade;
 -- Inserción de Registros para Ahuachapán
 insert into municipio(nombre,cod_departamento) values('Ahuachapán',1);
@@ -404,6 +414,7 @@ create table `informante` (
 	`nombre` varchar(50) not null,
 	`tipo_documento` varchar(50) not null,
 	`numero_documento` varchar(100) not null,
+	`genero` varchar(50) not null,
 	constraint pk_Informante primary key(`codigo`),
 	constraint unq_Informante_nombre unique(nombre),
 	constraint unq_Informante_numero_documento unique(numero_documento)
@@ -510,12 +521,14 @@ insert into usuario(nombre,contrasenya,salt,cod_rol) values('gerflax','8436f1452
 insert into usuario(nombre,contrasenya,salt,cod_rol) values ('rodrigo','50116cb87536c9c9a414f13093fc3a7073d05bb22e68b5249546729d8caea87479ea11ba79cb9c7c5d9f6ca27d21d442a35bbce1dc657b36510b873b2c2e2890','KCma6npWyLQ',4);
 insert into usuario(nombre,contrasenya,salt,cod_rol) values ('verdugo','cdea91f725d0023cecf95eb2dc352bb09ff174bea76ff9d94e3c71e1708a2501419576172f8e50c96de26f8738e618a7e3feab3981db921cc1df26c8c96cd053','YoSpMe9bwFk',4);
 
+
 create table `persona` (
 	`codigo` int auto_increment,
 	`nombre` varchar(50) not null,
 	`apellido` varchar(50) not null,
 	`dui` char(9) null,
 	`nit` char(14) null,
+	`otro_doc` varchar(80) null,
 	`fecha_nacimiento` date not null,
 	`genero` varchar(50) not null,
 	`direccion` varchar(200) not null,
@@ -634,6 +647,7 @@ create table `nacimiento` (
 	`cod_asentado` int not null,
 	`cod_hospital` int not null,
 	`cod_partida` int not null,
+	`rel_informante` varchar(50) not null,
 	constraint pk_Nacimiento primary key(`codigo`),
 	constraint unq_Nacimiento_cod_asentado unique(cod_asentado),
 	constraint unq_Nacimiento_cod_partida unique(cod_partida)
@@ -696,13 +710,13 @@ create table `recoleccion` (
 	`codigo` int auto_increment,
 	`fecha` date not null,
 	`hora_salida` time not null,
-	`hora_inicio_ruta` time not null,
-	`hora_regreso` time not null,
-	`kilometraje_entrada` int not null,
+	`hora_inicio_ruta` time null,
+	`hora_regreso` time null,
+	`kilometraje_entrada` int null,
 	`kilometraje_salida` int not null,
-	`kilometraje_recorrido` int not null,
+	`kilometraje_recorrido` int null,
 	`observaciones` varchar(300) null,
-	`total_recoleccion` decimal(12,2) not null,
+	`total_recoleccion` decimal(12,2) null,
 	`num_vehiculo` int not null,
 	constraint pk_Recoleccion primary key(`codigo`)
 );
@@ -893,6 +907,7 @@ create table `informante_historico` (
 	`nombre` varchar(50) not null,
 	`tipo_documento` varchar(50) not null,
 	`numero_documento` varchar(100) not null,
+	`genero` varchar(50) not null,
 	constraint pk_InformanteHistorico primary key(`codigo`),
 	constraint unq_InformanteHistorico_nombre unique(nombre),
 	constraint unq_InformanteHistorico_numero_documento unique(numero_documento)
@@ -951,6 +966,7 @@ create table `nacimiento_historico` (
 	`cod_asentado` int not null,
 	`cod_hospital` int not null,
 	`cod_partida` int not null,
+	`rel_informante` varchar(50) not null,
 	constraint pk_NacimientoHistorico primary key(`codigo`),
 	constraint unq_NacimientoHistorico_cod_asentado unique(cod_asentado),
 	constraint unq_NacimientoHistorico_cod_partida unique(cod_partida)

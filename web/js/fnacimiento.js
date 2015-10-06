@@ -163,16 +163,49 @@
     var longdn = dnacimiento.length, longdp = dpartida.length;
     var cadena = "&parametros=";
     jQuery.each(dnacimiento, function(i, param){
-      //"+param.name.slice(param.name.indexOf("[")+1, -1)+"
-      cadena+=param.name.slice(param.name.indexOf("[")+1, -1)+":"+param.value+",";
+      cadena+=param.name.slice(param.name.indexOf("[")+1, -1)+"*"+param.value+";";
     });
     jQuery.each(dpartida, function(i, param){
-      cadena+=param.name.slice(param.name.indexOf("[")+1, -1)+":"+param.value;
+      cadena+=param.name.slice(param.name.indexOf("[")+1, -1)+"*"+param.value;
       if(i<longdp-1){
-        cadena+=",";
+        cadena+=";";
       }
     });
     window.open('generar?tipo=nacimiento'+cadena);
   });
 
+  $('#reload-asentado').click(function(){
+    location.reload();
+    window.sessionStorage.setItem('recargado',true);
+    window.sessionStorage.setItem('destino','nrwr1');
+  });
+
+  $('#reload-madre').click(function(){
+    location.reload();
+    window.sessionStorage.setItem('recargado',true);
+    window.sessionStorage.setItem('destino','nrwr');
+  });
+
+  $('#reload-padre').click(function(){
+    location.reload();
+    window.sessionStorage.setItem('recargado',true);
+    window.sessionStorage.setItem('destino','nrwr2');
+  });
+
+  $('#reload-informante').click(function(){
+    location.reload();
+    window.sessionStorage.setItem('recargado',true);
+    window.sessionStorage.setItem('destino','nrwr3');
+  });
+
+  $('#reload-hospital').click(function(){
+    location.reload();
+    window.sessionStorage.setItem('recargado',true);
+    window.sessionStorage.setItem('destino','nrwr4');
+  });
+
+  if(window.sessionStorage.getItem('recargado')=='true'){
+    $('#'+window.sessionStorage.getItem('destino')).focus();
+    window.sessionStorage.setItem('recargado',false);
+  }
 }(this, this.document))

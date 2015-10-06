@@ -49,7 +49,7 @@ AppAsset::register($this);
                       ['label' => 'Matrimonio', 'url' => ['/registro/matrimonio']],
                       ['label' => 'Divorcio', 'url' => ['/registro/divorcio']],
                       ['label' => 'Emisión de Partidas', 'url' => ['/registro/emision']],
-                      ['label' => 'Gestionar Solicitudes', 'url' => ['/registro/gsolicitud']],
+                      ['label' => 'Gestión de Solicitudes', 'url' => ['/registro/gsolicitud']],
                       ]],
                     ['label' => 'Recolección de Desechos', 'visible'=>!Yii::$app->user->isGuest &&
                     (Yii::$app->user->identity->codRol->nombre=='EmpleadoRD'||Yii::$app->user->identity->codRol->nombre=='Administrador'), 'items'=>[

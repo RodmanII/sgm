@@ -21,6 +21,7 @@ use Yii;
  * @property integer $cod_nacionalidad
  * @property integer $cod_estado_civil
  * @property string $nombre_usuario
+ * @property string $otro_doc
  *
  * @property CarnetMinoridad[] $carnetMinoridads
  * @property Defuncion $defuncion
@@ -58,9 +59,11 @@ class Persona extends \yii\db\ActiveRecord
             [['dui'], 'string', 'max' => 9],
             [['nit'], 'string', 'max' => 10],
             [['direccion'], 'string', 'max' => 200],
+            [['otro_doc'], 'string', 'max' => 80],
             [['dui'], 'unique'],
             [['nit'], 'unique'],
-            [['nombre_usuario'], 'unique']
+            [['nombre_usuario'], 'unique'],
+            [['otro_doc'], 'unique']
         ];
     }
 
@@ -69,21 +72,22 @@ class Persona extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-      return [
-            'codigo' => 'Código',
+        return [
+            'codigo' => 'Codigo',
             'nombre' => 'Nombre',
             'apellido' => 'Apellido',
-            'dui' => 'DUI',
-            'nit' => 'NIT',
-            'fecha_nacimiento' => 'Fecha de Nacimiento',
-            'genero' => 'Género',
-            'direccion' => 'Dirección',
-            'profesion' => 'Profesión',
+            'dui' => 'Dui',
+            'nit' => 'Nit',
+            'fecha_nacimiento' => 'Fecha Nacimiento',
+            'genero' => 'Genero',
+            'direccion' => 'Direccion',
+            'profesion' => 'Profesion',
             'estado' => 'Estado',
-            'cod_municipio' => 'Municipio',
-            'cod_nacionalidad' => 'Nacionalidad',
-            'cod_estado_civil' => 'Estado Civil',
-            'nombre_usuario' => 'Usuario',
+            'cod_municipio' => 'Cod Municipio',
+            'cod_nacionalidad' => 'Cod Nacionalidad',
+            'cod_estado_civil' => 'Cod Estado Civil',
+            'nombre_usuario' => 'Nombre Usuario',
+            'otro_doc' => 'Otro Doc',
         ];
     }
 
