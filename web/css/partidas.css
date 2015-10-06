@@ -1,5 +1,6 @@
 p {
   font-family: Arial;
+  text-align: justify;
 }
 .centrado {
   text-align: center;
@@ -30,31 +31,33 @@ p {
   top: 38;
 }
 
-#finforl {
+.firmal {
   position: absolute;
-  bottom: 20;
-  left: 40;
+  bottom: 90;
+}
+
+#finforl {
+  left: 100;
 }
 
 #fjrfl {
+  right: 100;
+}
+
+.firmat {
   position: absolute;
-  bottom: 20;
-  right: 40;
+  bottom: 70;
 }
 
 #finfort {
-  position: absolute;
-  bottom: 18;
-  left: 42;
+  left: 112;
 }
 
 #fjrft {
-  position: absolute;
-  bottom: 18;
-  right: 42;
+  right: 118;
 }
 
 .cabecera{
   font-weight: bold;
-  font-size: 22px;
+  font-size: 16px;
 }

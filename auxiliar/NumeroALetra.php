@@ -16,7 +16,7 @@ class NumeroALetra
 {
     private $UNIDADES = [
         '',
-        'UNO ',
+        'UN ',
         'DOS ',
         'TRES ',
         'CUATRO ',
@@ -39,7 +39,7 @@ class NumeroALetra
     ];
 
     private $DECENAS = [
-        'VENTI',
+        'VEINTI',
         'TREINTA ',
         'CUARENTA ',
         'CINCUENTA ',
@@ -71,7 +71,7 @@ class NumeroALetra
         ['country' => 'Reino Unido', 'currency' => 'GBP', 'singular' => 'LIBRA', 'plural' => 'LIBRAS', 'symbol', '£']
     ];
 
-    public function to_word($number, $miMoneda = null, $min = false)
+    public function to_word($number, $miMoneda = null, $min = false, $partida = false)
     {
         if ($miMoneda !== null) {
             try {
@@ -107,10 +107,19 @@ class NumeroALetra
         }
 
         $numberStr = (string) $number;
+        $ultimo = mb_substr($numberStr,-1);
+        $apex = '';
+        // echo 'cadena'.$numberStr;
+        // echo '<br>';
+        // echo 'utlimo'.$ultimo;
+        // echo '<br>';
+        // echo $partida ? 'true' : 'false';
+        // exit;
         $numberStrFill = str_pad($numberStr, 9, '0', STR_PAD_LEFT);
         $millones = substr($numberStrFill, 0, 3);
         $miles = substr($numberStrFill, 3, 3);
         $cientos = substr($numberStrFill, 6);
+        $unidades = substr($numberStrFill, 6);
 
         if (intval($millones) > 0) {
             if ($millones == '001') {
@@ -137,10 +146,27 @@ class NumeroALetra
         }
 
         $converted .= $moneda;
-        if($min){
-          return strtolower($converted);
+        if($ultimo == '1' && $partida == true){
+          $apex = 'O';
         }
-        return $converted;
+        $converted = trim($converted);
+        if($min){
+          return strtolower($converted.$apex);
+        }
+        return $converted.$apex;
+    }
+
+    public function convertirSeparado($numero)
+    {
+      $arreglo = str_split($numero);
+      $cadena = '';
+      foreach ($arreglo as $elemento) {
+        if($elemento == '0'){
+          $cadena.='cero ';
+        }
+        $cadena.=$this->to_word($elemento,null,true,true).' ';
+      }
+      return trim($cadena);
     }
 
     private function convertGroup($n)
@@ -164,7 +190,6 @@ class NumeroALetra
                 $output .= sprintf('%s%s', $this->DECENAS[intval($n[1]) - 2], $this->UNIDADES[intval($n[2])]);
             }
         }
-
         return $output;
     }
 }

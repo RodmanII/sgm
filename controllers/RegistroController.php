@@ -106,12 +106,12 @@ class RegistroController extends Controller
                         <img src="../web/images/EscudoSalvador.png" class="imgcab"/>
                       </div>');
     $mpdf->WriteHTML('<p class="centrado">Ave. Miguel Mármol y Calle Francisco Menéndez, Ilopango</p>');
-    $mpdf->WriteHTML('<p class="centrado">TELEFAX 2563-5215</p>');
+    $mpdf->WriteHTML('<p class="centrado">TELEFAX 2536-5215</p>');
     $mpdf->WriteHTML('<hr/>');
     $mpdf->WriteHTML('<p class="centrado cabecera">ALCALDÍA MUNICIPAL DE ILOPANGO</p>');
     switch ($tipo) {
       case 'nacimiento':
-      $mpdf->WriteHTML('<p class="centrado cabecera">LIBRO DE PARTIDAS DE NACIMIENTO NÚMERO '.$conversor->to_word($param['num_libro']).' DEL</p>');
+      $mpdf->WriteHTML('<p class="centrado cabecera">LIBRO DE PARTIDAS DE NACIMIENTO NÚMERO '.$conversor->to_word($param['num_libro'],null,false,true).' DEL</p>');
       $mpdf->WriteHTML('<p class="centrado cabecera">AÑO '.$conversor->to_word(date('Y')).'</p>');
       $mpdf->WriteHTML('<p class="derecha cabecera">FOLIO '.$conversor->to_word($param['folio']).'</p>');
       $mpdf->WriteHTML('<p class="centrado">DATOS DEL INSCRITO</p>');
@@ -119,32 +119,45 @@ class RegistroController extends Controller
       $dbHospital = Hospital::find()->where('codigo = '.$param['cod_hospital'])->one();
       $dbMunicipio = Municipio::find()->where('codigo = '.$param['cod_municipio'])->one();
       $tiempo = explode(':',date('G:i',strtotime($param['hora_suceso'])));
-      $mpdf->WriteHTML('<p class="justificado">Partida Número '.$conversor->to_word($param['codigo'],null,true).'; <strong>'.$dbAsentado->nombre.'</strong>.- sexo '
+      $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).'; <strong>'.$dbAsentado->nombre.'</strong>.- sexo '
       .strtolower($dbAsentado->genero).', nació en el '.$dbHospital->nombre.' '.$param['lugar_suceso'].', Municipio de '
       .$dbMunicipio->nombre.', Departamento de '.$dbMunicipio->codDepartamento->nombre.', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$conversor->to_word($tiempo[1],null,true).' minutos
-      del día '.fechaATexto($param['fecha_suceso']).'</p>');
+      del día '.fechaATexto($param['fecha_suceso']).'.</p>');
 
-      $arreglo = ['cod_madre','cod_padre'];
-      $parentesco = ['DE LA MADRE','DEL PADRE'];
-      for($i = 0;$i < 2;$i++){
-        if($param['cod_madre']!=''){
-          $dbProgenitor = Persona::find()->where('codigo = '.$param[$arreglo[$i]])->one();
-          if($dbProgenitor->dui!=''){
-            $tipo_doc = 'Documento Único de Identidad';
-            $num_doc = $dbProgenitor->dui;
-          }else{
-            $arreglo = explode(':',$dbProgenitor->otro_doc);
-            $tipo_doc = $arreglo[0];
-            $num_doc = $arreglo[1];
-          }
-          $mpdf->WriteHTML('<p class="centrado">DATOS '.$parentesco[$i].'</p>');
-          $edad = calcularEdad($dbProgenitor->fecha_nacimiento);
-          $mpdf->WriteHTML('<p class="justificado"><strong>'.$dbProgenitor->nombre.' '.$dbProgenitor->apellido.'</strong> de '.$conversor->to_word($edad,null,true).'
-          años de edad, profesión u oficio, '.strtolower($dbProgenitor->profesion).', originaria de '.$dbProgenitor->codMunicipio->nombre.',
-          Departamento de '.$dbProgenitor->codMunicipio->codDepartamento->nombre.', del domicilio de '.$dbProgenitor->direccion.',
-          de Nacionalidad '.$dbProgenitor->codNacionalidad->nombre.', quién se identifica por medio de '.$tipo_doc.'
-          número; '.$num_doc.'.</p>');
+      $arreglo = [];
+      $parentesco = [];
+      $iteraciones = 0;
+      if($param['cod_madre']!=''){
+        array_push($arreglo,'cod_madre');
+        array_push($parentesco,'DE LA MADRE');
+        $iteraciones++;
+      }
+      if($param['cod_padre']!=''){
+        array_push($arreglo,'cod_padre');
+        array_push($parentesco,'DEL PADRE');
+        $iteraciones++;
+      }
+      for($i = 0;$i < $iteraciones;$i++){
+        $dbProgenitor = Persona::find()->where('codigo = '.$param[$arreglo[$i]])->one();
+        if($dbProgenitor->dui!=''){
+          $tipo_doc = 'Documento Único de Identidad';
+          $num_doc = $dbProgenitor->dui;
+        }else{
+          $arreglo = explode(':',$dbProgenitor->otro_doc);
+          $tipo_doc = $arreglo[0];
+          $num_doc = $arreglo[1];
         }
+        $mpdf->WriteHTML('<p class="centrado">DATOS '.$parentesco[$i].'</p>');
+        $edad = calcularEdad($dbProgenitor->fecha_nacimiento);
+        $indicador = 'a';
+        if($dbProgenitor->genero=='Masculino'){
+          $indicador = 'o';
+        }
+        $mpdf->WriteHTML('<p class="justificado"><strong>'.$dbProgenitor->nombre.' '.$dbProgenitor->apellido.'</strong> de '.$conversor->to_word($edad,null,true).'
+        años de edad, profesión u oficio, '.strtolower($dbProgenitor->profesion).', originari'.$indicador.' de '.$dbProgenitor->codMunicipio->nombre.',
+        Departamento de '.$dbProgenitor->codMunicipio->codDepartamento->nombre.', del domicilio de '.$dbProgenitor->direccion.',
+        de Nacionalidad '.$dbProgenitor->codNacionalidad->nombre.', quién se identifica por medio de '.$tipo_doc.'
+        número; '.$conversor->convertirSeparado($num_doc).'.</p>');
       }
       $indicador = 'de la inscrita';
       $comp = 'a';
@@ -158,10 +171,10 @@ class RegistroController extends Controller
       $mpdf->WriteHTML('<p class="justificado">Dio los datos; <strong>'.$dbInformante->nombre.'</strong>, quién se identifica por medio de '
       .$dbInformante->tipo_documento.' número; '.$dbInformante->numero_documento.'. Manifestando ser '.$param['rel_informante'].'
       '.$indicador.' y para constancia firma, se asienta con base a '.$tipo_ase.' de fecha '.fechaATexto($param['fecha_suceso']).'.
-      Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'</p>');
+      Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
 
-      $mpdf->WriteHTML('<p id="finforl">F. _____________________</p><p id="fjrfl">F._______________________________________</p>');
-      $mpdf->WriteHTML('<p id="finfort">Firma del Informante</p><p id="fjrft">Jefe del Registro del Estado Familiar</p>');
+      $mpdf->WriteHTML('<p id="finforl" class="firmal">F. _________________________</p><p id="fjrfl" class="firmal">F._______________________________________</p>');
+      $mpdf->WriteHTML('<p id="finfort" class="firmat">Firma del Informante</p><p id="fjrft" class="firmat">Jefe del Registro del Estado Familiar</p>');
       break;
       case 'defuncion':
       break;

@@ -24,6 +24,6 @@ function fechaATexto($fecha){
   $obj = new NumeroALetra();
   $meses = array("","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
   $fechaNac = explode('/',$fecha);
-  return $obj->to_word($fechaNac[0],null,true).' de '.$meses[$fechaNac[1]].' del año '.$obj->to_word($fechaNac[2],null,true);
+  return trim($obj->to_word($fechaNac[0],null,true,true).' de '.strtolower($meses[$fechaNac[1]]).' del año '.$obj->to_word($fechaNac[2],null,true));
 }
 ?>
