@@ -521,7 +521,6 @@ insert into usuario(nombre,contrasenya,salt,cod_rol) values('gerflax','8436f1452
 insert into usuario(nombre,contrasenya,salt,cod_rol) values ('rodrigo','50116cb87536c9c9a414f13093fc3a7073d05bb22e68b5249546729d8caea87479ea11ba79cb9c7c5d9f6ca27d21d442a35bbce1dc657b36510b873b2c2e2890','KCma6npWyLQ',4);
 insert into usuario(nombre,contrasenya,salt,cod_rol) values ('verdugo','cdea91f725d0023cecf95eb2dc352bb09ff174bea76ff9d94e3c71e1708a2501419576172f8e50c96de26f8738e618a7e3feab3981db921cc1df26c8c96cd053','YoSpMe9bwFk',4);
 
-
 create table `persona` (
 	`codigo` int auto_increment,
 	`nombre` varchar(50) not null,

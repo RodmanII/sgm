@@ -24,16 +24,17 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rmatrimonio">
     <?php if (Yii::$app->session->hasFlash('success')): ?>
-
     <div class="alert alert-success">
       <?= Yii::$app->session->getFlash('success') ?>
     </div>
+    <?php endif; ?>
 
     <?php if (Yii::$app->session->hasFlash('error')): ?>
-
     <div class="alert alert-success">
       <?= Yii::$app->session->getFlash('error') ?>
     </div>
+    <?php endif; ?>
+    
     <?php $form = ActiveForm::begin(['id'=>'inacimiento']); ?>
     <?php
       $dbLibro = Libro::find()->where('tipo = "Nacimiento"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
@@ -215,4 +216,4 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
       $this->registerJsFile(Yii::$app->homeUrl."js/fnacimiento.js", ['depends' => [\yii\web\JqueryAsset::className()]]);
     ?>
-</div><!-- rnacimiento -->
+</div>

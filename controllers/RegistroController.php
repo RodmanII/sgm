@@ -18,7 +18,9 @@ use app\models\mant\Persona;
 use app\models\mant\Hospital;
 use app\models\mant\Informante;
 use app\models\mant\Municipio;
+use app\models\mant\Libro;
 use app\auxiliar\NumeroALetra;
+use app\auxiliar\Auxiliar;
 use mPDF;
 
 class RegistroController extends Controller
@@ -82,26 +84,39 @@ class RegistroController extends Controller
     $conexion = \Yii::$app->db;
     $transaccion = $conexion->beginTransaction();
     if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())) {
+      $model->cod_partida = 1;
+      $partidaModelo->cod_libro = 1;
+      $partidaModelo->cod_empleado = Yii::$app->user->identity->persona->empleado->codigo;
       if ($model->validate() && $partidaModelo->validate()) {
         try{
+          $codlibro = Libro::find()->select('codigo')->where("tipo = 'Nacimiento'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
+          $partidaModelo->cod_libro = $codlibro;
+          $partidaModelo->fecha_emision = fechaMySQL($partidaModelo->fecha_emision);
+          $partidaModelo->fecha_suceso = fechaMySQL($partidaModelo->fecha_suceso);
+          $partidaModelo->hora_suceso = horaMySQL($partidaModelo->hora_suceso);
           if($partidaModelo->save()){
             //Recupero el valor de id con el cual se inserto
             $ulid = $conexion->getLastInsertID();
             $model->cod_partida = $ulid;
             //Guardo el registro de nacimiento
             if(!$model->save()){
-              throw Exception('No se pudo guardar la partida');
+              throw Exception('No se pudo guardar el registro de nacimiento, intente nuevamente');
+            }
+            //Actualizar el folio actual del libro
+            if($conexion->createCommand("update libro set folio_actual = folio_actual + 1 where codigo = ".$codlibro)->execute()<=0){
+              throw Exception('No se pudo actualizar el libro de partidas, intente nuevamente');
             }
             $transaccion->commit();
-            Yii::$app->session->setFlash('success', '¡Bienvenid@! '.$nombrePersona);
+            Yii::$app->session->setFlash('success', 'Partida guardada con éxito');
             return $this->redirect(['rnacimiento']);
           }else{
-            throw Exception('No se pudo guardar la partida');
+            throw Exception('No se pudo guardar el registro de partida, intente nuevamente');
           }
           return;
         }catch(Exception $err){
             $transaccion->rollback();
             Yii::$app->session->setFlash('error', $err->getMessage());
+            return $this->redirect(['rnacimiento']);
         }
       }
     }
@@ -110,7 +125,6 @@ class RegistroController extends Controller
   }
 
   public function actionGenerar($tipo,$guardar,$parametros){
-    require('../auxiliar/Auxiliar.php');
     $guardar = filter_var($guardar, FILTER_VALIDATE_BOOLEAN);
     $destino = 'I';
     if($guardar){
@@ -145,10 +159,14 @@ class RegistroController extends Controller
       $dbHospital = Hospital::find()->where('codigo = '.$param['cod_hospital'])->one();
       $dbMunicipio = Municipio::find()->where('codigo = '.$param['cod_municipio'])->one();
       $tiempo = explode(':',date('G:i',strtotime($param['hora_suceso'])));
+      $minutos = 'cero';
+      if($tiempo[1]!='00'){
+        $minutos = $conversor->to_word($tiempo[1],null,true);
+      }
       $nomInscrito = $dbAsentado->nombre.' '.$dbAsentado->apellido;
       $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).'; <strong>'.$dbAsentado->nombre.'</strong>.- sexo '
       .strtolower($dbAsentado->genero).', nació en el '.$dbHospital->nombre.' '.$param['lugar_suceso'].', Municipio de '
-      .$dbMunicipio->nombre.', Departamento de '.$dbMunicipio->codDepartamento->nombre.', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$conversor->to_word($tiempo[1],null,true).' minutos
+      .$dbMunicipio->nombre.', Departamento de '.$dbMunicipio->codDepartamento->nombre.', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos
       del día '.fechaATexto($param['fecha_suceso']).'.</p>');
 
       $arreglo = [];
@@ -170,9 +188,9 @@ class RegistroController extends Controller
           $tipo_doc = 'Documento Único de Identidad';
           $num_doc = $dbProgenitor->dui;
         }else{
-          $arreglo = explode(':',$dbProgenitor->otro_doc);
-          $tipo_doc = $arreglo[0];
-          $num_doc = $arreglo[1];
+          $arr = explode(':',$dbProgenitor->otro_doc);
+          $tipo_doc = $arr[0];
+          $num_doc = $arr[1];
         }
         $mpdf->WriteHTML('<p class="centrado">DATOS '.$parentesco[$i].'</p>');
         $edad = calcularEdad($dbProgenitor->fecha_nacimiento);
@@ -222,7 +240,7 @@ class RegistroController extends Controller
       $nombre = $dirdestino.$nomInscrito.'.pdf';
       $script = '<script type="text/javascript">window.close()</script>';
     }
-    $mpdf->Output($nombre,$destino);
+    $mpdf->Output(utf8_decode($nombre),$destino);
     echo $script;
     exit;
   }

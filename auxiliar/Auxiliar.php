@@ -1,5 +1,17 @@
 <?php
+namespace app\auxiliar;
+
 use app\auxiliar\NumeroALetra;
+function fechaMySQL($fecha){
+  $formateado = str_replace('/', '-', $fecha);
+  return date('Y-m-d', strtotime($formateado));
+}
+
+function horaMySQL($hora){
+  $formateado = DateTime::createFromFormat( 'H:i A', $hora);
+  return $formateado->format( 'H:i:s');
+}
+
 function obtenerParams($parametros){
   $auxiliar = explode(';',$parametros);
   $param = array();

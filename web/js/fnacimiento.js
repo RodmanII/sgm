@@ -192,7 +192,7 @@
     var madre = $('#nacimiento-cod_madre').val();
     var padre = $('#nacimiento-cod_padre').val();
     if(madre != '' || padre != ''){
-      //$('#inacimiento').submit();
+      $('#inacimiento').submit();
       enviarParametros(true,false);
     }else{
       alert('Tiene que especificar padre, madre u ambos.');
