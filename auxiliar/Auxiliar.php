@@ -11,19 +11,19 @@ function obtenerParams($parametros){
 }
 
 function calcularEdad($fechanacimiento){
-    list($ano,$mes,$dia) = explode("-",$fechanacimiento);
-    $ano_diferencia  = date("Y") - $ano;
-    $mes_diferencia = date("m") - $mes;
-    $dia_diferencia   = date("d") - $dia;
-    if ($dia_diferencia < 0 || $mes_diferencia < 0)
-        $ano_diferencia--;
-    return $ano_diferencia;
+    list($Y,$m,$d) = explode("-",$fechanacimiento);
+    return( date("md") < $m.$d ? date("Y")-$Y-1 : date("Y")-$Y );
 }
 
 function fechaATexto($fecha){
   $obj = new NumeroALetra();
   $meses = array("","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
   $fechaNac = explode('/',$fecha);
-  return trim($obj->to_word($fechaNac[0],null,true,true).' de '.strtolower($meses[$fechaNac[1]]).' del año '.$obj->to_word($fechaNac[2],null,true));
+  $mes = str_split($fechaNac[1]);
+  $mesIndicador = $mes[0].$mes[1];
+  if($mes[0]=='0'){
+    $mesIndicador = $mes[1];
+  }
+  return trim($obj->to_word($fechaNac[0],null,true,true).' de '.strtolower($meses[$mesIndicador]).' del año '.$obj->to_word($fechaNac[2],null,true));
 }
 ?>

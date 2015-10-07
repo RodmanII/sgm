@@ -23,6 +23,17 @@ $this->title = 'Inscripción de Nacimiento';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rmatrimonio">
+    <?php if (Yii::$app->session->hasFlash('success')): ?>
+
+    <div class="alert alert-success">
+      <?= Yii::$app->session->getFlash('success') ?>
+    </div>
+
+    <?php if (Yii::$app->session->hasFlash('error')): ?>
+
+    <div class="alert alert-success">
+      <?= Yii::$app->session->getFlash('error') ?>
+    </div>
     <?php $form = ActiveForm::begin(['id'=>'inacimiento']); ?>
     <?php
       $dbLibro = Libro::find()->where('tipo = "Nacimiento"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
@@ -55,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
           $query = new Query;
           $query->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
             ->from('persona p')->leftJoin('nacimiento n', 'p.codigo = n.cod_asentado')
-            ->where('p.estado = "Activo"')->orderBy(['p.nombre'=>SORT_ASC]);
+            ->where('p.estado = "Activo"')->andWhere('calcularEdad(p.codigo) < 1')->orderBy(['p.nombre'=>SORT_ASC]);
           $command = $query->createCommand();
           $data = $command->queryAll();
         ?>
@@ -72,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </button>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'cod_madre')->dropDownList(ArrayHelper::map(Persona::find()->where('genero = "Femenino"')->andWhere('estado = "Activo"')->orderBy(['nombre'=>SORT_ASC])->all(), 'codigo',
+        <?= $form->field($model, 'cod_madre')->dropDownList(ArrayHelper::map(Persona::find()->where('genero = "Femenino"')->andWhere('estado = "Activo"')->andWhere('calcularEdad(persona.codigo) > 14')->orderBy(['nombre'=>SORT_ASC])->all(), 'codigo',
           function($model, $defaultValue) {
             return $model->nombre.' '.$model->apellido;
           }
@@ -89,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </button>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'cod_padre')->dropDownList(ArrayHelper::map(Persona::find()->where('genero = "Masculino"')->andWhere('estado = "Activo"')->orderBy(['nombre'=>SORT_ASC])->all(), 'codigo',
+        <?= $form->field($model, 'cod_padre')->dropDownList(ArrayHelper::map(Persona::find()->where('genero = "Masculino"')->andWhere('estado = "Activo"')->andWhere('calcularEdad(persona.codigo) > 14')->orderBy(['nombre'=>SORT_ASC])->all(), 'codigo',
           function($model, $defaultValue) {
             return $model->nombre.' '.$model->apellido;
           }
@@ -197,7 +208,7 @@ $this->params['breadcrumbs'][] = $this->title;
       </span>
     </div>
     <div class="form-group">
-        <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
+        <?= Html::button('Guardar', ['class' => 'btn btn-primary', 'id'=>'guardar']) ?>
         <?= Html::button('Vista Previa', ['class' => 'btn btn-primary', 'id'=>'generar']) ?>
     </div>
     <?php ActiveForm::end(); ?>

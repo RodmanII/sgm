@@ -34,6 +34,7 @@ p {
 .firmal {
   position: absolute;
   bottom: 90;
+  font-size: 16px;
 }
 
 #finforl {
@@ -47,6 +48,7 @@ p {
 .firmat {
   position: absolute;
   bottom: 70;
+  font-size: 16px;
 }
 
 #finfort {

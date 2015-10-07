@@ -79,32 +79,58 @@ class RegistroController extends Controller
   {
     $model = new Nacimiento();
     $partidaModelo = new Partida();
-    if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post()) && Model::validateMultiple([$model, $partidaModelo])) {
-      if($model->cod_padre == null && $model->cod_madre == null)
-      if ($model->validate()) {
-        // form inputs are valid, do something here
-        return;
+    $conexion = \Yii::$app->db;
+    $transaccion = $conexion->beginTransaction();
+    if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())) {
+      if ($model->validate() && $partidaModelo->validate()) {
+        try{
+          if($partidaModelo->save()){
+            //Recupero el valor de id con el cual se inserto
+            $ulid = $conexion->getLastInsertID();
+            $model->cod_partida = $ulid;
+            //Guardo el registro de nacimiento
+            if(!$model->save()){
+              throw Exception('No se pudo guardar la partida');
+            }
+            $transaccion->commit();
+            Yii::$app->session->setFlash('success', '¡Bienvenid@! '.$nombrePersona);
+            return $this->redirect(['rnacimiento']);
+          }else{
+            throw Exception('No se pudo guardar la partida');
+          }
+          return;
+        }catch(Exception $err){
+            $transaccion->rollback();
+            Yii::$app->session->setFlash('error', $err->getMessage());
+        }
       }
     }
 
     return $this->render('rnacimiento', ['model'=> $model,'partida'=>$partidaModelo]);
   }
 
-  public function actionGenerar($tipo,$parametros){
+  public function actionGenerar($tipo,$guardar,$parametros){
     require('../auxiliar/Auxiliar.php');
+    $guardar = filter_var($guardar, FILTER_VALIDATE_BOOLEAN);
+    $destino = 'I';
+    if($guardar){
+      $destino = 'F';
+    }
     $conversor = new NumeroALetra();
     $param = obtenerParams($parametros);
+    $nombre = 'Partida de '.$tipo.'.pdf';
+    $nomInscrito = '';
     $estilos = file_get_contents('../web/css/partidas.css');
     $mpdf = new mPDF('','Letter');
     $mpdf->WriteHTML($estilos,1);
     $mpdf->WriteHTML('<p class="centrado">www.alcaldiadeilopango.gob.sv</p>');
     $mpdf->WriteHTML('<div class="clalcaldia">
-                        <img src="../web/images/LogoAlcaldia.jpg" class="imgcab"/>
-                      </div>');
+    <img src="../web/images/LogoAlcaldia.jpg" class="imgcab"/>
+    </div>');
     $mpdf->WriteHTML('<p class="centrado titular">Alcaldía Municipal de Ilopango</p>');
     $mpdf->WriteHTML('<div class="cescudo">
-                        <img src="../web/images/EscudoSalvador.png" class="imgcab"/>
-                      </div>');
+    <img src="../web/images/EscudoSalvador.png" class="imgcab"/>
+    </div>');
     $mpdf->WriteHTML('<p class="centrado">Ave. Miguel Mármol y Calle Francisco Menéndez, Ilopango</p>');
     $mpdf->WriteHTML('<p class="centrado">TELEFAX 2536-5215</p>');
     $mpdf->WriteHTML('<hr/>');
@@ -119,6 +145,7 @@ class RegistroController extends Controller
       $dbHospital = Hospital::find()->where('codigo = '.$param['cod_hospital'])->one();
       $dbMunicipio = Municipio::find()->where('codigo = '.$param['cod_municipio'])->one();
       $tiempo = explode(':',date('G:i',strtotime($param['hora_suceso'])));
+      $nomInscrito = $dbAsentado->nombre.' '.$dbAsentado->apellido;
       $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).'; <strong>'.$dbAsentado->nombre.'</strong>.- sexo '
       .strtolower($dbAsentado->genero).', nació en el '.$dbHospital->nombre.' '.$param['lugar_suceso'].', Municipio de '
       .$dbMunicipio->nombre.', Departamento de '.$dbMunicipio->codDepartamento->nombre.', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$conversor->to_word($tiempo[1],null,true).' minutos
@@ -173,7 +200,7 @@ class RegistroController extends Controller
       '.$indicador.' y para constancia firma, se asienta con base a '.$tipo_ase.' de fecha '.fechaATexto($param['fecha_suceso']).'.
       Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
 
-      $mpdf->WriteHTML('<p id="finforl" class="firmal">F. _________________________</p><p id="fjrfl" class="firmal">F._______________________________________</p>');
+      $mpdf->WriteHTML('<p id="finforl" class="firmal">F._________________________</p><p id="fjrfl" class="firmal">F._______________________________________</p>');
       $mpdf->WriteHTML('<p id="finfort" class="firmat">Firma del Informante</p><p id="fjrft" class="firmat">Jefe del Registro del Estado Familiar</p>');
       break;
       case 'defuncion':
@@ -186,7 +213,17 @@ class RegistroController extends Controller
       # code...
       break;
     }
-    $mpdf->Output();
+    $script = '';
+    if($guardar){
+      $dirdestino = Yii::getAlias('@webroot').'/../partidas/'.$tipo.'/'.date('Y').'/'.$param['num_libro'].'/';
+      if (!file_exists($dirdestino)) {
+        mkdir($dirdestino, 0777, true);
+      }
+      $nombre = $dirdestino.$nomInscrito.'.pdf';
+      $script = '<script type="text/javascript">window.close()</script>';
+    }
+    $mpdf->Output($nombre,$destino);
+    echo $script;
     exit;
   }
 

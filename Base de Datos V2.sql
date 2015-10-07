@@ -557,7 +557,23 @@ values('Hugo Ernesto', 'Grijalva Pérez', '014501627', '05171032641145', '1967-1
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Claudia Maribel', 'Flores Valle', '562101627', '62301032647801', '1995-10-09', 'Femenino', 'San Marcos, Departamento de San Salvador', 'Secretaria', 74, 5, 3, 'verdugo');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Carla Maria', 'Castillo Navarrete', '565171647', '62321027642304', '1992-03-17', 'Femenino', 'Ciudad Valdez, Departamento de Santa Ana, 'Inactivo', 62, 6, 5, 'gerflax');
+values('Carla Maria', 'Castillo Navarrete', '565171647', '62321027642304', '1992-03-17', 'Femenino', 'Ciudad Valdez, Departamento de Santa Ana', 'Inactivo', 62, 6, 5, 'gerflax');
+-- Menos de 18 que van a figurar como padres
+insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('William Eduardo', 'Castro Paz', 'Carnet de BoyScoutt:45126320', '1995-07-22', 'Masculino', 'Loc Muine, Departamento de Temeria', 'Mecánico Soldador', 'Activo', 101, 2, 3, null);
+insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Cristina Angelica', 'Gomez Garcia', 'Tarjeta de Afiliación a CENAR:00845145', '1997-01-14', 'Femenino', 'Tor Lara, Departamento de Aedir', 'Asistente de oficina', 'Activo', 36, 1, 1, null);
+insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Daniel Ortega', 'Gomez Gaspan', 'Carnet de EUPRIDES:7741301', '1996-08-16', 'Masculino', 'Teirgel, Departamento de Kaer Morhen', 'Técnico de Hardware', 'Activo', 51, 4, 1, null);
+-- Menores de 1 que van a figurar como asentados
+insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
+values('Ernesto Augusto', 'Flores Miran','2015-02-22', 'Masculino', 'Yelmo de Piedra, Departamento de Kwaeden', 'Activo', 22, 1, 1);
+insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
+values('Sonia Germinia', 'Gonzales Cortez','2015-04-27', 'Femenino', 'Paramo de Hierro, Departamento de Kovir', 'Activo', 62, 1, 1);
+insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
+values('Lourdes Anastasia', 'Gonzales Peña','2015-07-09', 'Femenino', 'Mahakan, Departamento de Temeria', 'Activo', 77, 1, 1);
+insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
+values('Maria José', 'Jurado Carmona','2014-12-15', 'Femenino', 'Rivendel, Departamento de Tierra Media', 'Activo', 11, 1, 1);
 
 create table `empleado` (
 	`codigo` int auto_increment,
