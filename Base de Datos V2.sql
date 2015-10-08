@@ -413,17 +413,21 @@ create table `informante` (
 	`codigo` int auto_increment,
 	`nombre` varchar(50) not null,
 	`tipo_documento` varchar(50) not null,
-	`numero_documento` varchar(100) not null,
+	`numero_documento` varchar(50) not null,
 	`genero` varchar(50) not null,
+	`cod_persona` int(11) null,
 	constraint pk_Informante primary key(`codigo`),
 	constraint unq_Informante_nombre unique(nombre),
+	constraint unq_Informante_cod_persona unique(cod_persona),
 	constraint unq_Informante_numero_documento unique(numero_documento)
 );
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('Fabián Ernesto Clavico Fútil','Documento Único de Identidad','cero cuatro nueve cinco cinco cuatro nueve siete-tres','Masculino');
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('Sandra Valentina Rios Luna','Documento Único de Identidad','cero cuatro ocho tres dos cuatro cero siete-siete','Femenino');
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('Leonardo Ernesto Fernández Gunter','Documento Nacional de Identidad','uno tres cero tres dos nueve cero siete-cinco','Masculino');
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('James Howlet','Pasaporte','e i dos cinco siete nueve nueve tres e','Femenino');
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('Thomas David Blaskowitz','Pasaporte','a o uno cuatro seis nueve tres','Masculino');
+alter table `informante` add constraint `fk_informante_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
+-- Inserción de Registros para Informante
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('Fabián Ernesto Clavico Fútil','Documento Único de Identidad','049554973','Masculino');
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('Sandra Valentina Rios Luna','Documento Único de Identidad','048324077','Femenino');
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('Leonardo Ernesto Fernández Gunter','Documento Nacional de Identidad','13032975','Masculino');
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('James Howlet','Pasaporte','257993','Femenino');
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('Thomas David Blaskowitz','Pasaporte','14693','Masculino');
 
 create table `modalidad_divorcio` (
 	`codigo` int auto_increment,
@@ -921,12 +925,15 @@ create table `informante_historico` (
 	`codigo` int auto_increment,
 	`nombre` varchar(50) not null,
 	`tipo_documento` varchar(50) not null,
-	`numero_documento` varchar(100) not null,
+	`numero_documento` varchar(50) not null,
 	`genero` varchar(50) not null,
+	`cod_persona` int(11) null,
 	constraint pk_InformanteHistorico primary key(`codigo`),
 	constraint unq_InformanteHistorico_nombre unique(nombre),
+	constraint unq_InformanteHistorico_cod_persona unique(cod_persona),
 	constraint unq_InformanteHistorico_numero_documento unique(numero_documento)
 );
+alter table `informante_historico` add constraint `fk_informante_his_persona_his_cod_persona` foreign key (`cod_persona`) references `persona_historico`(`codigo`) on delete cascade on update cascade;
 
 create table `partida_historico` (
 		`codigo` int auto_increment,

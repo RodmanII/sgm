@@ -123,7 +123,6 @@ class RegistroController extends Controller
         Yii::$app->session->setFlash('error', 'El modelo no cumple con la validación');
       }
     }
-
     return $this->render('rnacimiento', ['model'=> $model,'partida'=>$partidaModelo]);
   }
 
@@ -218,7 +217,7 @@ class RegistroController extends Controller
       $dbInformante = Informante::find()->where('codigo = '.$param['cod_informante'])->one();
       $mpdf->WriteHTML('<p class="centrado">DATOS DEL INFORMANTE</p>');
       $mpdf->WriteHTML('<p class="justificado">Dio los datos; <strong>'.$dbInformante->nombre.'</strong>, quién se identifica por medio de '
-      .$dbInformante->tipo_documento.' número; '.$dbInformante->numero_documento.'. Manifestando ser '.$param['rel_informante'].'
+      .$dbInformante->tipo_documento.' número; '.$conversor->convertirSeparado($dbInformante->numero_documento).'. Manifestando ser '.$param['rel_informante'].'
       '.$indicador.' y para constancia firma, se asienta con base a '.$tipo_ase.' de fecha '.fechaATexto($param['fecha_suceso']).'.
       Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
 

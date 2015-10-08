@@ -12,7 +12,9 @@ use Yii;
  * @property string $tipo_documento
  * @property string $numero_documento
  * @property string $genero
+ * @property integer $cod_persona
  *
+ * @property Persona $codPersona
  * @property Partida[] $partidas
  */
 class Informante extends \yii\db\ActiveRecord
@@ -32,10 +34,11 @@ class Informante extends \yii\db\ActiveRecord
     {
         return [
             [['nombre', 'tipo_documento', 'numero_documento', 'genero'], 'required'],
-            [['nombre', 'tipo_documento', 'genero'], 'string', 'max' => 50],
-            [['numero_documento'], 'string', 'max' => 100],
+            [['cod_persona'], 'integer'],
+            [['nombre', 'tipo_documento', 'numero_documento', 'genero'], 'string', 'max' => 50],
             [['nombre'], 'unique'],
-            [['numero_documento'], 'unique']
+            [['numero_documento'], 'unique'],
+            [['cod_persona'], 'unique']
         ];
     }
 
@@ -50,7 +53,16 @@ class Informante extends \yii\db\ActiveRecord
             'tipo_documento' => 'Tipo Documento',
             'numero_documento' => 'Numero Documento',
             'genero' => 'Genero',
+            'cod_persona' => 'Cod Persona',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCodPersona()
+    {
+        return $this->hasOne(Persona::className(), ['codigo' => 'cod_persona']);
     }
 
     /**
