@@ -84,7 +84,8 @@ class RegistroController extends Controller
     $conexion = \Yii::$app->db;
     $transaccion = $conexion->beginTransaction();
     if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())) {
-      $model->cod_partida = 1;
+      require_once('../auxiliar/Auxiliar.php');
+      $model->cod_partida = 0;
       $partidaModelo->cod_libro = 1;
       $partidaModelo->cod_empleado = Yii::$app->user->identity->persona->empleado->codigo;
       if ($model->validate() && $partidaModelo->validate()) {
@@ -108,7 +109,7 @@ class RegistroController extends Controller
             }
             $transaccion->commit();
             Yii::$app->session->setFlash('success', 'Partida guardada con éxito');
-            return $this->redirect(['rnacimiento']);
+            return $this->redirect(['nacimiento']);
           }else{
             throw Exception('No se pudo guardar el registro de partida, intente nuevamente');
           }
@@ -116,8 +117,10 @@ class RegistroController extends Controller
         }catch(Exception $err){
             $transaccion->rollback();
             Yii::$app->session->setFlash('error', $err->getMessage());
-            return $this->redirect(['rnacimiento']);
+            return $this->redirect(['nacimiento']);
         }
+      }else{
+        Yii::$app->session->setFlash('error', 'El modelo no cumple con la validación');
       }
     }
 
@@ -125,6 +128,7 @@ class RegistroController extends Controller
   }
 
   public function actionGenerar($tipo,$guardar,$parametros){
+    require_once('../auxiliar/Auxiliar.php');
     $guardar = filter_var($guardar, FILTER_VALIDATE_BOOLEAN);
     $destino = 'I';
     if($guardar){

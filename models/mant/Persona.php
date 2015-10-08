@@ -73,21 +73,21 @@ class Persona extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'codigo' => 'Codigo',
+            'codigo' => 'Código',
             'nombre' => 'Nombre',
             'apellido' => 'Apellido',
-            'dui' => 'Dui',
-            'nit' => 'Nit',
-            'fecha_nacimiento' => 'Fecha Nacimiento',
-            'genero' => 'Genero',
-            'direccion' => 'Direccion',
-            'profesion' => 'Profesion',
+            'dui' => 'DUI',
+            'nit' => 'NIT',
+            'fecha_nacimiento' => 'Fecha de Nacimiento',
+            'genero' => 'Sexo',
+            'direccion' => 'Dirección',
+            'profesion' => 'Profesión',
             'estado' => 'Estado',
-            'cod_municipio' => 'Cod Municipio',
-            'cod_nacionalidad' => 'Cod Nacionalidad',
-            'cod_estado_civil' => 'Cod Estado Civil',
-            'nombre_usuario' => 'Nombre Usuario',
-            'otro_doc' => 'Otro Doc',
+            'cod_municipio' => 'Municipio',
+            'cod_nacionalidad' => 'Nacionalidad',
+            'cod_estado_civil' => 'Estado Civil',
+            'nombre_usuario' => 'Usuario',
+            'otro_doc' => 'Documento Alternativo',
         ];
     }
 

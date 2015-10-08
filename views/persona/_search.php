@@ -21,13 +21,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'apellido') ?>
 
-    <?= $form->field($model, 'dui') ?>
+    <?= //$form->field($model, 'dui') ?>
 
-    <?= $form->field($model, 'nit') ?>
+    <?= //$form->field($model, 'nit') ?>
 
-    <?php // echo $form->field($model, 'fecha_nacimiento') ?>
+    <?php echo $form->field($model, 'fecha_nacimiento') ?>
 
-    <?php // echo $form->field($model, 'genero') ?>
+    <?php echo $form->field($model, 'genero') ?>
 
     <?php // echo $form->field($model, 'direccion') ?>
 
@@ -43,9 +43,11 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'nombre_usuario') ?>
 
+    <?php // echo $form->field($model, 'otro_doc') ?>
+
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

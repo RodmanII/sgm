@@ -61,7 +61,8 @@ class PersonaController extends Controller
     public function actionCreate()
     {
         $model = new Persona();
-
+        /*Aqui tengo que inicializar la propiedad otro_doc del modelo antes de guardarlo,
+        para ello uso $_POST[nomda] y numda, probablemente tenga que hacer algo similar en el update y view*/
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->codigo]);
         } else {

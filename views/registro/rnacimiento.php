@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
       <?= Yii::$app->session->getFlash('error') ?>
     </div>
     <?php endif; ?>
-    
+
     <?php $form = ActiveForm::begin(['id'=>'inacimiento']); ?>
     <?php
       $dbLibro = Libro::find()->where('tipo = "Nacimiento"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
@@ -66,8 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
           $query = new Query;
           $query->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
-            ->from('persona p')->leftJoin('nacimiento n', 'p.codigo = n.cod_asentado')
-            ->where('p.estado = "Activo"')->andWhere('calcularEdad(p.codigo) < 1')->orderBy(['p.nombre'=>SORT_ASC]);
+            ->from('persona p')->where('p.estado = "Activo"')->andWhere('calcularEdad(p.codigo) < 1')->andWhere('p.codigo NOT IN (SELECT cod_asentado FROM nacimiento)')->orderBy(['p.nombre'=>SORT_ASC]);
           $command = $query->createCommand();
           $data = $command->queryAll();
         ?>

@@ -1,6 +1,4 @@
 <?php
-namespace app\auxiliar;
-
 use app\auxiliar\NumeroALetra;
 function fechaMySQL($fecha){
   $formateado = str_replace('/', '-', $fecha);
