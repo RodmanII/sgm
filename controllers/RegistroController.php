@@ -7,6 +7,7 @@ use yii\base\Model;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\HttpException;
+use yii\base\UserException;
 use yii\filters\VerbFilter;
 use app\models\mant\Nacimiento;
 use app\models\mant\Defuncion;
@@ -101,20 +102,20 @@ class RegistroController extends Controller
             $model->cod_partida = $ulid;
             //Guardo el registro de nacimiento
             if(!$model->save()){
-              throw Exception('No se pudo guardar el registro de nacimiento, intente nuevamente');
+              throw new UserException('No se pudo guardar el registro de nacimiento, intente nuevamente');
             }
             //Actualizar el folio actual del libro
             if($conexion->createCommand("update libro set folio_actual = folio_actual + 1 where codigo = ".$codlibro)->execute()<=0){
-              throw Exception('No se pudo actualizar el libro de partidas, intente nuevamente');
+              throw new UserException('No se pudo actualizar el libro de partidas, intente nuevamente');
             }
             $transaccion->commit();
             Yii::$app->session->setFlash('success', 'Partida guardada con éxito');
             return $this->redirect(['nacimiento']);
           }else{
-            throw Exception('No se pudo guardar el registro de partida, intente nuevamente');
+            throw new UserException('No se pudo guardar el registro de partida, intente nuevamente');
           }
           return;
-        }catch(Exception $err){
+        }catch(UserException $err){
             $transaccion->rollback();
             Yii::$app->session->setFlash('error', $err->getMessage());
             return $this->redirect(['nacimiento']);

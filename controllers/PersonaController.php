@@ -4,10 +4,12 @@ namespace app\controllers;
 
 use Yii;
 use app\models\mant\Persona;
+use app\models\mant\Informante;
 use app\models\search\PersonaB;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\base\UserException;
 
 /**
 * PersonaController implements the CRUD actions for Persona model.
@@ -61,19 +63,19 @@ class PersonaController extends Controller
       public function actionCreate()
       {
         $model = new Persona();
-        /*Aqui tengo que inicializar la propiedad otro_doc del modelo antes de guardarlo,
-        para ello uso $_POST[nomda] y numda, probablemente tenga que hacer algo similar en el update y view*/
         $conexion = \Yii::$app->db;
         $transaccion = $conexion->beginTransaction();
         if ($model->load(Yii::$app->request->post())) {
-          print_r($_POST);
-          exit;
           require_once('../auxiliar/Auxiliar.php');
           if($model->validate()){
             try{
               $model->otro_doc = null;
-              if(isset($_POST['nomda']) && isset($_POST['numda'])){
+              $model->estado = 'Activo';
+              if($_POST['nomda'] != '' && $_POST['numda'] != ''){
                 $model->otro_doc = $_POST['nomda'].':'.$_POST['numda'];
+              }
+              if($model->nombre_usuario == ''){
+                $model->nombre_usuario = null;
               }
               $model->fecha_nacimiento = fechaMySQL($model->fecha_nacimiento);
               if($model->save()){
@@ -83,7 +85,7 @@ class PersonaController extends Controller
                   $informanteModel->nombre = $model->nombre.' '.$model->apellido;
                   $informanteModel->genero = $model->genero;
                   $informanteModel->cod_persona = $ulid;
-                  if(isset($model->dui)){
+                  if(!empty($model->dui)){
                     $informanteModel->tipo_documento = 'Documento Único de Identidad';
                     $informanteModel->numero_documento = $model->dui;
                   }else{
@@ -91,99 +93,92 @@ class PersonaController extends Controller
                     $informanteModel->numero_documento = $_POST['numda'];
                   }
                   if(!$informanteModel->save()){
-                    throw Exception('No se pudo guardar el registro de informante, intente nuevamente');
+                    throw new UserException('No se pudo guardar el registro de informante, intente nuevamente');
                   }
                 }
                 $transaccion->commit();
                 return $this->redirect(['view', 'id' => $model->codigo]);
               }else{
-                throw Exception('No se pudo guardar el registro de persona, intente nuevamente');
+                throw new UserException('No se pudo guardar el registro de persona, intente nuevamente');
               }
-            }catch(Exception $err){
+            }catch(UserException $err){
               $transaccion->rollback();
               Yii::$app->session->setFlash('error', $err->getMessage());
               return $this->redirect(['create']);
             }
-          } else {
-            return $this->render('create', [
-              'model' => $model,
-              ]);
-            }
           }
-
-          /**
-          * Updates an existing Persona model.
-          * If update is successful, the browser will be redirected to the 'view' page.
-          * @param integer $id
-          * @return mixed
-          */
-          public function actionUpdate($id)
-          {
-            $model = $this->findModel($id);
-
-            if ($model->load(Yii::$app->request->post())) {
-              require_once('../auxiliar/Auxiliar.php');
-              if($model->validate()){
-                try{
-                  $informanteModel = Informante::find()->where('cod_persona = :valor',[':valor'=>$model->codigo])->one();
-                  if($model->save()){
-                    if(isset($informanteModel)){
-                      //Si tiene un informante asociada, habra que actualizarlo también
-                      $informanteModel->nombre = $model->nombre.' '.$model->apellido;
-                      $informanteModel->genero = $model->genero;
-                      if(isset($model->dui)){
-                        $informanteModel->tipo_documento = 'Documento Único de Identidad';
-                        $informanteModel->numero_documento = $model->dui;
-                      }else{
-                        $informanteModel->tipo_documento = $_POST['nomda'];
-                        $informanteModel->numero_documento = $_POST['numda'];
-                      }
-                      if(!$informanteModel->save()){
-                        throw Exception('No se pudo actualizar el registro de informante asociado, intente nuevamente');
-                      }
-                    }
-                    $transaccion->commit();
+        }
+        return $this->render('create', ['model' => $model,]);
+      }
+      /**
+      * Updates an existing Persona model.
+      * If update is successful, the browser will be redirected to the 'view' page.
+      * @param integer $id
+      * @return mixed
+      */
+      public function actionUpdate($id)
+      {
+        $model = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post())) {
+          require_once('../auxiliar/Auxiliar.php');
+          if($model->validate()){
+            try{
+              $informanteModel = Informante::find()->where('cod_persona = :valor',[':valor'=>$model->codigo])->one();
+              if($model->save()){
+                if(!empty($informanteModel)){
+                  //Si tiene un informante asociada, habra que actualizarlo también
+                  $informanteModel->nombre = $model->nombre.' '.$model->apellido;
+                  $informanteModel->genero = $model->genero;
+                  if(!empty($model->dui)){
+                    $informanteModel->tipo_documento = 'Documento Único de Identidad';
+                    $informanteModel->numero_documento = $model->dui;
                   }else{
-                    throw Exception('No se pudo actualizar el registro de persona, intente nuevamente');
+                    $informanteModel->tipo_documento = $_POST['nomda'];
+                    $informanteModel->numero_documento = $_POST['numda'];
                   }
-                }catch(Exception $err){
-                  $transaccion->rollback();
-                  Yii::$app->session->setFlash('error', $err->getMessage());
-                  return $this->redirect(['create']);
+                  if(!$informanteModel->save()){
+                    throw new UserException('No se pudo actualizar el registro de informante asociado, intente nuevamente');
+                  }
                 }
-              } else {
-                return $this->render('update', [
-                  'model' => $model,
-                  ]);
-                }
+                $transaccion->commit();
+              }else{
+                throw new UserException('No se pudo actualizar el registro de persona, intente nuevamente');
               }
-            }
-
-            /**
-            * Deletes an existing Persona model.
-            * If deletion is successful, the browser will be redirected to the 'index' page.
-            * @param integer $id
-            * @return mixed
-            */
-            public function actionDelete($id)
-            {
-              $this->findModel($id)->delete();              
-              return $this->redirect(['index']);
-            }
-
-            /**
-            * Finds the Persona model based on its primary key value.
-            * If the model is not found, a 404 HTTP exception will be thrown.
-            * @param integer $id
-            * @return Persona the loaded model
-            * @throws NotFoundHttpException if the model cannot be found
-            */
-            protected function findModel($id)
-            {
-              if (($model = Persona::findOne($id)) !== null) {
-                return $model;
-              } else {
-                throw new NotFoundHttpException('The requested page does not exist.');
-              }
+            }catch(UserException $err){
+              $transaccion->rollback();
+              Yii::$app->session->setFlash('error', $err->getMessage());
+              return $this->redirect(['create']);
             }
           }
+        }
+        return $this->render('update', ['model' => $model,]);
+        }
+
+        /**
+        * Deletes an existing Persona model.
+        * If deletion is successful, the browser will be redirected to the 'index' page.
+        * @param integer $id
+        * @return mixed
+        */
+        public function actionDelete($id)
+        {
+          $this->findModel($id)->delete();
+          return $this->redirect(['index']);
+        }
+
+        /**
+        * Finds the Persona model based on its primary key value.
+        * If the model is not found, a 404 HTTP Exception will be thrown.
+        * @param integer $id
+        * @return Persona the loaded model
+        * @throws NotFoundHttpException if the model cannot be found
+        */
+        protected function findModel($id)
+        {
+          if (($model = Persona::findOne($id)) !== null) {
+            return $model;
+          } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+          }
+        }
+      }

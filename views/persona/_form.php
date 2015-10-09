@@ -20,7 +20,7 @@ use yii\helpers\ArrayHelper;
 <div class="persona-form">
 
   <?php if (Yii::$app->session->hasFlash('error')): ?>
-  <div class="alert alert-success">
+  <div class="alert alert-danger">
     <?= Yii::$app->session->getFlash('error') ?>
   </div>
   <?php endif; ?>
@@ -35,15 +35,24 @@ use yii\helpers\ArrayHelper;
 
   <?= $form->field($model, 'nit')->textInput(['maxlength' => true]) ?>
 
-  <?= $form->field($model, 'fecha_nacimiento')->widget(DatePicker::className(),[
+  <?php
+    if(!$model->isNewRecord){
+      require_once('../auxiliar/Auxiliar.php');
+      $model->fecha_nacimiento = fechaComun($model->fecha_nacimiento);
+    }
+    echo $form->field($model, 'fecha_nacimiento')->widget(DatePicker::className(),[
     'language'=>'es',
     'readonly'=>true,
     'options'=>['placeholder'=>'Especifique la fecha'],
     'pluginOptions'=>['format'=>'dd/mm/yyyy','autoclose'=>true],
     ]);
-    ?>
+  ?>
 
-    <?php $model->genero = 'Masculino'; ?>
+    <?php
+      if($model->isNewRecord){
+        $model->genero = 'Masculino';
+      }
+      ?>
     <?= $form->field($model, 'genero')->radioList(array('Masculino'=>'Masculino','Femenino'=>'Femenino')) ?>
 
     <div class="cflex">
@@ -58,6 +67,15 @@ use yii\helpers\ArrayHelper;
         </div>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
+        <?php
+          if(!$model->isNewRecord){
+            require_once('../auxiliar/Auxiliar.php');
+            $objDepto = Departamento::find()->where(' ')
+            //El depto y municpio tienen que aparecer seleccionados cuando se modifique
+            $model->fecha_nacimiento = fechaComun($model->fecha_nacimiento);
+          }
+        echo
+        ?>
         <?= $form->field($model, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->where('cod_departamento = 1')->all(), 'codigo', 'nombre'), ['id'=>'munic', 'onblur'=>'
         var direccion = $("#munic option:selected").text() + ", Departamento de "+$("#depto option:selected").text();
         $("#persona-direccion").val(direccion);
@@ -83,7 +101,18 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'cod_estado_civil')->dropDownList(ArrayHelper::map(EstadoCivil::find()->all(), 'codigo', 'nombre')) ?>
 
-    <?= $form->field($model, 'nombre_usuario')->dropDownList(ArrayHelper::map(Usuario::find()->where('nombre NOT IN (SELECT nombre_usuario FROM persona)')->all(), 'nombre', 'nombre'), ['prompt'=>'Seleccione un usuario']) ?>
+    <?php
+      if($model->isNewRecord){
+        echo $form->field($model, 'nombre_usuario')->dropDownList(ArrayHelper::map(Usuario::find()->where('NOT EXISTS
+        (
+        SELECT  nombre_usuario
+        FROM    persona
+        WHERE   persona.nombre_usuario = usuario.nombre
+        )')->all(), 'nombre', 'nombre'), ['prompt'=>'Seleccione un usuario']);
+      }else{
+        echo $form->field($model, 'nombre_usuario')->dropDownList(ArrayHelper::map(Usuario::find()->all(), 'nombre', 'nombre'), ['prompt'=>'Seleccione un usuario']);
+      }
+    ?>
 
     <div class="cflex">
         <?php
@@ -117,9 +146,7 @@ use yii\helpers\ArrayHelper;
         }else{
           $objInformante = Informante::find()->select('codigo')->where('cod_persona = :valor',[':valor'=>$model->codigo])->one();
           if(isset($objInformante)){
-            echo Html::a('Ver informante', '/web/informante/update/'.$objInformante->codigo, ['target'=>'_blank']);
-          }else{
-            echo Html::a('Sin Persona Asociada', null, ['target'=>'_self']);
+            echo Html::a('Ver informante', 'sgm/web/informante/update/'.$objInformante->codigo, ['target'=>'_blank']);
           }
         }
         echo '</span>';
@@ -139,6 +166,10 @@ use yii\helpers\ArrayHelper;
   </div>
   <script type="text/javascript">
     $('#personafrm').submit(function(event){
+      if ($('#numdoca').val() !== parseInt($('#numdoca').val(), 10)){
+        alert("El número de documento debe ser entero");
+        event.preventDefault;
+      }
       if($('#esinfor').val() == 'Si'){
         if($('#persona-dui').val() == '' && ($('#nomdoca').val() == '' || $('#numdoca').val() == '')){
           alert('Debe especificar DUI o un Documento Alternativo');

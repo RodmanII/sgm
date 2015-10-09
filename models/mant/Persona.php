@@ -54,7 +54,7 @@ class Persona extends \yii\db\ActiveRecord
         return [
             [['nombre', 'apellido', 'fecha_nacimiento', 'genero', 'direccion', 'cod_municipio', 'cod_nacionalidad', 'cod_estado_civil'], 'required'],
             [['fecha_nacimiento'], 'safe'],
-            [['cod_municipio', 'cod_nacionalidad', 'cod_estado_civil', 'dui', 'nit', 'otro_doc'], 'integer'],
+            [['cod_municipio', 'cod_nacionalidad', 'cod_estado_civil', 'dui', 'nit'], 'integer'],
             [['nombre', 'apellido', 'genero', 'profesion', 'estado', 'nombre_usuario'], 'string', 'max' => 50],
             [['dui'], 'string', 'max' => 9],
             [['nit'], 'string', 'max' => 14],

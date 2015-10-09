@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\mant\Municipio;
+use app\models\mant\EstadoCivil;
+use app\models\mant\Nacionalidad;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\mant\Persona */
@@ -25,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
+    <?php require_once('../auxiliar/Auxiliar.php'); ?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -33,14 +37,30 @@ $this->params['breadcrumbs'][] = $this->title;
             'apellido',
             'dui',
             'nit',
-            'fecha_nacimiento',
+            [
+              'attribute'=>'fecha_nacimiento',
+              'format'=>'raw',
+              'value'=>fechaComun($model->fecha_nacimiento),
+            ],
             'genero',
             'direccion',
             'profesion',
             'estado',
-            'cod_municipio',
-            'cod_nacionalidad',
-            'cod_estado_civil',
+            [
+              'attribute'=>'cod_municipio',
+              'format'=>'raw',
+              'value'=>retornarDato($model, 'Municipio'),
+            ],
+            [
+              'attribute'=>'cod_nacionalidad',
+              'format'=>'raw',
+              'value'=>retornarDato($model, 'Nacionalidad'),
+            ],
+            [
+              'attribute'=>'cod_estado_civil',
+              'format'=>'raw',
+              'value'=>retornarDato($model, 'EstadoCivil'),
+            ],
             'nombre_usuario',
             'otro_doc',
         ],

@@ -11,11 +11,11 @@ SELECT usr.nombre, rol.nombre FROM usuario usr INNER JOIN rol on usr.cod_rol = r
 SELECT *, calcularEdad(codigo) FROM persona;
 select * from departamento;
 
-SELECT * FROM informante;
 select * from hospital where codigo = 19;
 select * from municipio where codigo = 60;
-select * from persona;
 SELECT * FROM libro;
 select * from partida;
 select * from nacimiento;
 select * from usuario;
+SELECT * FROM informante;
+select * from persona;

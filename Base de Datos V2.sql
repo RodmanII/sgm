@@ -409,26 +409,6 @@ insert into unidad(nombre) values('Registro Tributario');
 insert into unidad(nombre) values('Desarrollo Urbano y Rural');
 insert into unidad(nombre) values('Desarrollo Ciudadano Municipal');
 
-create table `informante` (
-	`codigo` int auto_increment,
-	`nombre` varchar(50) not null,
-	`tipo_documento` varchar(50) not null,
-	`numero_documento` varchar(50) not null,
-	`genero` varchar(50) not null,
-	`cod_persona` int(11) null,
-	constraint pk_Informante primary key(`codigo`),
-	constraint unq_Informante_nombre unique(nombre),
-	constraint unq_Informante_cod_persona unique(cod_persona),
-	constraint unq_Informante_numero_documento unique(numero_documento)
-);
-alter table `informante` add constraint `fk_informante_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
--- Inserción de Registros para Informante
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('Fabián Ernesto Clavico Fútil','Documento Único de Identidad','049554973','Masculino');
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('Sandra Valentina Rios Luna','Documento Único de Identidad','048324077','Femenino');
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('Leonardo Ernesto Fernández Gunter','Documento Nacional de Identidad','13032975','Masculino');
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('James Howlet','Pasaporte','257993','Femenino');
-insert into informante(nombre,tipo_documento,numero_documento,genero) values('Thomas David Blaskowitz','Pasaporte','14693','Masculino');
-
 create table `modalidad_divorcio` (
 	`codigo` int auto_increment,
 	`nombre` varchar(50) not null,
@@ -524,6 +504,10 @@ insert into usuario(nombre,contrasenya,salt,cod_rol) values('gurflax','b205d3732
 insert into usuario(nombre,contrasenya,salt,cod_rol) values('gerflax','8436f145294b4539068d6f73a7c626aa6f62c33c4911af63194ef86415f3f9b1ca229305257ce5fb53c5273132b5f38df22bc731e7026f623e4f2a16cc77bef5','2_Qc7k0rKRb',3);
 insert into usuario(nombre,contrasenya,salt,cod_rol) values ('rodrigo','50116cb87536c9c9a414f13093fc3a7073d05bb22e68b5249546729d8caea87479ea11ba79cb9c7c5d9f6ca27d21d442a35bbce1dc657b36510b873b2c2e2890','KCma6npWyLQ',4);
 insert into usuario(nombre,contrasenya,salt,cod_rol) values ('verdugo','cdea91f725d0023cecf95eb2dc352bb09ff174bea76ff9d94e3c71e1708a2501419576172f8e50c96de26f8738e618a7e3feab3981db921cc1df26c8c96cd053','YoSpMe9bwFk',4);
+insert into usuario(nombre,contrasenya,salt,cod_rol) values ('blaviken','a7f9b0b2f55a036c415ae6fd80d4c72513acb4159f0f600fbbcbba118cf734d71f7a4412947faf8d0eff82014aa4c885f1adde25ff85fbbfbf9b475c008efb85','-VcY=t^=+yy',1);
+insert into usuario(nombre,contrasenya,salt,cod_rol) values ('vicovaro','d5620259cb2b0a08c6742f5cf5659b14533ae72e8f2a738cc0bb68f1c17362ff16900218908fcd39d2876fe7f43c8035a99c01277f802eb0ce0aa61ed199d1f3','2S^bjNmlgl8',1);
+insert into usuario(nombre,contrasenya,salt,cod_rol) values ('eskel','1c720800df757f711de87603e17c509914ae962fa8af00d0089b0f9a1d3cb3d85210530dfba6c9f82fbe778491af449f0d1cf92888f1af205b20151d6d86464f','~B11wVqYJo8',2);
+insert into usuario(nombre,contrasenya,salt,cod_rol) values ('vesemir','3a4c4c1bb7758a4ee9786aed5f41a988588d06192ae993328c1eaede266cbda19cfa79f91fe6aa1116a5cdd11d374ee2ef08d8d456482d8d780f98e73e944371','sy_AZj8JY|F',3);
 
 create table `persona` (
 	`codigo` int auto_increment,
@@ -554,13 +538,13 @@ alter table `persona` add constraint `fk_persona_municipio_cod_municipio` foreig
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Alicia Guadalupe', 'López', '048501627', '05151032645014', '1971-02-25', 'Femenino', 'Santa Tecla, Departamento de La Libertad', 'Profesora', 158, 1, 2, 'garflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Rodrigo Osvaldo', 'Grijalva López', '0484019150023', '0515103145', '1993-09-14', 'Masculino', 'Ilopango, Departamento de San Salvador', 'Estudiante', 154, 1, 4, 'girflax');
+values('Rodrigo Osvaldo', 'Grijalva López', '051510314', '04840191500236', '1993-09-14', 'Masculino', 'Ilopango, Departamento de San Salvador', 'Estudiante', 154, 1, 4, 'girflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Hugo Ernesto', 'Grijalva Pérez', '014501627', '05171032641145', '1967-10-09', 'Masculino', 'San Sebastián, Departamento de Chalatenango', 'Administrativo', 64, 3, 1, 'gorflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Claudia Maribel', 'Flores Valle', '562101627', '62301032647801', '1995-10-09', 'Femenino', 'San Marcos, Departamento de San Salvador', 'Secretaria', 74, 5, 3, 'verdugo');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Carla Maria', 'Castillo Navarrete', '565171647', '62321027642304', '1992-03-17', 'Femenino', 'Ciudad Valdez, Departamento de Santa Ana', 'Inactivo', 62, 6, 5, 'gerflax');
+values('Carla Maria', 'Castillo Navarrete', '565171647', '62321027642304', '1992-03-17', 'Femenino', 'Ciudad Valdez, Departamento de Santa Ana', 'Contadora', 'Inactivo', 62, 6, 5, 'gerflax');
 -- Menos de 18 que van a figurar como padres
 insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('William Eduardo', 'Castro Paz', 'Carnet de BoyScoutt:45126320', '1995-07-22', 'Masculino', 'Loc Muine, Departamento de Temeria', 'Mecánico Soldador', 'Activo', 101, 2, 3, null);
@@ -577,6 +561,26 @@ insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estad
 values('Lourdes Anastasia', 'Gonzales Peña','2015-07-09', 'Femenino', 'Mahakan, Departamento de Temeria', 'Activo', 77, 1, 1);
 insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
 values('Maria José', 'Jurado Carmona','2014-12-15', 'Femenino', 'Rivendel, Departamento de Tierra Media', 'Activo', 11, 1, 1);
+
+create table `informante` (
+	`codigo` int auto_increment,
+	`nombre` varchar(50) not null,
+	`tipo_documento` varchar(50) not null,
+	`numero_documento` varchar(50) not null,
+	`genero` varchar(50) not null,
+	`cod_persona` int(11) null,
+	constraint pk_Informante primary key(`codigo`),
+	constraint unq_Informante_nombre unique(nombre),
+	constraint unq_Informante_cod_persona unique(cod_persona),
+	constraint unq_Informante_numero_documento unique(numero_documento)
+);
+alter table `informante` add constraint `fk_informante_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
+-- Inserción de Registros para Informante
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('Fabián Ernesto Clavico Fútil','Documento Único de Identidad','049554973','Masculino');
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('Sandra Valentina Rios Luna','Documento Único de Identidad','048324077','Femenino');
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('Leonardo Ernesto Fernández Gunter','Documento Nacional de Identidad','13032975','Masculino');
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('James Howlet','Pasaporte','257993','Femenino');
+insert into informante(nombre,tipo_documento,numero_documento,genero) values('Thomas David Blaskowitz','Pasaporte','14693','Masculino');
 
 create table `empleado` (
 	`codigo` int auto_increment,
