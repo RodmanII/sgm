@@ -13,6 +13,9 @@ use yii\base\UserException;
 
 /**
 * PersonaController implements the CRUD actions for Persona model.
+* AVISO IMPORTANTE: Debido a que no estoy usando los botones de submit de ActiveForm sino que simples botones y
+* enviando el formulario por medio de JS los valores que se tendrian que guardar como nulos se pasan como candenas vacias
+* esto debido a que las solicitudes POST y GET no admiten null.
 */
 class PersonaController extends Controller
 {
@@ -68,14 +71,16 @@ class PersonaController extends Controller
         if ($model->load(Yii::$app->request->post())) {
           require_once('../auxiliar/Auxiliar.php');
           if($model->validate()){
+            foreach ($model->attributes as $llave => $elemento) {
+              if($model[$llave] == ''){
+                $model[$llave] = null;
+              }
+            }
             try{
               $model->otro_doc = null;
               $model->estado = 'Activo';
               if($_POST['nomda'] != '' && $_POST['numda'] != ''){
                 $model->otro_doc = $_POST['nomda'].':'.$_POST['numda'];
-              }
-              if($model->nombre_usuario == ''){
-                $model->nombre_usuario = null;
               }
               $model->fecha_nacimiento = fechaMySQL($model->fecha_nacimiento);
               if($model->save()){
@@ -118,10 +123,22 @@ class PersonaController extends Controller
       */
       public function actionUpdate($id)
       {
+        $model = new Persona();
+        $conexion = \Yii::$app->db;
+        $transaccion = $conexion->beginTransaction();
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post())) {
           require_once('../auxiliar/Auxiliar.php');
           if($model->validate()){
+            foreach ($model->attributes as $llave => $elemento) {
+              if($model[$llave] == ''){
+                $model[$llave] = null;
+              }
+            }
+            if($_POST['nomda'] != '' && $_POST['numda'] != ''){
+              $model->otro_doc = $_POST['nomda'].':'.$_POST['numda'];
+            }
+            $model->fecha_nacimiento = fechaMySQL($model->fecha_nacimiento);
             try{
               $informanteModel = Informante::find()->where('cod_persona = :valor',[':valor'=>$model->codigo])->one();
               if($model->save()){
@@ -141,6 +158,7 @@ class PersonaController extends Controller
                   }
                 }
                 $transaccion->commit();
+                return $this->redirect(['view', 'id' => $model->codigo]);
               }else{
                 throw new UserException('No se pudo actualizar el registro de persona, intente nuevamente');
               }
@@ -151,7 +169,7 @@ class PersonaController extends Controller
             }
           }
         }
-        return $this->render('update', ['model' => $model,]);
+          return $this->render('update', ['model' => $model,]);
         }
 
         /**
@@ -178,7 +196,7 @@ class PersonaController extends Controller
           if (($model = Persona::findOne($id)) !== null) {
             return $model;
           } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException('La página solicitida no existe');
           }
         }
       }

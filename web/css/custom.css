@@ -37,3 +37,21 @@
     margin-bottom: 10px;
   }
 }
+
+.tablac {
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.tablac caption{
+  color: #333;
+  font-weight: bold;
+}
+
+input[type="radio"][name="gen_familiar"] {
+  display: inline;
+}
+
+.form-group label{
+  display: block;
+}

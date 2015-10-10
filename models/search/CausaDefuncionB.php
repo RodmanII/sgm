@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\mant\Informante;
+use app\models\mant\CausaDefuncion;
 
 /**
- * InformanteB represents the model behind the search form about `app\models\mant\Informante`.
+ * CausaDefuncionB represents the model behind the search form about `app\models\mant\CausaDefuncion`.
  */
-class InformanteB extends Informante
+class CausaDefuncionB extends CausaDefuncion
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class InformanteB extends Informante
     public function rules()
     {
         return [
-            [['codigo', 'cod_persona'], 'integer'],
-            [['nombre', 'tipo_documento', 'numero_documento', 'genero'], 'safe'],
+            [['codigo'], 'integer'],
+            [['nombre'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class InformanteB extends Informante
      */
     public function search($params)
     {
-        $query = Informante::find();
+        $query = CausaDefuncion::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,13 +57,9 @@ class InformanteB extends Informante
 
         $query->andFilterWhere([
             'codigo' => $this->codigo,
-            'cod_persona' => $this->cod_persona,
         ]);
 
-        $query->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'tipo_documento', $this->tipo_documento])
-            ->andFilterWhere(['like', 'numero_documento', $this->numero_documento])
-            ->andFilterWhere(['like', 'genero', $this->genero]);
+        $query->andFilterWhere(['like', 'nombre', $this->nombre]);
 
         return $dataProvider;
     }

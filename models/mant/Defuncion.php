@@ -34,7 +34,7 @@ class Defuncion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['determino_causa', 'familiares', 'cod_difunto', 'cod_causa', 'num_partida'], 'required'],
+            [['determino_causa', 'cod_difunto', 'cod_causa', 'num_partida'], 'required'],
             [['cod_difunto', 'cod_causa', 'num_partida'], 'integer'],
             [['determino_causa'], 'string', 'max' => 100],
             [['familiares'], 'string', 'max' => 300],
@@ -49,10 +49,10 @@ class Defuncion extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'codigo' => 'Codigo',
+            'codigo' => 'Número',
             'determino_causa' => 'Profesional quién determino la causa',
             'familiares' => 'Familiares',
-            'cod_difunto' => 'Persona Difunta',
+            'cod_difunto' => 'Difunto',
             'cod_causa' => 'Causa de Defunción',
             'num_partida' => 'Número',
         ];

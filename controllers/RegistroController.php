@@ -20,6 +20,7 @@ use app\models\mant\Hospital;
 use app\models\mant\Informante;
 use app\models\mant\Municipio;
 use app\models\mant\Libro;
+use app\models\mant\CausaDefuncion;
 use app\auxiliar\NumeroALetra;
 use app\auxiliar\Auxiliar;
 use mPDF;
@@ -153,6 +154,11 @@ class RegistroController extends Controller
     $mpdf->WriteHTML('<p class="centrado">TELEFAX 2536-5215</p>');
     $mpdf->WriteHTML('<hr/>');
     $mpdf->WriteHTML('<p class="centrado cabecera">ALCALDÍA MUNICIPAL DE ILOPANGO</p>');
+    $tiempo = explode(':',date('G:i',strtotime($param['hora_suceso'])));
+    $minutos = 'cero';
+    if($tiempo[1]!='00'){
+      $minutos = $conversor->to_word($tiempo[1],null,true);
+    }
     switch ($tipo) {
       case 'nacimiento':
       $mpdf->WriteHTML('<p class="centrado cabecera">LIBRO DE PARTIDAS DE NACIMIENTO NÚMERO '.$conversor->to_word($param['num_libro'],null,false,true).' DEL</p>');
@@ -162,11 +168,7 @@ class RegistroController extends Controller
       $dbAsentado = Persona::find()->where('codigo = '.$param['cod_asentado'])->one();
       $dbHospital = Hospital::find()->where('codigo = '.$param['cod_hospital'])->one();
       $dbMunicipio = Municipio::find()->where('codigo = '.$param['cod_municipio'])->one();
-      $tiempo = explode(':',date('G:i',strtotime($param['hora_suceso'])));
-      $minutos = 'cero';
-      if($tiempo[1]!='00'){
-        $minutos = $conversor->to_word($tiempo[1],null,true);
-      }
+      //Aqui estaba el codigo para recuperar el tiempo, se coloca antes del switch porque figura en cada documento
       $nomInscrito = $dbAsentado->nombre.' '.$dbAsentado->apellido;
       $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).'; <strong>'.$dbAsentado->nombre.'</strong>.- sexo '
       .strtolower($dbAsentado->genero).', nació en el '.$dbHospital->nombre.' '.$param['lugar_suceso'].', Municipio de '
@@ -188,7 +190,7 @@ class RegistroController extends Controller
       }
       for($i = 0;$i < $iteraciones;$i++){
         $dbProgenitor = Persona::find()->where('codigo = '.$param[$arreglo[$i]])->one();
-        if($dbProgenitor->dui!=''){
+        if($dbProgenitor->dui!=null){
           $tipo_doc = 'Documento Único de Identidad';
           $num_doc = $dbProgenitor->dui;
         }else{
@@ -226,6 +228,50 @@ class RegistroController extends Controller
       $mpdf->WriteHTML('<p id="finfort" class="firmat">Firma del Informante</p><p id="fjrft" class="firmat">Jefe del Registro del Estado Familiar</p>');
       break;
       case 'defuncion':
+        $mpdf->WriteHTML('<p class="centrado cabecera">LIBRO DE PARTIDAS DE DEFUNCIÓN NÚMERO '.$conversor->to_word($param['num_libro'],null,false,true).' DEL</p>');
+        $mpdf->WriteHTML('<p class="centrado cabecera">AÑO '.$conversor->to_word(date('Y')).'</p>');
+        $mpdf->WriteHTML('<p class="derecha cabecera">FOLIO '.$conversor->to_word($param['folio']).'</p>');
+        $mpdf->WriteHTML('<p class="centrado">DATOS DEL FALLECIDO</p>');
+        $dbDifunto = Persona::find()->where('codigo = '.$param['cod_difunto'])->one();
+        $dbCausa = CausaDefuncion::find()->where('codigo = '.$param['cod_causa'])->one();
+        $dbInformante = Informante::find()->where('codigo = '.$param['cod_informante'])->one();
+        $nomInscrito = $dbDifunto->nombre.' '.$dbDifunto->apellido;
+        if($dbDifunto->dui!=null){
+          $tipo_doc = 'Documento Único de Identidad';
+          $num_doc = $dbDifunto->dui;
+        }else{
+          $arr = explode(':',$dbDifunto->otro_doc);
+          $tipo_doc = $arr[0];
+          $num_doc = $arr[1];
+        }
+        $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).'; <strong>'.$dbDifunto->nombre.' '.$dbDifunto->apellido.'</strong>.- sexo '
+        .strtolower($dbDifunto->genero).', de '.$conversor->to_word(calcularEdad($dbDifunto->fecha_nacimiento),null,true).' años de edad; Profesión u Oficio; '.$dbDifunto->profesion.'; Estado Familiar: '.$dbDifunto->codEstadoCivil->nombre.';'
+        .' Del domicilio de '.$dbDifunto->direccion.', de Nacionalidad '.$dbDifunto->codNacionalidad->nombre.', Documento de Identidad del Fallecido: '.$tipo_doc.'; Documento Número '
+        .$conversor->convertirSeparado($num_doc).'. Falleció en el '.$param['lugar_suceso'].', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos del día '
+        .fechaATexto($param['fecha_suceso']).' Causa del fallecimiento: '.$dbCausa->nombre.'. Nombre del profesional quién determino la causa: '
+        .$param['determino_causa'].'.</p>');
+
+        $mpdf->WriteHTML('<p class="centrado">DATOS FAMILIARES</p>');
+        $arrfam = explode('-',$param['familiares']);
+        $indinf = 'El';
+        if($dbInformante->genero=='Femenino'){
+          $indinf = 'La';
+        }
+        for($i = 0;$i < count($arrfam);$i++){
+          $elemento = explode(':',$param['familiares']);
+          $indicador = 'del';
+          if($elemento[1][0].$elemento[1][1] == 'Ma' || substr($elemento[1],-1) == 'a'){
+            $indicador = 'de la';
+          }
+          $mpdf->WriteHTML('<p class="justificado">Nombre '.$indicador.' '.$elemento[1].': '.$elemento[0].' </p>');
+        }
+        $mpdf->WriteHTML('<p class="centrado">DATOS DEL INFORMANTE</p>');
+        $mpdf->WriteHTML('<p class="justificado">Dio los datos; <strong>'.$dbInformante->nombre.'</strong>, quién se identifica por medio de '
+        .$dbInformante->tipo_documento.' número; '.$conversor->convertirSeparado($dbInformante->numero_documento).'. '.$indinf.'. informante manifiesta '
+        .'que está de acuerdo con los datos consignados y para constancia firma. Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
+
+        $mpdf->WriteHTML('<p id="finforl" class="firmal">F._________________________</p><p id="fjrfl" class="firmal">F._______________________________________</p>');
+        $mpdf->WriteHTML('<p id="finfort" class="firmat">Firma del Informante</p><p id="fjrft" class="firmat">Jefe del Registro del Estado Familiar</p>');
       break;
       case 'matrimonio':
       break;

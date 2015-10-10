@@ -132,7 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </button>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'rel_informante')->dropDownList(['Padre'=>'Padre','Madre'=>'Madre','Tio'=>'Tio','Tia'=>'Tia']); ?>
+        <?= $form->field($model, 'rel_informante')->dropDownList(['Padre'=>'Padre','Madre'=>'Madre','Tio'=>'Tio','Tia'=>'Tia','Abuelo'=>'Abuelo','Abuela'=>'Abuela']); ?>
       </span>
     </div>
     <div class="cflex">

@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\mant\Informante */
+/* @var $model app\models\mant\CausaDefuncion */
 
-$this->title = 'Crear Informante';
-$this->params['breadcrumbs'][] = ['label' => 'Informantes', 'url' => ['index']];
+$this->title = 'Create Causa Defuncion';
+$this->params['breadcrumbs'][] = ['label' => 'Causa Defuncions', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="informante-create">
+<div class="causa-defuncion-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

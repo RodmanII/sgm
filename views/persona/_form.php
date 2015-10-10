@@ -11,6 +11,7 @@ use app\models\mant\EstadoCivil;
 use app\models\mant\Usuario;
 use app\models\mant\Informante;
 use yii\helpers\ArrayHelper;
+use yii\web\View;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\mant\Persona */
@@ -38,7 +39,9 @@ use yii\helpers\ArrayHelper;
   <?php
     if(!$model->isNewRecord){
       require_once('../auxiliar/Auxiliar.php');
-      $model->fecha_nacimiento = fechaComun($model->fecha_nacimiento);
+      if(!empty($model->fecha_nacimiento)){
+        $model->fecha_nacimiento = fechaComun($model->fecha_nacimiento);
+      }
     }
     echo $form->field($model, 'fecha_nacimiento')->widget(DatePicker::className(),[
     'language'=>'es',
@@ -61,7 +64,8 @@ use yii\helpers\ArrayHelper;
           <?= Html::label('Departamento', 'depto'); ?>
           <?= Html::dropDownList('departamento', null, ArrayHelper::map(Departamento::find()->all(), 'codigo', 'nombre'), ['id'=>'depto','class'=>'form-control','onchange'=>'
           $.post( "'.Yii::$app->urlManager->createUrl('general/municipios?id=').'"+$(this).val(), function( data ) {
-            $( "select#munic" ).html( data );
+            $("select#munic").html(data);
+            $("#munic").val('.$model->cod_municipio.');
           });
           ']) ?>
         </div>
@@ -69,12 +73,9 @@ use yii\helpers\ArrayHelper;
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
         <?php
           if(!$model->isNewRecord){
-            require_once('../auxiliar/Auxiliar.php');
-            $objDepto = Departamento::find()->where(' ')
-            //El depto y municpio tienen que aparecer seleccionados cuando se modifique
-            $model->fecha_nacimiento = fechaComun($model->fecha_nacimiento);
+            $objMunicipio = Municipio::find()->where('codigo = :valor',[':valor'=>$model->cod_municipio])->one();
+            $this->registerJs('$("#depto").val('.$objMunicipio->codDepartamento->codigo.').change();',View::POS_READY);
           }
-        echo
         ?>
         <?= $form->field($model, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->where('cod_departamento = 1')->all(), 'codigo', 'nombre'), ['id'=>'munic', 'onblur'=>'
         var direccion = $("#munic option:selected").text() + ", Departamento de "+$("#depto option:selected").text();
@@ -119,7 +120,7 @@ use yii\helpers\ArrayHelper;
           $tipodoc = '';
           $numdoc = '';
           if(!$model->isNewRecord){
-            if(isset($model->otro_doc)){
+            if(!empty($model->otro_doc)){
               $arreglo = explode(':',$model->otro_doc);
               $tipodoc = $arreglo[0];
               $numdoc = $arreglo[1];
@@ -146,7 +147,7 @@ use yii\helpers\ArrayHelper;
         }else{
           $objInformante = Informante::find()->select('codigo')->where('cod_persona = :valor',[':valor'=>$model->codigo])->one();
           if(isset($objInformante)){
-            echo Html::a('Ver informante', 'sgm/web/informante/update/'.$objInformante->codigo, ['target'=>'_blank']);
+            echo Html::a('Ver informante', '/sgm/web/informante/update/'.$objInformante->codigo, ['target'=>'_blank']);
           }
         }
         echo '</span>';
@@ -154,7 +155,7 @@ use yii\helpers\ArrayHelper;
     ?>
 
     <div class="form-group">
-      <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+      <?= Html::button($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary','id'=>'procesar']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -164,17 +165,6 @@ use yii\helpers\ArrayHelper;
       $this->registerJsFile(Yii::$app->homeUrl."js/bootstrap-select.min.js");
     ?>
   </div>
-  <script type="text/javascript">
-    $('#personafrm').submit(function(event){
-      if ($('#numdoca').val() !== parseInt($('#numdoca').val(), 10)){
-        alert("El número de documento debe ser entero");
-        event.preventDefault;
-      }
-      if($('#esinfor').val() == 'Si'){
-        if($('#persona-dui').val() == '' && ($('#nomdoca').val() == '' || $('#numdoca').val() == '')){
-          alert('Debe especificar DUI o un Documento Alternativo');
-          event.preventDefault();
-        }
-      }
-    }
-  </script>
+  <?php
+    $this->registerJsFile(Yii::$app->homeUrl."js/mant/fpersona.js", ['depends' => [\yii\web\JqueryAsset::className()]]);
+  ?>

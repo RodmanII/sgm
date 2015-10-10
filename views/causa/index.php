@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\search\InformanteB */
+/* @var $searchModel app\models\search\CausaDefuncionB */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Informantes';
+$this->title = 'Causa Defuncions';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="informante-index">
+<div class="causa-defuncion-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Crear Informante', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Causa Defuncion', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -27,10 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'codigo',
             'nombre',
-            'tipo_documento',
-            'numero_documento',
-            'genero',
-            // 'cod_persona',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

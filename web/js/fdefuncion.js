@@ -67,43 +67,26 @@
   }
 
   // initialization
-  var inp  = document.querySelector('#nrwr')
-  var sel  = document.querySelector('#nacimiento-cod_madre')
-  var disp = document.querySelector('#matches')
-  var elemento = document.getElementById('nacimiento-cod_madre');
-
   var inp1  = document.querySelector('#nrwr1')
-  var sel1  = document.querySelector('#nacimiento-cod_asentado')
+  var sel1  = document.querySelector('#defuncion-cod_difunto')
   var disp1 = document.querySelector('#matches1')
-  var elemento1 = document.getElementById('nacimiento-cod_asentado');
+  var elemento1 = document.getElementById('defuncion-cod_difunto');
 
   var inp2  = document.querySelector('#nrwr2')
-  var sel2  = document.querySelector('#nacimiento-cod_padre')
+  var sel2  = document.querySelector('#defuncion-cod_causa')
   var disp2 = document.querySelector('#matches2')
-  var elemento2 = document.getElementById('nacimiento-cod_padre');
+  var elemento2 = document.getElementById('defuncion-cod_causa');
 
   var inp3  = document.querySelector('#nrwr3')
   var sel3  = document.querySelector('#partida-cod_informante')
   var disp3 = document.querySelector('#matches3')
   var elemento3 = document.getElementById('partida-cod_informante');
 
-  var inp4  = document.querySelector('#nrwr4')
-  var sel4  = document.querySelector('#nacimiento-cod_hospital')
-  var disp4 = document.querySelector('#matches4')
-  var elemento4 = document.getElementById('nacimiento-cod_hospital');
-
   // kick it off
-  var listado = []
   var listado1 = []
   var listado2 = []
   var listado3 = []
-  var listado4 = []
 
-  for(var i = 0;i<elemento.length;i++){
-    listado.push([]);
-    listado[i].push(elemento.options[i].value);
-    listado[i].push(elemento.options[i].innerHTML);
-  }
   for(var i = 0;i<elemento1.length;i++){
     listado1.push([]);
     listado1[i].push(elemento1.options[i].value);
@@ -119,48 +102,31 @@
     listado3[i].push(elemento3.options[i].value);
     listado3[i].push(elemento3.options[i].innerHTML);
   }
-  for(var i = 0;i<elemento4.length;i++){
-    listado4.push([]);
-    listado4[i].push(elemento4.options[i].value);
-    listado4[i].push(elemento4.options[i].innerHTML);
-  }
 
-  var nrwr = new Narrower(inp, sel, disp, listado)
   var nrwr1 = new Narrower(inp1, sel1, disp1, listado1)
   var nrwr2 = new Narrower(inp2, sel2, disp2, listado2)
   var nrwr3 = new Narrower(inp3, sel3, disp3, listado3)
-  var nrwr4 = new Narrower(inp4, sel4, disp4, listado4)
 
-  nrwr.init()
   nrwr1.init()
   nrwr2.init()
   nrwr3.init()
-  nrwr4.init()
 
-  $("#edit-asentado").click(function(){
+  $("#edit-difunto").click(function(){
     window.open('/sgm/web/persona/index');
   });
 
-  $("#edit-madre").click(function(){
-    window.open('/sgm/web/persona/index');
-  });
-
-  $("#edit-padre").click(function(){
-    window.open('/sgm/web/persona/index');
+  $("#edit-causa").click(function(){
+    window.open('/sgm/web/causa/index');
   });
 
   $("#edit-informante").click(function(){
     window.open('/sgm/web/informante/index');
   });
 
-  $("#edit-hospital").click(function(){
-    window.open('/sgm/web/hospital/index');
-  });
-
   function enviarParametros(archivo,ventana){
     archivo = typeof archivo !== 'undefined' ? archivo : false;
     ventana = typeof ventana !== 'undefined' ? ventana : true;
-    var dnacimiento = $('[id^=nacimiento]').serializeArray();
+    var dnacimiento = $('[id^=defuncion]').serializeArray();
     var dpartida = $('[id^=partida]').serializeArray();
     var longdn = dnacimiento.length, longdp = dpartida.length;
     var cadena = "&parametros=";
@@ -173,46 +139,55 @@
         cadena+=";";
       }
     });
+    //Obtener los familiares
+    var familiares = ';familiares*';
+    var long = $("#tfamiliares tbody").children().length;
+    $("#tfamiliares > tbody > tr").each(function(index, element){
+      var elemento = $(this);
+      var anex = '-';
+      if(index == long-1){
+        anex = '';
+      }
+      familiares += elemento.find(".nom").html()+':'+elemento.find(".rel").html()+anex;
+    });
     var gar = '&guardar=false';
     if(archivo){
       gar = '&guardar=true';
     }
     if(ventana){
-      window.open('generar?tipo=nacimiento'+gar+cadena);
+      window.open('generar?tipo=defuncion'+gar+cadena+familiares);
     }else{
-      $.get('generar','tipo=nacimiento'+gar+cadena);
+      $.get('generar','tipo=defuncion'+gar+cadena+familiares);
     }
   }
 
   $('#generar').click(function(){
-    enviarParametros(false);
+    var tbody = $("#tfamiliares tbody");
+    if(tbody.children().length > 0){
+      enviarParametros(false);
+    }else{
+      alert('Tiene que especificar a al menos un familiar');
+    }
   });
 
   $('#guardar').click(function(){
-    var madre = $('#nacimiento-cod_madre').val();
-    var padre = $('#nacimiento-cod_padre').val();
-    if(madre != '' || padre != ''){
-      $('#inacimiento').submit();
+    var tbody = $("#tfamiliares tbody");
+    if(tbody.children().length > 0){
+      $('#idefuncion').submit();
       enviarParametros(true,false);
     }else{
-      alert('Tiene que especificar padre, madre u ambos');
+      alert('Tiene que especificar a al menos un familiar');
     }
   }
 );
 
-$('#reload-asentado').click(function(){
+$('#reload-difunto').click(function(){
   location.reload();
   window.sessionStorage.setItem('recargado',true);
   window.sessionStorage.setItem('destino','nrwr1');
 });
 
-$('#reload-madre').click(function(){
-  location.reload();
-  window.sessionStorage.setItem('recargado',true);
-  window.sessionStorage.setItem('destino','nrwr');
-});
-
-$('#reload-padre').click(function(){
+$('#reload-causa').click(function(){
   location.reload();
   window.sessionStorage.setItem('recargado',true);
   window.sessionStorage.setItem('destino','nrwr2');
@@ -224,14 +199,50 @@ $('#reload-informante').click(function(){
   window.sessionStorage.setItem('destino','nrwr3');
 });
 
-$('#reload-hospital').click(function(){
-  location.reload();
-  window.sessionStorage.setItem('recargado',true);
-  window.sessionStorage.setItem('destino','nrwr4');
-});
-
 if(window.sessionStorage.getItem('recargado')=='true'){
   $('#'+window.sessionStorage.getItem('destino')).focus();
   window.sessionStorage.setItem('recargado',false);
 }
+
+$('#agfamiliar').click(function(){
+  var nombre = $('#nomfamiliar').val();
+  var genero = $('input[name=gen_familiar]:checked', '#idefuncion').val();
+  var relacion = $('#relfamiliar').val();
+  var trel = '';
+  var seguir = true;
+  if(nombre != ''){
+    if(genero == 'Masculino'){
+      trel = relacion+'o';
+    }else{
+      trel = relacion+'a';
+    }
+    if(genero == 'Masculino' && relacion == 'dre'){
+      trel = 'Pa'+relacion;
+    }else if(genero == 'Femenino' && relacion == 'dre'){
+      trel = 'Ma'+relacion;
+    }
+    var tbody = $("#tfamiliares tbody");
+    if(tbody.children().length > 0) {
+      $("#tfamiliares > tbody > tr").each(function() {
+        var elemento = $(this);
+        if(trel == elemento.find(".rel").html()){
+          alert('El familiar ya ha sido especificado');
+          seguir = false;
+          return false;
+        }
+        if(nombre.toLowerCase() == elemento.find(".nom").html().toLowerCase()){
+          alert('El nombre ya ha sido especificado');
+          seguir = false;
+          return false;
+        }
+      });
+    }
+    if(seguir){
+      $('#tfamiliares > tbody:last-child').append('<tr><td class="nom">'+nombre+'</td><td class="rel">'+trel+'</td><td><span class="glyphicon glyphicon-trash" onClick=$(this).closest("tr").remove() style="color:#337ab7;"></span></td></td></tr>');
+    }
+  }else{
+    alert('El nombre no puede estar vacio');
+  }
+});
+
 }(this, this.document))

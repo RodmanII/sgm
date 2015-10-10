@@ -109,12 +109,6 @@ class NumeroALetra
         $numberStr = (string) $number;
         $ultimo = mb_substr($numberStr,-1);
         $apex = '';
-        // echo 'cadena'.$numberStr;
-        // echo '<br>';
-        // echo 'utlimo'.$ultimo;
-        // echo '<br>';
-        // echo $partida ? 'true' : 'false';
-        // exit;
         $numberStrFill = str_pad($numberStr, 9, '0', STR_PAD_LEFT);
         $millones = substr($numberStrFill, 0, 3);
         $miles = substr($numberStrFill, 3, 3);

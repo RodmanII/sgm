@@ -42,7 +42,12 @@ function fechaATexto($fecha){
 }
 
 function fechaComun($fecha){
-  return date_format(date_create_from_format('Y-m-d', $fecha), 'd/m/Y');
+  $d = DateTime::createFromFormat('Y-m-d', $fecha);
+  if($d && $d->format('Y-m-d') == $fecha){
+    return date_format(date_create_from_format('Y-m-d', $fecha), 'd/m/Y');
+  }else{
+    return $fecha;
+  }
 }
 
 function retornarDato($model, $tipo){

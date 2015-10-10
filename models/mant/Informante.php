@@ -48,12 +48,12 @@ class Informante extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'codigo' => 'Codigo',
+            'codigo' => 'Código',
             'nombre' => 'Nombre',
-            'tipo_documento' => 'Tipo Documento',
-            'numero_documento' => 'Numero Documento',
-            'genero' => 'Genero',
-            'cod_persona' => 'Cod Persona',
+            'tipo_documento' => 'Tipo de Documento',
+            'numero_documento' => 'Número de Documento',
+            'genero' => 'Género',
+            'cod_persona' => 'Persona',
         ];
     }
 

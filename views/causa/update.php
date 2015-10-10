@@ -3,14 +3,14 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\mant\Informante */
+/* @var $model app\models\mant\CausaDefuncion */
 
-$this->title = 'Actualizar Informante: ' . ' ' . $model->codigo;
-$this->params['breadcrumbs'][] = ['label' => 'Informantes', 'url' => ['index']];
+$this->title = 'Update Causa Defuncion: ' . ' ' . $model->codigo;
+$this->params['breadcrumbs'][] = ['label' => 'Causa Defuncions', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->codigo, 'url' => ['view', 'id' => $model->codigo]];
-$this->params['breadcrumbs'][] = 'Actualizar';
+$this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="informante-update">
+<div class="causa-defuncion-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
