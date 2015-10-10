@@ -13,9 +13,18 @@ select * from departamento;
 
 select * from hospital where codigo = 19;
 select * from municipio where codigo = 60;
+
 SELECT * FROM libro;
 select * from partida;
 select * from nacimiento;
-select * from usuario;
-SELECT * FROM informante;
+
+SELECT * FROM libro;
+select * from partida;
+select * from defuncion;
+select * from persona;
+
+SELECT * FROM libro;
+select * from partida;
+select * from matrimonio;
+select * from matrimonio_persona;
 select * from persona;

@@ -66,8 +66,12 @@ class AdminController extends Controller
     {
       preg_match("/dbname=([^;]*)/", Yii::$app->db->dsn, $resultado);
       $datos = Yii::$app->db->createCommand("select table_name as tabla from information_schema.tables where
-      table_schema='".$resultado[1]."'")->queryAll();
-      return $this->render('mantenimientos', array('data'=>$datos));
+      table_schema='".$resultado[1]."' and table_name not like '%auditoria%' and table_name not like '%historico%'")->queryAll();
+      $arreglo = [];
+      foreach ($datos as $elemento) {
+        $arreglo[$elemento['tabla']] = strtoupper(substr($elemento['tabla'],0,1)).substr($elemento['tabla'],1);
+      }
+      return $this->render('mantenimientos', array('data'=>$arreglo));
     }
 
     public function actionReportes()

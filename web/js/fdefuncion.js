@@ -171,8 +171,18 @@
   });
 
   $('#guardar').click(function(){
-    var tbody = $("#tfamiliares tbody");
-    if(tbody.children().length > 0){
+    var long = $("#tfamiliares tbody").children().length;
+    var contenido = '';
+    if(long > 0){
+      $("#tfamiliares > tbody > tr").each(function(index, element){
+        var elemento = $(this);
+        var anex = '-';
+        if(index == long-1){
+          anex = '';
+        }
+        contenido += elemento.find(".nom").html()+':'+elemento.find(".rel").html()+anex;
+      });
+      $('#ifam').val(contenido);
       $('#idefuncion').submit();
       enviarParametros(true,false);
     }else{

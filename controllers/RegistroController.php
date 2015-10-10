@@ -235,6 +235,7 @@ class RegistroController extends Controller
         $dbDifunto = Persona::find()->where('codigo = '.$param['cod_difunto'])->one();
         $dbCausa = CausaDefuncion::find()->where('codigo = '.$param['cod_causa'])->one();
         $dbInformante = Informante::find()->where('codigo = '.$param['cod_informante'])->one();
+        $dbMunicipio = Municipio::find()->where('codigo = '.$param['cod_municipio'])->one();
         $nomInscrito = $dbDifunto->nombre.' '.$dbDifunto->apellido;
         if($dbDifunto->dui!=null){
           $tipo_doc = 'Documento Único de Identidad';
@@ -247,27 +248,29 @@ class RegistroController extends Controller
         $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).'; <strong>'.$dbDifunto->nombre.' '.$dbDifunto->apellido.'</strong>.- sexo '
         .strtolower($dbDifunto->genero).', de '.$conversor->to_word(calcularEdad($dbDifunto->fecha_nacimiento),null,true).' años de edad; Profesión u Oficio; '.$dbDifunto->profesion.'; Estado Familiar: '.$dbDifunto->codEstadoCivil->nombre.';'
         .' Del domicilio de '.$dbDifunto->direccion.', de Nacionalidad '.$dbDifunto->codNacionalidad->nombre.', Documento de Identidad del Fallecido: '.$tipo_doc.'; Documento Número '
-        .$conversor->convertirSeparado($num_doc).'. Falleció en el '.$param['lugar_suceso'].', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos del día '
-        .fechaATexto($param['fecha_suceso']).' Causa del fallecimiento: '.$dbCausa->nombre.'. Nombre del profesional quién determino la causa: '
+        .$conversor->convertirSeparado($num_doc).'. Falleció en el '.$param['lugar_suceso'].'. '.$dbMunicipio->nombre.', Departamento de '.$dbMunicipio->codDepartamento->nombre.', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos del día '
+        .fechaATexto($param['fecha_suceso']).'. Causa del fallecimiento: '.$dbCausa->nombre.'. Nombre del profesional quién determino la causa: '
         .$param['determino_causa'].'.</p>');
 
         $mpdf->WriteHTML('<p class="centrado">DATOS FAMILIARES</p>');
+        $mpdf->WriteHTML('<br/>');
         $arrfam = explode('-',$param['familiares']);
         $indinf = 'El';
         if($dbInformante->genero=='Femenino'){
           $indinf = 'La';
         }
         for($i = 0;$i < count($arrfam);$i++){
-          $elemento = explode(':',$param['familiares']);
+          $elemento = explode(':',$arrfam[$i]);
           $indicador = 'del';
           if($elemento[1][0].$elemento[1][1] == 'Ma' || substr($elemento[1],-1) == 'a'){
             $indicador = 'de la';
           }
-          $mpdf->WriteHTML('<p class="justificado">Nombre '.$indicador.' '.$elemento[1].': '.$elemento[0].' </p>');
+          $mpdf->WriteHTML('<p class="justificado smargen">Nombre '.$indicador.' '.$elemento[1].': '.$elemento[0].' </p>');
         }
+        $mpdf->WriteHTML('<br/>');
         $mpdf->WriteHTML('<p class="centrado">DATOS DEL INFORMANTE</p>');
-        $mpdf->WriteHTML('<p class="justificado">Dio los datos; <strong>'.$dbInformante->nombre.'</strong>, quién se identifica por medio de '
-        .$dbInformante->tipo_documento.' número; '.$conversor->convertirSeparado($dbInformante->numero_documento).'. '.$indinf.'. informante manifiesta '
+        $mpdf->WriteHTML('<p class="justificado">Dio los datos: <strong>'.$dbInformante->nombre.'</strong>, quién se identifica por medio de '
+        .$dbInformante->tipo_documento.' número; '.$conversor->convertirSeparado($dbInformante->numero_documento).'. '.$indinf.' informante manifiesta '
         .'que está de acuerdo con los datos consignados y para constancia firma. Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
 
         $mpdf->WriteHTML('<p id="finforl" class="firmal">F._________________________</p><p id="fjrfl" class="firmal">F._______________________________________</p>');
@@ -299,14 +302,52 @@ class RegistroController extends Controller
   {
     $model = new Defuncion();
     $partidaModelo = new Partida();
-
-    if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post()) && Model::validateMultiple([$model, $partidaModelo])) {
-      if ($model->validate()) {
-        // form inputs are valid, do something here
-        return;
+    $conexion = \Yii::$app->db;
+    $transaccion = $conexion->beginTransaction();
+    if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())) {
+      require_once('../auxiliar/Auxiliar.php');
+      $model->cod_partida = 0;
+      $partidaModelo->cod_libro = 1;
+      $partidaModelo->cod_empleado = Yii::$app->user->identity->persona->empleado->codigo;
+      if ($model->validate() && $partidaModelo->validate()) {
+        try{
+          $codlibro = Libro::find()->select('codigo')->where("tipo = 'Defuncion'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
+          $partidaModelo->cod_libro = $codlibro;
+          $partidaModelo->fecha_emision = fechaMySQL($partidaModelo->fecha_emision);
+          $partidaModelo->fecha_suceso = fechaMySQL($partidaModelo->fecha_suceso);
+          $partidaModelo->hora_suceso = horaMySQL($partidaModelo->hora_suceso);
+          if($partidaModelo->save()){
+            //Recupero el valor de id con el cual se inserto
+            $ulid = $conexion->getLastInsertID();
+            $model->cod_partida = $ulid;
+            //Guardo el registro de defuncion
+            if(!$model->save()){
+              throw new UserException('No se pudo guardar el registro de defunción, intente nuevamente');
+            }
+            //Actualizar el folio actual del libro
+            if($conexion->createCommand("update libro set folio_actual = folio_actual + 1 where codigo = ".$codlibro)->execute()<=0){
+              throw new UserException('No se pudo actualizar el libro de partidas, intente nuevamente');
+            }
+            //Hay que actualizar el estado de la persona para reflejar que esta inactivo
+            if($conexion->createCommand("update persona set estado = 'Inactivo' where codigo = ".$_POST['Defuncion']['cod_difunto'])->execute()<=0){
+              throw new UserException('No se pudo actualizar el estado de la persona, intente nuevamente');
+            }
+            $transaccion->commit();
+            Yii::$app->session->setFlash('success', 'Partida guardada con éxito');
+            return $this->redirect(['defuncion']);
+          }else{
+            throw new UserException('No se pudo guardar el registro de partida, intente nuevamente');
+          }
+          return;
+        }catch(UserException $err){
+            $transaccion->rollback();
+            Yii::$app->session->setFlash('error', $err->getMessage());
+            return $this->redirect(['defuncion']);
+        }
+      }else{
+        Yii::$app->session->setFlash('error', 'El modelo no cumple con la validación');
       }
     }
-
     return $this->render('rdefuncion', ['model'=> $model,'partida'=>$partidaModelo]);
   }
 

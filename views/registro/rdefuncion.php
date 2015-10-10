@@ -62,6 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
       <?= $form->field($model, 'codigo')->textInput(array('readOnly'=>true,'value'=>$num_partida)) ?>
     </span>
   </div>
+  <?= Html::hiddenInput('Defuncion[familiares]','',['id'=>'ifam']); ?>
   <div class="cflex">
     <span style="order: 1; flex-grow: 1; margin-right:10px;">
       <?php

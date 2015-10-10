@@ -12,10 +12,10 @@ use Yii;
  * @property string $familiares
  * @property integer $cod_difunto
  * @property integer $cod_causa
- * @property integer $num_partida
+ * @property integer $cod_partida
  *
  * @property CausaDefuncion $codCausa
- * @property Partida $numPartida
+ * @property Partida $Partida
  * @property Persona $codDifunto
  */
 class Defuncion extends \yii\db\ActiveRecord
@@ -34,12 +34,12 @@ class Defuncion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['determino_causa', 'cod_difunto', 'cod_causa', 'num_partida'], 'required'],
-            [['cod_difunto', 'cod_causa', 'num_partida'], 'integer'],
+            [['determino_causa', 'cod_difunto', 'cod_causa', 'cod_partida'], 'required'],
+            [['cod_difunto', 'cod_causa', 'cod_partida'], 'integer'],
             [['determino_causa'], 'string', 'max' => 100],
             [['familiares'], 'string', 'max' => 300],
             [['cod_difunto'], 'unique'],
-            [['num_partida'], 'unique']
+            [['cod_partida'], 'unique']
         ];
     }
 
@@ -54,7 +54,7 @@ class Defuncion extends \yii\db\ActiveRecord
             'familiares' => 'Familiares',
             'cod_difunto' => 'Difunto',
             'cod_causa' => 'Causa de Defunción',
-            'num_partida' => 'Número',
+            'cod_partida' => 'Número',
         ];
     }
 
@@ -69,9 +69,9 @@ class Defuncion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getNumPartida()
+    public function getcodPartida()
     {
-        return $this->hasOne(Partida::className(), ['numero' => 'num_partida']);
+        return $this->hasOne(Partida::className(), ['codigo' => 'cod_partida']);
     }
 
     /**

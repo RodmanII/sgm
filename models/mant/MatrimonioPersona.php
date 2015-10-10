@@ -19,6 +19,8 @@ class MatrimonioPersona extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public $cod_conhom;
+    public $cod_conmuj;
     public static function tableName()
     {
         return 'matrimonio_persona';

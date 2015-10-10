@@ -52,7 +52,7 @@ class Matrimonio extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'codigo' => 'Codigo',
+            'codigo' => 'Número',
             'notario' => 'Notario',
             'testigos' => 'Testigos',
             'padre_contrayente_h' => 'Padre del Contrayente',
