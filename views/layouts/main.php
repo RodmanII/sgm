@@ -85,7 +85,7 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-            <p class="pull-left">&copy; Tiberio IT <?= date('Y') ?></p>
+            <p class="pull-left">&copy; Rodrigo Grijalva <?= date('Y') ?></p>
             <p class="pull-right">Potenciado por <a href='http://www.yiiframework.com/' target='_blank'/>Yii Framework</a></p>
         </div>
     </footer>

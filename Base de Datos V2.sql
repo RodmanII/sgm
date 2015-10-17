@@ -556,8 +556,8 @@ values('Sonia Elena', 'Greyskull', '3312173847', '05161111356304', '1988-02-08',
 -- Menos de 18 que van a figurar como padres
 insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('William Eduardo', 'Castro Paz', 'Carnet de BoyScoutt:45126320', '1995-07-22', 'Masculino', 'Loc Muine, Departamento de Temeria', 'Mecánico Soldador', 'Activo', 101, 2, 3, null);
-insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Cristina Angelica', 'Gomez Garcia', 'Tarjeta de Afiliación a CENAR:00845145', '1997-01-14', 'Femenino', 'Tor Lara, Departamento de Aedir', 'Asistente de oficina', 'Activo', 36, 1, 1, null);
+insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Cristina Angelica', 'Gomez Garcia', 'Tarjeta de Afiliación a CENAR:00845145', '1997-01-14', 'Femenino', 'Tor Lara, Departamento de Aedir', 'Asistente de oficina', 'Activo', 36, 73, 1, 1, null);
 insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Daniel Ortega', 'Gomez Gaspan', 'Carnet de EUPRIDES:7741301', '1996-08-16', 'Masculino', 'Teirgel, Departamento de Kaer Morhen', 'Técnico de Hardware', 'Activo', 51, 4, 1, null);
 -- Menores de 1 que van a figurar como asentados
@@ -603,7 +603,7 @@ create table `empleado` (
 alter table `empleado` add constraint `fk_empleado_unidad_cod_unidad` foreign key (`cod_unidad`) references `unidad`(`codigo`) on delete cascade on update cascade;
 alter table `empleado` add constraint `fk_empleado_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
 -- Inserción de Registros para Empleado
-insert into empleado(cargo,cod_unidad,cod_persona) values('Encargado de Inscripciones de Nacimiento',1,1);
+insert into empleado(cargo,cod_unidad,cod_persona) values('JREF',1,1);
 insert into empleado(cargo,cod_unidad,cod_persona) values('Encargado de Inscripciones de Defunción',1,2);
 insert into empleado(cargo,cod_unidad,cod_persona) values('Supervisor del Registro Familiar',1,3);
 insert into empleado(cargo,cod_unidad,cod_persona) values('Supervisor de Cuadrillas de Recolección',2,4);

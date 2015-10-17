@@ -174,8 +174,8 @@
             contenido += elemento.find(".nom").html()+anex;
           });
           $('#ites').val(contenido);
-          $('#imatrimonio').submit();
           enviarParametros(true,false);
+          $('#imatrimonio').submit();
         }else{
           alert('Tiene que especificar a dos testigos');
         }

@@ -13,6 +13,7 @@ use app\models\mant\Nacimiento;
 use app\models\mant\Defuncion;
 use app\models\mant\Matrimonio;
 use app\models\mant\MatrimonioPersona;
+use app\models\mant\ModalidadDivorcio;
 use app\models\mant\RegimenPatrimonial;
 use app\models\mant\Partida;
 use app\models\mant\Divorcio;
@@ -343,6 +344,73 @@ class RegistroController extends Controller
         $mpdf->WriteHTML('<p class="centrado" style="font-size:16.5px">'.$titulo.' del Registro del Estado Familiar</p>');
       break;
       case 'divorcio':
+        $mpdf->WriteHTML('<p class="centrado cabecera">LIBRO DE PARTIDAS DE DIVORCIO NÚMERO '.$conversor->to_word($param['num_libro'],null,false,true).' DEL</p>');
+        $mpdf->WriteHTML('<p class="centrado cabecera">AÑO '.$conversor->to_word(date('Y')).'</p>');
+        $mpdf->WriteHTML('<p class="derecha cabecera">FOLIO '.$conversor->to_word($param['folio']).'</p>');
+        $dbMatp = MatrimonioPersona::find()->where('cod_matrimonio = '.$param['cod_matrimonio'])->all();
+        $dbConh = $dbMatp[0]->codPersona;
+        $dbConm = $dbMatp[1]->codPersona;
+        $nomConh = $dbConh->nombre.' '.$dbConh->apellido;
+        $nomConm = $dbConm->nombre.' '.$dbConm->apellido;
+        $nomInscrito = $dbConh->nombre.' '.$dbConh->apellido.'-'.$dbConm->nombre.' '.$dbConm->apellido;
+        $complemento = '';
+        if($dbConm->apellido_casada!=null){
+          $complemento = 'El nombre que la contrayente usará de conformidad al artículo ventiuno de la Ley del Nombre de la Persona Natural será: <strong>'.$dbConm->nombre.' '.$dbConm->apellido_casada.'</strong>.';
+        }
+        $pahom = '';
+        if($dbMatp[0]->codMatrimonio->madre_contrayente_h!=null){
+          $pahom = 'Hijo de la Señora: '.$dbMatp[0]->codMatrimonio->madre_contrayente_h;
+          if($dbMatp[0]->codMatrimonio->padre_contrayente_h!=null){
+            $pahom .= ' y del Señor: '.$dbMatp[0]->codMatrimonio->padre_contrayente_h;
+          }
+        }else{
+          $pahom = 'Hijo del Señor: '.$dbMatp[0]->codMatrimonio->padre_contrayente_h;
+        }
+        $pamuj = '';
+        if($dbMatp[0]->codMatrimonio->madre_contrayente_m!=null){
+          $pamuj = 'Hija de la Señora: '.$dbMatp[0]->codMatrimonio->madre_contrayente_m;
+          if($dbMatp[0]->codMatrimonio->padre_contrayente_m!=null){
+            $pamuj .= ' y del Señor: '.$dbMatp[0]->codMatrimonio->padre_contrayente_m;
+          }
+        }else{
+          $pamuj = 'Hija del Señor: '.$dbMatp[0]->codMatrimonio->padre_contrayente_m;
+        }
+        $tiempo = explode(':',$dbMatp[0]->codMatrimonio->codPartida->hora_suceso);
+        $minutos = 'cero';
+        if($tiempo[1]!='00'){
+          $minutos = $conversor->to_word($tiempo[1],null,true);
+        }
+        $tiempoD = explode(':',date('G:i',strtotime($param['hora_suceso'])));
+        $minutosD = 'cero';
+        if($tiempoD[1]!='00'){
+          $minutosD = $conversor->to_word($tiempoD[1],null,true);
+        }
+        $modalidad = ModalidadDivorcio::find()->where('codigo = '.$param['cod_mod_divorcio'])->one()->nombre;
+        $municipio = Municipio::find()->where('codigo = '.$param['cod_municipio'])->one();
+        $dbConm->codEstadoCivil->nombre = rtrim($dbConm->codEstadoCivil->nombre,'o').'a';
+        $testigos = explode('-',$dbMatp[0]->codMatrimonio->testigos);
+        $reg_pat = $dbMatp[0]->codMatrimonio->codRegPatrimonial->nombre;
+        $mpdf->WriteHTML('<p class="justificado" style="font-size:16.5px">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).': <strong>'.$nomConh.' y '.$nomConm.'</strong>. El Contrayente de '
+        .$conversor->to_word(calcularEdad($dbConh->fecha_nacimiento),null,true).' años de edad, '.(($dbConh->empleado) ? 'Empleado':'Desempleado').', '.$dbConh->codEstadoCivil->nombre.', '
+        .'originario de '.$dbConh->codMunOrigen->nombre.', Departamento de '.$dbConh->codMunOrigen->codDepartamento->nombre.', del Domicilio de '.$dbConh->direccion.', de Nacionalidad '.$dbConh->codNacionalidad->nombre.', '
+        .$pahom.', la Contrayente: de '.$conversor->to_word(calcularEdad($dbConm->fecha_nacimiento),null,true).' años de edad, '
+        .(($dbConm->empleado) ? 'Empleada':'Desempleada').', '.$dbConm->codEstadoCivil->nombre.', originaria de '.$dbConm->codMunOrigen->nombre.', Departamento de '.$dbConm->codMunOrigen->codDepartamento->nombre.', del Domicilio de '.$dbConm->direccion.', de Nacionalidad '
+        .$dbConm->codNacionalidad->nombre.', '.$pamuj.'. Contrajeron matrimonio en la ciudad de Ilopango, Departamento de San Salvador, ante los oficios de: '
+        .$dbMatp[0]->codMatrimonio->notario.'. Según escritura pública de matrimonio número: '.$conversor->to_word($dbMatp[0]->codMatrimonio->num_etr_publica,null,true).', otorgada a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos del día '
+        .fechaATexto(fechaComun($dbMatp[0]->codMatrimonio->codPartida->fecha_suceso)).', con asistencia de los testigos: '.$testigos[0].' y '.$testigos[1].'. '
+        .' Según partida de matrimonio número: '.$conversor->to_word($dbMatp[0]->codMatrimonio->codigo,null,true,true).', folio '.$conversor->to_word($dbMatp[0]->codMatrimonio->codPartida->folio,null,true).', del libro de partidas de matrimonio '
+        .$conversor->to_word($dbMatp[0]->codMatrimonio->codPartida->codLibro->numero,null,true,true).' del año '.$conversor->to_word($dbMatp[0]->codMatrimonio->codPartida->codLibro->anyo,null,true).'. <strong>Se ha decretado el divorcio: </strong>'
+        .'Por '.$modalidad.', declarándose disuelto el vínculo matrimonial que los unía, por medio de sentencia definitiva de divorcio, pronunciada por: '.$param['juez'].' de '.$municipio->nombre.', Departamento de '.$municipio->codDepartamento->nombre.' a las '.$conversor->to_word($tiempoD[0],null,true).' horas '.$minutosD.' minutos '
+        .'del día '.fechaATexto($param['fecha_suceso']).' y ejecutoriada el día '.fechaATexto($param['fecha_ejecucion']).'. '
+        .$param['detalle'].'. Por lo tanto se cancela la partida de matrimonio relacionada. Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
+        //obtener el nombre de la modalidad
+        $mpdf->WriteHTML('<br/>');
+        $mpdf->WriteHTML('<br/>');
+        $mpdf->WriteHTML('<div class="firmadm">
+        <img src="../web/images/firma_jref.png" />
+        </div>');
+        $mpdf->WriteHTML('<p class="centrado" style="font-size:16.5px">Lic. '.$jref.'</p>');
+        $mpdf->WriteHTML('<p class="centrado" style="font-size:16.5px">'.$titulo.' del Registro del Estado Familiar</p>');
       break;
       default:
       # code...

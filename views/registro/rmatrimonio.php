@@ -62,11 +62,11 @@ $this->params['breadcrumbs'][] = $this->title;
   <div class="cflex">
     <span style="order: 1; flex-grow: 1; margin-right:10px;">
       <?php
-        $query = new Query;
-        $query->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
-          ->from('persona p')->where('p.estado = "Activo"')->andWhere("genero = 'Masculino'")->andWhere("cod_estado_civil <> 5")->andWhere('cod_estado_civil <> 2')->andWhere("calcularEdad(codigo) >= 18")->orderBy(['p.nombre'=>SORT_ASC]);
-        $command = $query->createCommand();
-        $data = $command->queryAll();
+      $query = new Query;
+      $query->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
+      ->from('persona p')->where('p.estado = "Activo"')->andWhere("genero = 'Masculino'")->andWhere("cod_estado_civil <> 5")->andWhere('cod_estado_civil <> 2')->andWhere("calcularEdad(codigo) >= 18")->orderBy(['p.nombre'=>SORT_ASC]);
+      $command = $query->createCommand();
+      $data = $command->queryAll();
       ?>
       <?= Html::label('Contrayente Hombre', 'codconhom'); ?>
       <?= Html::dropDownList('MatrimonioPersona[cod_conhom]',null, ArrayHelper::map($data, 'codigo', 'nombre_completo'), ['class'=>'form-control','id'=>'matrimonio-codconhom']) ?>
@@ -83,11 +83,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </span>
     <span style="order: 2; flex-grow: 1; margin-right:10px;">
       <?php
-        $query = new Query;
-        $query->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
-          ->from('persona p')->where('p.estado = "Activo"')->andWhere("genero = 'Femenino'")->andWhere("cod_estado_civil <> 5")->andWhere('cod_estado_civil <> 2')->andWhere("calcularEdad(codigo) >= 18")->orderBy(['p.nombre'=>SORT_ASC]);
-        $command = $query->createCommand();
-        $data = $command->queryAll();
+      $query = new Query;
+      $query->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
+      ->from('persona p')->where('p.estado = "Activo"')->andWhere("genero = 'Femenino'")->andWhere("cod_estado_civil <> 5")->andWhere('cod_estado_civil <> 2')->andWhere("calcularEdad(codigo) >= 18")->orderBy(['p.nombre'=>SORT_ASC]);
+      $command = $query->createCommand();
+      $data = $command->queryAll();
       ?>
       <?= Html::label('Contrayente Mujer', 'codconmuj'); ?>
       <?= Html::dropDownList('MatrimonioPersona[cod_conmuj]',null, ArrayHelper::map($data, 'codigo', 'nombre_completo'), ['class'=>'form-control','id'=>'matrimonio-codconmuj']) ?>

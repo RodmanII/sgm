@@ -51,9 +51,9 @@ class Divorcio extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'codigo' => 'Codigo',
+            'codigo' => 'Número',
             'juez' => 'Juez',
-            'fecha_ejecucion' => 'Fecha de Ejecución Sentencia',
+            'fecha_ejecucion' => 'Fecha de Ejecución de Sentencia',
             'detalle' => 'Detalles Adicionales',
             'num_partida' => 'Num Partida',
             'cod_mod_divorcio' => 'Modalidad de Divorcio',
