@@ -17,9 +17,6 @@ use app\models\mant\Libro;
 use yii\db\Query;
 use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\mant\Defuncion */
-/* @var $form ActiveForm */
 $this->title = 'Inscripción de Defunción';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -117,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
         <div class="form-group">
-          <?= Html::textInput('nombre_familiar',null,array('id'=>'nomfamiliar', 'class'=>'form-control','placeholder'=>'Nombre del familiar')); ?>
+          <?= Html::textInput('nombre_familiar',null,array('id'=>'nomfamiliar', 'class'=>'form-control', 'placeholder'=>'Nombre del familiar')); ?>
         </div>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
@@ -131,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
       </span>
       <span style="order: 4; flex-grow: 1; margin-right:10px;">
-        <button id='agfamiliar' type="button" class="btn btn-primary" id="edit-informante" style="margin-top:5px;">
+        <button id='agfamiliar' type="button" class="btn btn-primary" style="margin-top:5px;">
           <i class="glyphicon glyphicon-plus"></i>
         </button>
       </span>
@@ -217,4 +214,4 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
       $this->registerJsFile(Yii::$app->homeUrl."js/fdefuncion.js", ['depends' => [\yii\web\JqueryAsset::className()]]);
     ?>
-</div><!-- rdefuncion -->
+</div>

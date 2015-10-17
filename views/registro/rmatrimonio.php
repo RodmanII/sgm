@@ -14,13 +14,8 @@ use app\models\mant\Matrimonio;
 use app\models\mant\Libro;
 use app\models\mant\MatrimonioPersona;
 use app\models\mant\RegimenPatrimonial;
-use kartik\grid\GridView;
-use yii\data\ArrayDataProvider;
-use yii\grid\ActionColumn;
+use yii\db\Query;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\mant\Nacimiento */
-/* @var $form ActiveForm */
 $this->title = 'Inscripción de Matrimonio';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -66,8 +61,15 @@ $this->params['breadcrumbs'][] = $this->title;
   <?= Html::hiddenInput('Matrimonio[testigos]','',['id'=>'ites']); ?>
   <div class="cflex">
     <span style="order: 1; flex-grow: 1; margin-right:10px;">
+      <?php
+        $query = new Query;
+        $query->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
+          ->from('persona p')->where('p.estado = "Activo"')->andWhere("genero = 'Masculino'")->andWhere("cod_estado_civil <> 5")->andWhere('cod_estado_civil <> 2')->andWhere("calcularEdad(codigo) >= 18")->orderBy(['p.nombre'=>SORT_ASC]);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+      ?>
       <?= Html::label('Contrayente Hombre', 'codconhom'); ?>
-      <?= Html::dropDownList('MatrimonioPersona[cod_conhom]',null, ArrayHelper::map(Persona::find()->where("genero = 'Masculino'")->andWhere('cod_estado_civil = 1')->all(), 'codigo', 'nombre'), ['class'=>'form-control','id'=>'codconhom']) ?>
+      <?= Html::dropDownList('MatrimonioPersona[cod_conhom]',null, ArrayHelper::map($data, 'codigo', 'nombre_completo'), ['class'=>'form-control','id'=>'matrimonio-codconhom']) ?>
       <div class="form-group">
         <?= Html::textInput('fchombre','',array('id'=>'nrwr1','class'=>'form-control')); ?>
         <span id="matches1" style="display:none"></span>
@@ -80,11 +82,18 @@ $this->params['breadcrumbs'][] = $this->title;
       </button>
     </span>
     <span style="order: 2; flex-grow: 1; margin-right:10px;">
+      <?php
+        $query = new Query;
+        $query->select(['p.codigo','nombre_completo'=>'CONCAT(p.nombre, " ", p.apellido)'])
+          ->from('persona p')->where('p.estado = "Activo"')->andWhere("genero = 'Femenino'")->andWhere("cod_estado_civil <> 5")->andWhere('cod_estado_civil <> 2')->andWhere("calcularEdad(codigo) >= 18")->orderBy(['p.nombre'=>SORT_ASC]);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+      ?>
       <?= Html::label('Contrayente Mujer', 'codconmuj'); ?>
-      <?= Html::dropDownList('MatrimonioPersona[cod_conmuj]',null, ArrayHelper::map(Persona::find()->where("genero = 'Femenino'")->andWhere('cod_estado_civil = 1')->all(), 'codigo', 'nombre'), ['class'=>'form-control','id'=>'codconmuj']) ?>
+      <?= Html::dropDownList('MatrimonioPersona[cod_conmuj]',null, ArrayHelper::map($data, 'codigo', 'nombre_completo'), ['class'=>'form-control','id'=>'matrimonio-codconmuj']) ?>
       <div class="form-group">
-        <?= Html::textInput('fcmujer','',array('id'=>'nrwr1','class'=>'form-control')); ?>
-        <span id="matches1" style="display:none"></span>
+        <?= Html::textInput('fcmujer','',array('id'=>'nrwr2','class'=>'form-control')); ?>
+        <span id="matches2" style="display:none"></span>
       </div>
       <button type="button" class="btn btn-primary" id="edit-mujer">
         <i class="glyphicon glyphicon-edit"></i>
@@ -96,10 +105,14 @@ $this->params['breadcrumbs'][] = $this->title;
   </div>
   <div class="cflex">
     <span style="order: 1; flex-grow: 1; margin-right:10px;">
-      <?= $form->field($model, 'notario')->textInput(array('placeholder'=>'Especifique al notario')) ?>
+      <?= $form->field($model, 'notario')->textInput(['placeholder'=>'Especifique al notario']) ?>
+      <?= Html::radioList('gen_notario','Masculino',['Masculino'=>'Masculino','Femenino'=>'Femenino'],['id'=>'matrimonio-gen_notario']) ?>
     </span>
     <span style="order: 2; flex-grow: 1; margin-right:10px;">
       <?= $form->field($model, 'cod_reg_patrimonial')->dropDownList(ArrayHelper::map(RegimenPatrimonial::find()->all(), 'codigo', 'nombre')) ?>
+    </span>
+    <span style="order: 3; flex-grow: 1; margin-right:10px;">
+      <?= $form->field($model, 'num_etr_publica')->textInput(['placeholder'=>'Especifique el número de escritura']) ?>
     </span>
   </div>
   <div class="cflex">
@@ -116,6 +129,18 @@ $this->params['breadcrumbs'][] = $this->title;
   </div>
   <div class="cflex">
     <span style="order: 1; flex-grow: 1; margin-right:10px;">
+      <div class="form-group">
+        <?= Html::textInput('nombre_testigo',null,array('id'=>'nomtestigo', 'class'=>'form-control','placeholder'=>'Nombre del testigo')); ?>
+      </div>
+    </span>
+    <span style="order: 2; flex-grow: 1; margin-right:10px;">
+      <button id='agtestigo' type="button" class="btn btn-primary" style="margin-top:5px;">
+        <i class="glyphicon glyphicon-plus"></i>
+      </button>
+    </span>
+  </div>
+  <div class="cflex">
+    <span style="order: 1; flex-grow: 1; margin-right:10px;">
       <?= $form->field($model, 'padre_contrayente_h')->textInput(array('placeholder'=>'Especifique al padre')) ?>
     </span>
     <span style="order: 2; flex-grow: 1; margin-right:10px;">
@@ -128,24 +153,6 @@ $this->params['breadcrumbs'][] = $this->title;
     </span>
     <span style="order: 2; flex-grow: 1; margin-right:10px;">
       <?= $form->field($model, 'madre_contrayente_m')->textInput(array('placeholder'=>'Especifique a la madre')) ?>
-    </span>
-  </div>
-  <div class="cflex">
-    <span style="order: 1; flex-grow: 1; margin-right:10px;">
-      <div class="form-group">
-        <?= Html::label('Departamento', 'depto'); ?>
-        <?= Html::dropDownList('deptos',null, ArrayHelper::map(Departamento::find()->all(), 'codigo', 'nombre'), ['id'=>'depto','class'=>'form-control','onchange'=>'
-        $.post( "'.Yii::$app->urlManager->createUrl('general/municipios?id=').'"+$(this).val(), function( data ) {
-          $( "select#partida-cod_municipio" ).html( data );
-        });
-        ']) ?>
-      </div>
-    </span>
-    <span style="order: 2; flex-grow: 1; margin-right:10px;">
-      <?= $form->field($partida, 'cod_municipio')->dropDownList(ArrayHelper::map(Municipio::find()->where('cod_departamento = 1')->all(), 'codigo', 'nombre')) ?>
-    </span>
-    <span style="order: 3; flex-grow: 1; margin-right:10px;">
-      <?= $form->field($partida, 'lugar_suceso')->textInput(array('placeholder'=>'Especifique el lugar'))->label('Lugar de Matrimonio') ?>
     </span>
   </div>
   <div class="cflex">
@@ -183,17 +190,26 @@ $this->params['breadcrumbs'][] = $this->title;
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
         <?= $form->field($partida, 'hora_suceso')->widget(TimePicker::className(), ['language'=>'es', 'pluginOptions'=>[
           'showMeridian'=>true, 'autoclose'=>true], 'options'=>['readonly'=>true]
-          ])->label('Hora de Defunción');
+          ])->label('Hora de Matrimonio');
           ?>
         </span>
       </div>
-
+      <div class="cflex">
+        <span style="order: 1; flex-grow: 1; margin-right:10px;">
+          <?= Html::label('Adopta Apellido', 'matrimonio-ape'); ?>
+          <?= Html::radioList('adop_casada','No',['Si'=>'Si','No'=>'No'],['id'=>'matrimonio-ape']) ?>
+        </span>
+        <span style="order: 2; flex-grow: 1; margin-right:10px;">
+          <?= Html::label('Apellido de Casada', 'matrimonio-acas'); ?>
+          <?= Html::textInput('Matrimonio[ape_casada]', null, ['id'=>'matrimonio-acas', 'readonly'=>'true', 'class'=>'form-control', 'placeholder'=>'Especifique el apellido de casada']) ?>
+        </span>
+      </div>
       <div class="form-group">
         <?= Html::button('Guardar', ['class' => 'btn btn-primary', 'id'=>'guardar']) ?>
         <?= Html::button('Vista Previa', ['class' => 'btn btn-primary', 'id'=>'generar']) ?>
       </div>
       <?php ActiveForm::end(); ?>
       <?php
-      $this->registerJsFile(Yii::$app->homeUrl."js/fdefuncion.js", ['depends' => [\yii\web\JqueryAsset::className()]]);
+      $this->registerJsFile(Yii::$app->homeUrl."js/fmatrimonio.js", ['depends' => [\yii\web\JqueryAsset::className()]]);
       ?>
-    </div><!-- rnacimiento -->
+    </div>

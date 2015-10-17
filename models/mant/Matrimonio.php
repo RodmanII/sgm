@@ -15,10 +15,11 @@ use Yii;
  * @property string $padre_contrayente_m
  * @property string $madre_contrayente_m
  * @property integer $cod_reg_patrimonial
- * @property integer $num_partida
+ * @property integer $cod_partida
+ * @property integer $num_etr_publica
  *
  * @property Divorcio $divorcio
- * @property Partida $numPartida
+ * @property Partida $codPartida
  * @property RegimenPatrimonial $codRegPatrimonial
  * @property MatrimonioPersona[] $matrimonioPersonas
  */
@@ -38,31 +39,32 @@ class Matrimonio extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['notario', 'testigos', 'cod_reg_patrimonial', 'num_partida'], 'required'],
-            [['cod_reg_patrimonial', 'num_partida'], 'integer'],
+            [['notario', 'testigos', 'cod_reg_patrimonial', 'cod_partida', 'num_etr_publica'], 'required'],
+            [['cod_reg_patrimonial', 'cod_partida', 'num_etr_publica'], 'integer'],
             [['notario', 'padre_contrayente_h', 'madre_contrayente_h', 'padre_contrayente_m', 'madre_contrayente_m'], 'string', 'max' => 50],
             [['testigos'], 'string', 'max' => 300],
-            [['num_partida'], 'unique']
+            [['cod_partida'], 'unique']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
-        return [
-            'codigo' => 'Número',
-            'notario' => 'Notario',
-            'testigos' => 'Testigos',
-            'padre_contrayente_h' => 'Padre del Contrayente',
-            'madre_contrayente_h' => 'Madre del Contrayente',
-            'padre_contrayente_m' => 'Padre de la Contrayente',
-            'madre_contrayente_m' => 'Madre de la Contrayente',
-            'cod_reg_patrimonial' => 'Régimen Patrimonial',
-            'num_partida' => 'Num Partida',
-        ];
-    }
+     public function attributeLabels()
+     {
+         return [
+             'codigo' => 'Número',
+             'notario' => 'Notario',
+             'testigos' => 'Testigos',
+             'padre_contrayente_h' => 'Padre del Contrayente',
+             'madre_contrayente_h' => 'Madre del Contrayente',
+             'padre_contrayente_m' => 'Padre de la Contrayente',
+             'madre_contrayente_m' => 'Madre de la Contrayente',
+             'cod_reg_patrimonial' => 'Régimen Patrimonial',
+             'num_partida' => 'Num Partida',
+             'num_etr_publica' => 'Número de Escritura Pública',
+         ];
+     }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -75,9 +77,9 @@ class Matrimonio extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getNumPartida()
+    public function getCodPartida()
     {
-        return $this->hasOne(Partida::className(), ['numero' => 'num_partida']);
+        return $this->hasOne(Partida::className(), ['codigo' => 'cod_partida']);
     }
 
     /**

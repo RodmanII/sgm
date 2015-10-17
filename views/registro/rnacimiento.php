@@ -16,9 +16,6 @@ use app\models\mant\Nacimiento;
 use yii\db\Query;
 use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\mant\Nacimiento */
-/* @var $form ActiveForm */
 $this->title = 'Inscripción de Nacimiento';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
