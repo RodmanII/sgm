@@ -1,30 +1,44 @@
-SELECT emp.nombre_usuario,emp.cargo,per.nombre,per.apellido,per.dui from empleado emp inner join persona per on emp.cod_persona = per.codigo;
-SELECT CONCAT(per.nombre,' ',per.apellido) as Nombre FROM persona per
-				INNER JOIN empleado emp on emp.cod_persona = per.codigo
-                INNER JOIN usuario usr on usr.nombre = emp.nombre_usuario AND usr.nombre = 'gorflax';
+select emp.nombre_usuario,emp.cargo,per.nombre,per.apellido,per.dui from empleado emp inner join persona per on emp.cod_persona = per.codigo;
+select concat(per.nombre,' ',per.apellido) as nombre from persona per
+				inner join empleado emp on emp.cod_persona = per.codigo
+                inner join usuario usr on usr.nombre = emp.nombre_usuario and usr.nombre = 'gorflax';
 
-SELECT * FROM libro WHERE tipo = 'Nacimiento' AND cerrado = 0 AND anyo = YEAR(CURDATE());
-SELECT codigo, concat(nombre,' ',apellido) as nombre from persona p LEFT JOIN nacimiento n ON p.codigo = n.cod_asentado;
-SELECT codigo from nacimiento ORDER BY codigo DESC LIMIT 1;
-SELECT * FROM rol;
-SELECT usr.nombre, rol.nombre FROM usuario usr INNER JOIN rol on usr.cod_rol = rol.codigo;
-SELECT *, calcularEdad(codigo) FROM persona;
+select * from libro where tipo = 'nacimiento' and cerrado = 0 and anyo = year(curdate());
+select codigo, concat(nombre,' ',apellido) as nombre from persona p left join nacimiento n on p.codigo = n.cod_asentado;
+select codigo from nacimiento order by codigo desc limit 1;
+select * from rol;
+select usr.nombre, rol.nombre from usuario usr inner join rol on usr.cod_rol = rol.codigo;
+select *, calcularedad(codigo) from persona;
 select * from departamento;
 
 select * from hospital where codigo = 19;
 select * from municipio where codigo = 60;
 
-SELECT * FROM libro;
+select * from libro;
 select * from partida;
 select * from nacimiento;
 
-SELECT * FROM libro;
+select * from libro;
 select * from partida;
 select * from defuncion;
 select * from persona;
 
-SELECT * FROM libro;
+select * from libro;
 select * from partida;
 select * from matrimonio;
 select * from matrimonio_persona;
-select * from persona;
+select * from persona where nombre like '%daniel%' or nombre like '%sonia elena%';
+
+select * from libro;
+select * from partida;
+select * from divorcio;
+select * from persona where nombre like '%daniel%' or nombre like '%sonia elena%';
+
+select  *
+from    matrimonio
+where   not exists
+        (
+        select  null
+        from    divorcio
+        where   divorcio.cod_matrimonio = matrimonio.codigo
+        )

@@ -554,12 +554,12 @@ values('Maria Eleonora', 'Mejía Cortez', '0215173547', '05161027362304', '1990-
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Sonia Elena', 'Greyskull', '3312173847', '05161111356304', '1988-02-08', 'Femenino', 'Palaven, Departamento de Exodo', 'Soldado', 'Activo', 26, 54, 3, 4, null);
 -- Menos de 18 que van a figurar como padres
-insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('William Eduardo', 'Castro Paz', 'Carnet de BoyScoutt:45126320', '1995-07-22', 'Masculino', 'Loc Muine, Departamento de Temeria', 'Mecánico Soldador', 'Activo', 101, 2, 3, null);
+insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('William Eduardo', 'Castro Paz', 'Carnet de BoyScoutt:45126320', '1995-07-22', 'Masculino', 'Loc Muine, Departamento de Temeria', 'Mecánico Soldador', 'Activo', 101, 94, 2, 3, null);
 insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Cristina Angelica', 'Gomez Garcia', 'Tarjeta de Afiliación a CENAR:00845145', '1997-01-14', 'Femenino', 'Tor Lara, Departamento de Aedir', 'Asistente de oficina', 'Activo', 36, 73, 1, 1, null);
-insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Daniel Ortega', 'Gomez Gaspan', 'Carnet de EUPRIDES:7741301', '1996-08-16', 'Masculino', 'Teirgel, Departamento de Kaer Morhen', 'Técnico de Hardware', 'Activo', 51, 4, 1, null);
+insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Daniel Ortega', 'Gomez Gaspan', 'Carnet de EUPRIDES:7741301', '1996-08-16', 'Masculino', 'Teirgel, Departamento de Kaer Morhen', 'Técnico de Hardware', 'Activo', 51, 27, 4, 1, null);
 -- Menores de 1 que van a figurar como asentados
 insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
 values('Ernesto Augusto', 'Flores Miran','2015-02-22', 'Masculino', 'Yelmo de Piedra, Departamento de Kwaeden', 'Activo', 22, 1, 1);
@@ -585,12 +585,6 @@ create table `informante` (
 	constraint unq_Informante_numero_documento unique(numero_documento)
 );
 alter table `informante` add constraint `fk_informante_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
--- Inserción de Registros para Informante
-insert into informante(nombre,tipo_documento,numero_documento,genero,firma) values('Fabián Ernesto Clavico Fútil','Documento Único de Identidad','049554973','Masculino','Directorio 1');
-insert into informante(nombre,tipo_documento,numero_documento,genero,firma) values('Sandra Valentina Rios Luna','Documento Único de Identidad','048324077','Femenino','Directorio 2');
-insert into informante(nombre,tipo_documento,numero_documento,genero,firma) values('Leonardo Ernesto Fernández Gunter','Documento Nacional de Identidad','13032975','Masculino','Directorio 3');
-insert into informante(nombre,tipo_documento,numero_documento,genero,firma) values('James Howlet','Pasaporte','257993','Femenino','Directorio 4');
-insert into informante(nombre,tipo_documento,numero_documento,genero,firma) values('Thomas David Blaskowitz','Pasaporte','14693','Masculino','Directorio 5');
 
 create table `empleado` (
 	`codigo` int auto_increment,
@@ -726,7 +720,7 @@ alter table `defuncion` add constraint `fk_defuncion_causa_cod_causa` foreign ke
 
 create table `divorcio` (
 	`codigo` int auto_increment,
-	`juez` varchar(50) not null,
+	`juez` varchar(100) not null,
 	`fecha_ejecucion` date not null,
 	`detalle` varchar(300) null,
 	`cod_partida` int not null,

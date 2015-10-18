@@ -17,9 +17,6 @@ use kartik\grid\GridView;
 use yii\data\ArrayDataProvider;
 use yii\grid\ActionColumn;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\mant\Nacimiento */
-/* @var $form ActiveForm */
 $this->title = 'Inscripción de Divorcio';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -35,7 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
       <?= Yii::$app->session->getFlash('error') ?>
     </div>
   <?php endif; ?>
-  <?php $form = ActiveForm::begin(); ?>
+
+  <?php $form = ActiveForm::begin(['id'=>'idivorcio']); ?>
   <?php
   $dbLibro = Libro::find()->where('tipo = "Divorcio"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
   $dbDivorcio = Divorcio::find()->orderBy(['codigo'=>SORT_DESC])->limit(1)->one();
@@ -63,7 +61,12 @@ $this->params['breadcrumbs'][] = $this->title;
   </div>
   <div class="cflex">
     <span style="order: 1; flex-grow: 1; margin-right:10px;">
-      <?= $form->field($model, 'cod_matrimonio')->dropDownList(ArrayHelper::map(Matrimonio::find()->all(), 'codigo', 'codigo')) ?>
+      <?= $form->field($model, 'cod_matrimonio')->dropDownList(ArrayHelper::map(Matrimonio::find()->where('NOT EXISTS
+        (
+        SELECT  null
+        FROM    divorcio
+        WHERE   divorcio.cod_matrimonio = matrimonio.codigo
+        )')->all(), 'codigo', 'codigo')) ?>
       <div class="form-group">
         <?= Html::textInput('fparm','',array('id'=>'nrwr1','class'=>'form-control')); ?>
         <span id="matches1" style="display:none"></span>

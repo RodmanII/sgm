@@ -353,10 +353,6 @@ class RegistroController extends Controller
         $nomConh = $dbConh->nombre.' '.$dbConh->apellido;
         $nomConm = $dbConm->nombre.' '.$dbConm->apellido;
         $nomInscrito = $dbConh->nombre.' '.$dbConh->apellido.'-'.$dbConm->nombre.' '.$dbConm->apellido;
-        $complemento = '';
-        if($dbConm->apellido_casada!=null){
-          $complemento = 'El nombre que la contrayente usará de conformidad al artículo ventiuno de la Ley del Nombre de la Persona Natural será: <strong>'.$dbConm->nombre.' '.$dbConm->apellido_casada.'</strong>.';
-        }
         $pahom = '';
         if($dbMatp[0]->codMatrimonio->madre_contrayente_h!=null){
           $pahom = 'Hijo de la Señora: '.$dbMatp[0]->codMatrimonio->madre_contrayente_h;
@@ -385,6 +381,9 @@ class RegistroController extends Controller
         if($tiempoD[1]!='00'){
           $minutosD = $conversor->to_word($tiempoD[1],null,true);
         }
+        if($param['detalle']!=''){
+          $param['detalle'].='.';
+        }
         $modalidad = ModalidadDivorcio::find()->where('codigo = '.$param['cod_mod_divorcio'])->one()->nombre;
         $municipio = Municipio::find()->where('codigo = '.$param['cod_municipio'])->one();
         $dbConm->codEstadoCivil->nombre = rtrim($dbConm->codEstadoCivil->nombre,'o').'a';
@@ -402,7 +401,7 @@ class RegistroController extends Controller
         .$conversor->to_word($dbMatp[0]->codMatrimonio->codPartida->codLibro->numero,null,true,true).' del año '.$conversor->to_word($dbMatp[0]->codMatrimonio->codPartida->codLibro->anyo,null,true).'. <strong>Se ha decretado el divorcio: </strong>'
         .'Por '.$modalidad.', declarándose disuelto el vínculo matrimonial que los unía, por medio de sentencia definitiva de divorcio, pronunciada por: '.$param['juez'].' de '.$municipio->nombre.', Departamento de '.$municipio->codDepartamento->nombre.' a las '.$conversor->to_word($tiempoD[0],null,true).' horas '.$minutosD.' minutos '
         .'del día '.fechaATexto($param['fecha_suceso']).' y ejecutoriada el día '.fechaATexto($param['fecha_ejecucion']).'. '
-        .$param['detalle'].'. Por lo tanto se cancela la partida de matrimonio relacionada. Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
+        .$param['detalle'].' Por lo tanto se cancela la partida de matrimonio relacionada. Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
         //obtener el nombre de la modalidad
         $mpdf->WriteHTML('<br/>');
         $mpdf->WriteHTML('<br/>');
@@ -575,14 +574,65 @@ class RegistroController extends Controller
   {
     $model = new Divorcio();
     $partidaModelo = new Partida();
-
-    if ($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post()) && Model::validateMultiple([$model, $partidaModelo])) {
-      if ($model->validate()) {
-        // form inputs are valid, do something here
-        return;
+    $dbCon = new Persona();
+    $conexion = \Yii::$app->db;
+    $transaccion = $conexion->beginTransaction();
+    if($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())){
+      require_once('../auxiliar/Auxiliar.php');
+      $model->cod_partida = 0;
+      $partidaModelo->cod_libro = 1;
+      $partidaModelo->cod_empleado = Yii::$app->user->identity->persona->codEmpleado->codigo;
+      $partidaModelo->lugar_suceso = $partidaModelo->codMunicipio->nombre;
+      $partidaModelo->tipo = 'Divorcio';
+      if($model->validate() && $partidaModelo->validate()){
+        try{
+          $codlibro = Libro::find()->select('codigo')->where("tipo = 'Divorcio'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
+          $partidaModelo->cod_libro = $codlibro;
+          $partidaModelo->fecha_emision = fechaMySQL($partidaModelo->fecha_emision);
+          $partidaModelo->fecha_suceso = fechaMySQL($partidaModelo->fecha_suceso);
+          $model->fecha_ejecucion = fechaMySQL($model->fecha_ejecucion);
+          $partidaModelo->hora_suceso = horaMySQL($partidaModelo->hora_suceso);
+          if($partidaModelo->save()){
+            //Recupero el valor de id con el cual se inserto
+            $ulid = $conexion->getLastInsertID();
+            $model->cod_partida = $ulid;
+            //Guardo el registro de divorcio
+            if(!$model->save()){
+              throw new UserException('No se pudo guardar el registro de divorcio, intente nuevamente');
+            }
+            $arrper = $model->codMatrimonio->matrimonioPersonas;
+            $dbCon = $arrper[0]->codPersona;
+            $dbCon->cod_estado_civil = 3;
+            //Se actualiza el estado civil de los contrayentes
+            if(!$dbCon->save()){
+              throw new UserException('No se pudo actualizar el estado civil del contrayente, intente nuevamente');
+            }
+            $dbCon = $arrper[1]->codPersona;
+            $dbCon->cod_estado_civil = 3;
+            //Se actualiza el estado civil de los contrayentes
+            if(!$dbCon->save()){
+              throw new UserException('No se pudo actualizar el estado civil de la contrayente, intente nuevamente');
+            }
+            //Actualizar el folio actual del libro
+            if($conexion->createCommand("update libro set folio_actual = folio_actual + 1 where codigo = ".$codlibro)->execute()<=0){
+              throw new UserException('No se pudo actualizar el libro de partidas, intente nuevamente');
+            }
+            $transaccion->commit();
+            Yii::$app->session->setFlash('success', 'Partida guardada con éxito');
+            return $this->redirect(['divorcio']);
+          }else{
+            throw new UserException('No se pudo guardar el registro de partida, intente nuevamente');
+          }
+          return;
+        }catch(UserException $err){
+            $transaccion->rollback();
+            Yii::$app->session->setFlash('error', $err->getMessage());
+            return $this->redirect(['divorcio']);
+        }
+      }else{
+        Yii::$app->session->setFlash('error', 'El modelo no cumple con la validación');
       }
     }
-
     return $this->render('rdivorcio', ['model'=> $model,'partida'=>$partidaModelo]);
   }
 }

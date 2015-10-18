@@ -117,7 +117,7 @@
   });
 
   $('#guardar').click(function(){
-    $('#idivorcio').submit();
     enviarParametros(true,false);
+    $('#idivorcio').submit();
   });
 }(this, this.document))

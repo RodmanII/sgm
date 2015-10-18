@@ -15,6 +15,13 @@ $('#procesar').click(function(){
     $('#personafrm').submit();
 });
 
-function isNumber(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
+$('#persona-genero').change(function(){
+  var valor = $('#persona-genero:checked').val();
+  if(valor == 'Femenino'){
+    //Si es mujer debo habilitar el apelldio de casada
+    $('#persona-apellido_casada').prop('disabled', false);
+  }else{
+    $('#persona-apellido_casada').prop('disabled', true);
+    $('#persona-apellido_casada').val('');
+  }
+});

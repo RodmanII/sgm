@@ -11,13 +11,13 @@ use Yii;
  * @property string $juez
  * @property string $fecha_ejecucion
  * @property string $detalle
- * @property integer $num_partida
+ * @property integer $cod_partida
  * @property integer $cod_mod_divorcio
  * @property integer $cod_matrimonio
  *
  * @property Matrimonio $codMatrimonio
  * @property ModalidadDivorcio $codModDivorcio
- * @property Partida $numPartida
+ * @property Partida $codPartida
  */
 class Divorcio extends \yii\db\ActiveRecord
 {
@@ -35,12 +35,12 @@ class Divorcio extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['juez', 'fecha_ejecucion', 'num_partida', 'cod_mod_divorcio', 'cod_matrimonio'], 'required'],
+            [['juez', 'fecha_ejecucion', 'cod_partida', 'cod_mod_divorcio', 'cod_matrimonio'], 'required'],
             [['fecha_ejecucion'], 'safe'],
-            [['num_partida', 'cod_mod_divorcio', 'cod_matrimonio'], 'integer'],
-            [['juez'], 'string', 'max' => 50],
+            [['cod_partida', 'cod_mod_divorcio', 'cod_matrimonio'], 'integer'],
+            [['juez'], 'string', 'max' => 100],
             [['detalle'], 'string', 'max' => 300],
-            [['num_partida'], 'unique'],
+            [['cod_partida'], 'unique'],
             [['cod_matrimonio'], 'unique']
         ];
     }
@@ -50,15 +50,15 @@ class Divorcio extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
-            'codigo' => 'Número',
-            'juez' => 'Juez',
-            'fecha_ejecucion' => 'Fecha de Ejecución de Sentencia',
-            'detalle' => 'Detalles Adicionales',
-            'num_partida' => 'Num Partida',
-            'cod_mod_divorcio' => 'Modalidad de Divorcio',
-            'cod_matrimonio' => 'Partida de Matrimonio Asociada',
-        ];
+      return [
+          'codigo' => 'Número',
+          'juez' => 'Juez',
+          'fecha_ejecucion' => 'Fecha de Ejecución de Sentencia',
+          'detalle' => 'Detalles Adicionales',
+          'cod_partida' => 'Número',
+          'cod_mod_divorcio' => 'Modalidad de Divorcio',
+          'cod_matrimonio' => 'Partida de Matrimonio Asociada',
+      ];
     }
 
     /**
@@ -80,8 +80,8 @@ class Divorcio extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getNumPartida()
+    public function getCodPartida()
     {
-        return $this->hasOne(Partida::className(), ['numero' => 'num_partida']);
+        return $this->hasOne(Partida::className(), ['codigo' => 'cod_partida']);
     }
 }

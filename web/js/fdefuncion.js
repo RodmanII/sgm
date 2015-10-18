@@ -183,8 +183,8 @@
         contenido += elemento.find(".nom").html()+':'+elemento.find(".rel").html()+anex;
       });
       $('#ifam').val(contenido);
-      $('#idefuncion').submit();
       enviarParametros(true,false);
+      $('#idefuncion').submit();
     }else{
       alert('Tiene que especificar a al menos un familiar');
     }
