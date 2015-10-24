@@ -95,7 +95,5 @@ AppAsset::register($this);
 </html>
 <?php
   $this->registerCssFile(Yii::$app->homeUrl."css/custom.css");
-  $this->registerCssFile(Yii::$app->homeUrl."css/bootstrap-select.css");
-  $this->registerJsFile(Yii::$app->homeUrl."js/bootstrap-select.min.js");
   $this->endPage();
 ?>

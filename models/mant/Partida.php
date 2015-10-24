@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "partida".
  *
  * @property integer $codigo
+ * @property integer $numero
  * @property integer $folio
  * @property string $fecha_emision
  * @property string $fecha_suceso
@@ -17,6 +18,7 @@ use Yii;
  * @property integer $cod_municipio
  * @property integer $cod_informante
  * @property integer $cod_libro
+ * @property string $tipo
  *
  * @property Defuncion $defuncion
  * @property Divorcio $divorcio
@@ -43,11 +45,12 @@ class Partida extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['folio', 'fecha_emision', 'fecha_suceso', 'hora_suceso', 'cod_empleado', 'cod_municipio', 'cod_libro', 'lugar_suceso'], 'required', 'message'=>'Este campo no puede estar vacio'],
-            [['folio', 'cod_empleado', 'cod_municipio', 'cod_informante', 'cod_libro'], 'integer'],
+            [['numero', 'folio', 'fecha_emision', 'fecha_suceso', 'hora_suceso', 'cod_empleado', 'cod_municipio', 'cod_libro', 'tipo', 'lugar_suceso'], 'required'],
+            [['numero', 'folio', 'cod_empleado', 'cod_municipio', 'cod_informante', 'cod_libro'], 'integer'],
             [['fecha_emision', 'fecha_suceso', 'hora_suceso'], 'safe'],
             [['lugar_suceso'], 'string', 'max' => 100],
-            [['folio', 'cod_libro'], 'unique', 'targetAttribute' => ['folio', 'cod_libro'], 'message' => 'La combinación de folio y libro debe de ser única'],
+            [['tipo'], 'string', 'max' => 50],
+            [['numero', 'folio', 'cod_libro'], 'unique', 'targetAttribute' => ['numero', 'folio', 'cod_libro'], 'message' => 'The combination of Numero, Folio and Cod Libro has already been taken.']
         ];
     }
 
@@ -67,7 +70,9 @@ class Partida extends \yii\db\ActiveRecord
             'cod_municipio' => 'Municipio',
             'cod_informante' => 'Informante',
             'cod_libro' => 'Libro',
-        ];
+            'tipo' => 'Tipo',
+            'numero' => 'Número',
+         ];
     }
 
     /**

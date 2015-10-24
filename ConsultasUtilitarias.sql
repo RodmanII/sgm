@@ -3,6 +3,7 @@ select concat(per.nombre,' ',per.apellido) as nombre from persona per
 				inner join empleado emp on emp.cod_persona = per.codigo
                 inner join usuario usr on usr.nombre = emp.nombre_usuario and usr.nombre = 'gorflax';
 
+select d.nombre, m.nombre from municipio m inner join departamento d on m.cod_departamento = d.codigo where m.codigo = 11;
 select * from libro where tipo = 'nacimiento' and cerrado = 0 and anyo = year(curdate());
 select codigo, concat(nombre,' ',apellido) as nombre from persona p left join nacimiento n on p.codigo = n.cod_asentado;
 select codigo from nacimiento order by codigo desc limit 1;

@@ -12,7 +12,7 @@ use app\models\mant\Departamento;
 use app\models\mant\Municipio;
 use app\models\mant\Hospital;
 use app\models\mant\Libro;
-use app\models\mant\Nacimiento;
+use app\models\mant\Partida;
 use yii\db\Query;
 use yii\web\View;
 
@@ -35,9 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $form = ActiveForm::begin(['id'=>'inacimiento']); ?>
     <?php
       $dbLibro = Libro::find()->where('tipo = "Nacimiento"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
-      $dbNacimiento = Nacimiento::find()->orderBy(['codigo'=>SORT_DESC])->limit(1)->one();
-      if(count($dbNacimiento)>0){
-          $num_partida = $dbNacimiento->codigo+1;
+      $dbPartida = Partida::find()->where('cod_libro = '.$dbLibro->codigo)->orderBy(['numero'=>SORT_DESC])->limit(1)->one();
+      // $dbPartida = Nacimiento::find()->orderBy(['codigo'=>SORT_DESC])->limit(1)->one();
+      if(count($dbPartida)>0){
+          $num_partida = $dbPartida->numero+1;
       }else{
         $num_partida = 1;
       }
@@ -55,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($partida, 'folio')->textInput(array('readOnly'=>true)) ?>
       </span>
       <span style="order: 3; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'codigo')->textInput(array('readOnly'=>true,'value'=>$num_partida)) ?>
+        <?= $form->field($partida, 'numero')->textInput(array('readOnly'=>true,'value'=>$num_partida)) ?>
       </span>
     </div>
     <div class="cflex">
@@ -129,7 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </button>
       </span>
       <span style="order: 2; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'rel_informante')->dropDownList(['Padre'=>'Padre','Madre'=>'Madre','Tio'=>'Tio','Tia'=>'Tia','Abuelo'=>'Abuelo','Abuela'=>'Abuela']); ?>
+        <?= $form->field($model, 'rel_informante')->dropDownList(['Padre'=>'Padre','Madre'=>'Madre','Abuela'=>'Abuela']); ?>
       </span>
     </div>
     <div class="cflex">
@@ -191,7 +192,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($model, 'cod_hospital')->dropDownList(ArrayHelper::map(Hospital::find()->all(), 'codigo', 'nombre')) ?>
+        <?= $form->field($model, 'cod_hospital')->dropDownList(ArrayHelper::map(Hospital::find()->all(), 'codigo', 'nombre'),['prompt'=>'Especifique el hospital']) ?>
         <div class="form-group">
           <?= Html::textInput('fhospital','',array('id'=>'nrwr4','class'=>'form-control')); ?>
           <span id="matches4" style="display:none"></span>
@@ -203,6 +204,9 @@ $this->params['breadcrumbs'][] = $this->title;
           <i class="glyphicon glyphicon-refresh"></i>
         </button>
       </span>
+      <span style="order: 2; flex-grow: 1; margin-right:10px;">
+        <?= $form->field($model, 'doc_presentado')->dropDownList(['Plantares de Recién Nacid'=>'Plantares de Recién Nacido','Solvencia de Nacimiento'=>'Solvencia de Nacimiento']) ?>
+      </span>
     </div>
     <div class="form-group">
         <?= Html::button('Guardar', ['class' => 'btn btn-primary', 'id'=>'guardar']) ?>
@@ -210,6 +214,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <?php ActiveForm::end(); ?>
     <?php
+      $this->registerJsFile(Yii::$app->homeUrl."js/generales.js", ['depends' => [\yii\web\JqueryAsset::className()]]);
       $this->registerJsFile(Yii::$app->homeUrl."js/fnacimiento.js", ['depends' => [\yii\web\JqueryAsset::className()]]);
     ?>
 </div>

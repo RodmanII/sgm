@@ -54,8 +54,8 @@ create table `tipo_doc_identidad` (
 	constraint pk_TipoDocIdenti primary key(`codigo`),
 	constraint unq_TipoDocIdenti_nombre unique(nombre)
 );
-insert into tipo_doc_identidad(nombre) values('Carnet de Identificación Personal');
-insert into tipo_doc_identidad(nombre) values('Cédula de Identidad');
+insert into tipo_doc_identidad(nombre) values('Documento Único de Identidad');
+insert into tipo_doc_identidad(nombre) values('Carnet de Minoridad');
 
 create table `municipio` (
 	`codigo` int auto_increment,
@@ -431,7 +431,6 @@ insert into estado_civil(nombre) values('Soltero');
 insert into estado_civil(nombre) values('Casado');
 insert into estado_civil(nombre) values('Divorciado');
 insert into estado_civil(nombre) values('Viudo');
-insert into estado_civil(nombre) values('Acompañado');
 
 create table `regimen_patrimonial` (
 	`codigo` int auto_increment,
@@ -524,7 +523,7 @@ create table `persona` (
 	`profesion` varchar(50) null,
 	`estado` varchar(50) not null default 'Activo',
 	`cod_municipio` int not null,
-	`cod_mun_origen` int null,
+	`cod_mun_origen` int not null,
 	`cod_nacionalidad` int not null,
 	`cod_estado_civil` int not null,
 	`nombre_usuario` varchar(50) null,
@@ -548,27 +547,31 @@ values('Hugo Ernesto', 'Grijalva Pérez', '014501627', '05171032641145', '1967-1
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Claudia Maribel', 'Flores Valle', '562101627', '62301032647801', '1995-10-09', 'Femenino', 'San Marcos, Departamento de San Salvador', 'Secretaria', 74, 55, 5, 3, 'verdugo');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Carla Maria', 'Castillo Navarrete', '565171647', '62321027642304', '1992-03-17', 'Femenino', 'Ciudad Valdez, Departamento de Santa Ana', 'Contadora', 'Inactivo', 62, 111, 6, 5, 'gerflax');
+values('Carla Maria', 'Castillo Navarrete', '565171647', '62321027642304', '1992-03-17', 'Femenino', 'Ciudad Valdez, Departamento de Santa Ana', 'Contadora', 'Inactivo', 62, 111, 6, 3, 'gerflax');
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Maria Eleonora', 'Mejía Cortez', '0215173547', '05161027362304', '1990-07-21', 'Femenino', 'Meridia, Departamento de Santa Ana', 'Operadora', 'Activo', 88, 97, 2, 1, null);
+values('Maria Eleonora', 'Mejía Cortez', '0215173547', '05161027362304', '1990-07-21', 'Femenino', 'Monte San Juan, Departamento de Cuscatlán', 'Operadora', 'Activo', 88, 97, 2, 1, null);
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Sonia Elena', 'Greyskull', '3312173847', '05161111356304', '1988-02-08', 'Femenino', 'Palaven, Departamento de Exodo', 'Soldado', 'Activo', 26, 54, 3, 4, null);
+values('Sonia Elena', 'Greyskull', '3312173847', '05161111356304', '1988-02-08', 'Femenino', 'Santo Domingo Guzmán, Departamento de Sonsonate', 'Soldado', 'Activo', 26, 54, 3, 4, null);
 -- Menos de 18 que van a figurar como padres
 insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('William Eduardo', 'Castro Paz', 'Carnet de BoyScoutt:45126320', '1995-07-22', 'Masculino', 'Loc Muine, Departamento de Temeria', 'Mecánico Soldador', 'Activo', 101, 94, 2, 3, null);
+values('William Eduardo', 'Castro Paz', 'Carnet de Minoridad:34581', '1998-07-22', 'Masculino', 'Chiltiupán, Departamento de La Libertad', 'Mecánico Soldador', 'Activo', 101, 94, 2, 3, null);
 insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Cristina Angelica', 'Gomez Garcia', 'Tarjeta de Afiliación a CENAR:00845145', '1997-01-14', 'Femenino', 'Tor Lara, Departamento de Aedir', 'Asistente de oficina', 'Activo', 36, 73, 1, 1, null);
+values('Cristina Angelica', 'Gomez Garcia', 'Carnet de Minoridad:21345', '1998-01-14', 'Femenino', 'San Antonio Pajonal, Departamento de Santa Ana', 'Asistente de oficina', 'Activo', 36, 73, 1, 1, null);
 insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Daniel Ortega', 'Gomez Gaspan', 'Carnet de EUPRIDES:7741301', '1996-08-16', 'Masculino', 'Teirgel, Departamento de Kaer Morhen', 'Técnico de Hardware', 'Activo', 51, 27, 4, 1, null);
+values('Fernando Wilfredo', 'Carrillo Padilla', 'Carnet de Minoridad:82712', '1997-09-25', 'Masculino', 'San Fernando, Departamento de Chalatenango', 'Dependiente de comercio', 'Activo', 72, 145, 1, 1, null);
+insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Maria Susana', 'Sanchéz Beltrán', 'Carnet de Minoridad:11312', '1999-02-06', 'Femenino', 'Joateca, Departamento de Morazán', 'Estudiante', 'Activo', 185, 12, 1, 1, null);
+insert into persona(nombre, apellido, dui, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Daniel Ortega', 'Gomez Gaspan', '987012365', '1996-08-16', 'Masculino', 'Agua Caliente, Departamento de Chalatenango', 'Técnico de Hardware', 'Activo', 51, 27, 4, 1, null);
 -- Menores de 1 que van a figurar como asentados
-insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
-values('Ernesto Augusto', 'Flores Miran','2015-02-22', 'Masculino', 'Yelmo de Piedra, Departamento de Kwaeden', 'Activo', 22, 1, 1);
-insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
-values('Sonia Germinia', 'Gonzales Cortez','2015-04-27', 'Femenino', 'Paramo de Hierro, Departamento de Kovir', 'Activo', 62, 1, 1);
-insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
-values('Lourdes Anastasia', 'Gonzales Peña','2015-07-09', 'Femenino', 'Mahakan, Departamento de Temeria', 'Activo', 77, 1, 1);
-insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_nacionalidad, cod_estado_civil)
-values('Maria José', 'Jurado Carmona','2014-12-15', 'Femenino', 'Rivendel, Departamento de Tierra Media', 'Activo', 11, 1, 1);
+insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil)
+values('Ernesto Augusto', 'Flores Miran','2015-02-22', 'Masculino', 'San Antonio del Monte, Departamento de Sonsonate', 'Activo', 22, 22, 1, 1);
+insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil)
+values('Sonia Germinia', 'Gonzales Cortez','2015-04-27', 'Femenino', 'La Palma, Departamento de Chalatenango', 'Activo', 62, 62, 1, 1);
+insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil)
+values('Lourdes Anastasia', 'Gonzales Peña','2015-07-09', 'Femenino', 'San José Cancasque, Departamento de Chalatenango', 'Activo', 77, 77, 1, 1);
+insert into persona(nombre, apellido, fecha_nacimiento, genero, direccion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil)
+values('Maria José', 'Jurado Carmona','2014-12-15', 'Femenino', 'Tacuba, Departamento de Ahuachapán', 'Activo', 11, 11, 1, 1);
 
 create table `informante` (
 	`codigo` int auto_increment,
@@ -585,6 +588,10 @@ create table `informante` (
 	constraint unq_Informante_numero_documento unique(numero_documento)
 );
 alter table `informante` add constraint `fk_informante_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
+INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('Claudia Maribel Flores Valle','Documento Único de Identidad','562101627','Femenino',4,'btDW_x8-xKp1-fAjQsHA_pcOoKK3-L4F.png');
+INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('Daniel Ortega Gomez Gaspan','Documento Único de Identidad','987012365','Masculino',10,'ai9Ch0dL2SDf5kRhJICZ16rOxmlL8reg.png');
+INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('Maria Susana Sanchéz Beltrán','Carnet de Minoridad','11312','Femenino',22,'og0n3X_QUiVMuwVX4Vgh7GNHrQG7mksz.png');
+INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('William Eduardo Castro Paz','Carnet de Minoridad','34581','Masculino',19,'1UnaUy0frGoY54cMPrVH9-lskWz41wpX.png');
 
 create table `empleado` (
 	`codigo` int auto_increment,
@@ -650,6 +657,7 @@ alter table `vehiculo` add constraint `fk_vehiculo_empleado_cod_conductor` forei
 
 create table `partida` (
 		`codigo` int auto_increment,
+		`numero` int not null,
 		`folio` int not null,
 		`fecha_emision` date not null,
 		`fecha_suceso` date not null,
@@ -661,7 +669,7 @@ create table `partida` (
 		`cod_libro` int not null,
 		`tipo` varchar(50) not null,
 		constraint pk_Partida primary key(`codigo`),
-		constraint unq_Partida_folio_cod_libro unique(folio,cod_libro)
+		constraint unq_Partida_numero_folio_cod_libro unique(numero,folio,cod_libro)
 );
 alter table `partida` add constraint `fk_partida_empleado_cod_empleado` foreign key (`cod_empleado`) references `empleado`(`codigo`) on delete no action on update cascade;
 alter table `partida` add constraint `fk_partida_municipio_cod_municipio` foreign key (`cod_municipio`) references `municipio`(`codigo`) on delete no action on update cascade;
@@ -671,11 +679,14 @@ alter table `partida` add constraint `fk_partida_libro_cod_libro` foreign key (`
 create table `nacimiento` (
 	`codigo` int auto_increment,
 	`cod_padre` int null,
+	`edad_padre` int null,
 	`cod_madre` int null,
+	`edad_madre` int null,
 	`cod_asentado` int not null,
-	`cod_hospital` int not null,
+	`cod_hospital` int null,
 	`cod_partida` int not null,
 	`rel_informante` varchar(50) not null,
+	`doc_presentado` varchar(50) not null,
 	constraint pk_Nacimiento primary key(`codigo`),
 	constraint unq_Nacimiento_cod_asentado unique(cod_asentado),
 	constraint unq_Nacimiento_cod_partida unique(cod_partida)
@@ -694,6 +705,8 @@ create table `matrimonio` (
 	`madre_contrayente_h` varchar(50) null,
 	`padre_contrayente_m` varchar(50) null,
 	`madre_contrayente_m` varchar(50) null,
+	`est_civ_h` varchar(50) not null,
+	`est_civ_m` varchar(50) not null,
 	`cod_reg_patrimonial` int not null,
 	`cod_partida` int not null,
 	`num_etr_publica` int not null,

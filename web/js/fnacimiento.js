@@ -192,8 +192,13 @@
     var madre = $('#nacimiento-cod_madre').val();
     var padre = $('#nacimiento-cod_padre').val();
     if(madre != '' || padre != ''){
-      enviarParametros(true,false);
-      $('#inacimiento').submit();
+      var diferencia = daydiff(parseDate($('#partida-fecha_suceso').val()), parseDate($('#partida-fecha_emision').val()));
+      if(diferencia > 90){
+        alert('La diferencia entre la fecha de nacimiento y la fecha de emisión no puede ser mayor a 90 días');
+      }else{
+        enviarParametros(true,false);
+        $('#inacimiento').submit();
+      }
     }else{
       alert('Tiene que especificar padre, madre u ambos');
     }
@@ -204,24 +209,37 @@ $('#reload-asentado').click(function(){
   location.reload();
   window.sessionStorage.setItem('recargado',true);
   window.sessionStorage.setItem('destino','nrwr1');
+  $('#nacimiento-cod_asentado').focus();
 });
 
 $('#reload-madre').click(function(){
   location.reload();
   window.sessionStorage.setItem('recargado',true);
   window.sessionStorage.setItem('destino','nrwr');
+  $('#nacimiento-cod_asentado').focus();
 });
 
 $('#reload-padre').click(function(){
   location.reload();
   window.sessionStorage.setItem('recargado',true);
   window.sessionStorage.setItem('destino','nrwr2');
+  $('#nacimiento-cod_asentado').focus();
 });
 
 $('#reload-informante').click(function(){
   location.reload();
   window.sessionStorage.setItem('recargado',true);
   window.sessionStorage.setItem('destino','nrwr3');
+  $('#nacimiento-cod_asentado').focus();
+});
+
+$('#nacimiento-doc_presentado').change(function(){
+  if($('#nacimiento-doc_presentado').val()=='Solvencia de Nacimiento'){
+    $('#nacimiento-cod_hospital').val('');
+    $("#nacimiento-cod_hospital").attr("disabled", "disabled")
+  }else{
+    $("#nacimiento-cod_hospital").removeAttr("disabled");
+  }
 });
 
 $('#reload-hospital').click(function(){
@@ -234,4 +252,5 @@ if(window.sessionStorage.getItem('recargado')=='true'){
   $('#'+window.sessionStorage.getItem('destino')).focus();
   window.sessionStorage.setItem('recargado',false);
 }
+
 }(this, this.document))

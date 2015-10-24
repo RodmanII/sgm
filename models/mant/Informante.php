@@ -13,6 +13,7 @@ use Yii;
  * @property string $numero_documento
  * @property string $genero
  * @property integer $cod_persona
+ * @property string $firma
  *
  * @property Persona $codPersona
  * @property Partida[] $partidas
@@ -34,9 +35,14 @@ class Informante extends \yii\db\ActiveRecord
     {
         return [
             [['nombre', 'tipo_documento', 'numero_documento', 'genero'], 'required'],
+            ['firma', 'required', 'on' => 'create'],
             [['cod_persona'], 'integer'],
             [['nombre', 'tipo_documento', 'numero_documento', 'genero'], 'string', 'max' => 50],
+            [['firma'], 'string', 'max' => 150],
             [['nombre'], 'unique'],
+            [['firma'], 'unique'],
+            [['firma'], 'safe'],
+            [['firma'], 'file', 'extensions'=>'jpg, png'],
             [['numero_documento'], 'unique'],
             [['cod_persona'], 'unique']
         ];
@@ -54,6 +60,7 @@ class Informante extends \yii\db\ActiveRecord
             'numero_documento' => 'Número de Documento',
             'genero' => 'Género',
             'cod_persona' => 'Persona',
+            'firma' => 'Firma',
         ];
     }
 

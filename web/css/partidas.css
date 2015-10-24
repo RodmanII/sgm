@@ -45,6 +45,14 @@ p {
   right: 100;
 }
 
+#finfori {
+  left: 110;
+}
+
+#fjrfi {
+  right: 166;
+}
+
 .firmat {
   position: absolute;
   bottom: 70;

@@ -90,9 +90,12 @@ class RegistroController extends Controller
     $transaccion = $conexion->beginTransaction();
     if($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())){
       require_once('../auxiliar/Auxiliar.php');
-      $model->cod_partida = 0;
       $partidaModelo->cod_libro = 1;
       $partidaModelo->cod_empleado = Yii::$app->user->identity->persona->codEmpleado->codigo;
+      $partidaModelo->tipo = "Nacimiento";
+      $model->cod_partida = 0;
+      $model->edad_padre = calcularEdad(Persona::find()->where('codigo = '.$model->cod_padre)->one()->fecha_nacimiento);
+      $model->edad_madre = calcularEdad(Persona::find()->where('codigo = '.$model->cod_madre)->one()->fecha_nacimiento);
       if($model->validate() && $partidaModelo->validate()){
         try{
           $codlibro = Libro::find()->select('codigo')->where("tipo = 'Nacimiento'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
@@ -100,6 +103,7 @@ class RegistroController extends Controller
           $partidaModelo->fecha_emision = fechaMySQL($partidaModelo->fecha_emision);
           $partidaModelo->fecha_suceso = fechaMySQL($partidaModelo->fecha_suceso);
           $partidaModelo->hora_suceso = horaMySQL($partidaModelo->hora_suceso);
+          // $partidaModelo->numero = $_POST['Partida']['numero'];
           if($partidaModelo->save()){
             //Recupero el valor de id con el cual se inserto
             $ulid = $conexion->getLastInsertID();
@@ -131,7 +135,7 @@ class RegistroController extends Controller
     return $this->render('rnacimiento', ['model'=> $model,'partida'=>$partidaModelo]);
   }
 
-  public function actionGenerar($tipo,$guardar,$parametros){
+  public function actionGenerar($tipo,$guardar,$parametros,$nueva = true){
     require_once('../auxiliar/Auxiliar.php');
     $guardar = filter_var($guardar, FILTER_VALIDATE_BOOLEAN);
     $destino = 'I';
@@ -157,6 +161,38 @@ class RegistroController extends Controller
     $mpdf->WriteHTML('<p class="centrado">TELEFAX 2536-5215</p>');
     $mpdf->WriteHTML('<hr/>');
     $mpdf->WriteHTML('<p class="centrado cabecera">ALCALDÍA MUNICIPAL DE ILOPANGO</p>');
+    $objTPar = null;
+    $objPartida = null;
+    if(!$nueva){
+      switch ($tipo) {
+        case 'nacimiento':
+          $objTPar = Nacimiento::find()->where('codigo = '.$param['codtpar'])->one();
+          break;
+        case 'defuncion':
+          $objTPar = Defuncion::find()->where('codigo = '.$param['codtpar'])->one();
+          break;
+        case 'matrimonio':
+          $objTPar = Matrimonio::find()->where('codigo = '.$param['codtpar'])->one();
+          break;
+        case 'divorcio':
+          $objTPar = Divorcio::find()->where('codigo = '.$param['codtpar'])->one();
+          break;
+        default:
+          exit('Algo no anda bien');
+          break;
+      }
+      foreach ($param as $llave => $valor) {
+        if(property_exists($objTPar,$llave)){
+          $param[$llave] = $objTPar[$llave];
+        }
+      }
+      $objPartida = Partida::find()->where('codigo = '.$objTPar->cod_partida)->one();
+      foreach ($param as $llave => $valor) {
+        if(property_exists($objPartida,$llave)){
+          $param[$llave] = $objPartida[$llave];
+        }
+      }
+    }
     $tiempo = explode(':',date('G:i',strtotime($param['hora_suceso'])));
     $minutos = 'cero';
     if($tiempo[1]!='00'){
@@ -177,11 +213,16 @@ class RegistroController extends Controller
         $mpdf->WriteHTML('<p class="derecha cabecera">FOLIO '.$conversor->to_word($param['folio']).'</p>');
         $mpdf->WriteHTML('<p class="centrado">DATOS DEL INSCRITO</p>');
         $dbAsentado = Persona::find()->where('codigo = '.$param['cod_asentado'])->one();
-        $dbHospital = Hospital::find()->where('codigo = '.$param['cod_hospital'])->one();
+        if($param['doc_presentado']=='Plantares de Recién Nacid'){
+          $dbHospital = Hospital::find()->where('codigo = '.$param['cod_hospital'])->one();
+        }else{
+          $dbHospital = new Hospital();
+          $dbHospital->nombre = '';
+        }
         $dbMunicipio = Municipio::find()->where('codigo = '.$param['cod_municipio'])->one();
         //Aqui estaba el codigo para recuperar el tiempo, se coloca antes del switch porque figura en cada documento
         $nomInscrito = $dbAsentado->nombre.' '.$dbAsentado->apellido;
-        $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).'; <strong>'.$dbAsentado->nombre.'</strong>.- sexo '
+        $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['numero'],null,true,true)).'; <strong>'.$dbAsentado->nombre.'</strong>.- sexo '
         .strtolower($dbAsentado->genero).', nació en el '.$dbHospital->nombre.' '.$param['lugar_suceso'].', Municipio de '
         .$dbMunicipio->nombre.', Departamento de '.$dbMunicipio->codDepartamento->nombre.', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos
         del día '.fechaATexto($param['fecha_suceso']).'.</p>');
@@ -201,23 +242,30 @@ class RegistroController extends Controller
         }
         for($i = 0;$i < $iteraciones;$i++){
           $dbProgenitor = Persona::find()->where('codigo = '.$param[$arreglo[$i]])->one();
-          if($dbProgenitor->dui!=null){
-            $tipo_doc = 'Documento Único de Identidad';
-            $num_doc = $dbProgenitor->dui;
-          }else{
+          if($dbProgenitor->otro_doc!=null){
             $arr = explode(':',$dbProgenitor->otro_doc);
             $tipo_doc = $arr[0];
             $num_doc = $arr[1];
+          }else{
+            $tipo_doc = 'Documento Único de Identidad';
+            $num_doc = $dbProgenitor->dui;
           }
           $mpdf->WriteHTML('<p class="centrado">DATOS '.$parentesco[$i].'</p>');
-          $edad = calcularEdad($dbProgenitor->fecha_nacimiento);
+          $edad = '';
+          if(!$nueva){
+            $temp = end(explode('_',$arreglo[$i]));
+            $llave = 'edad_'.$temp;
+            $edad = $objTPar[$llave];
+          }else{
+            $edad = calcularEdad($dbProgenitor->fecha_nacimiento);
+          }
           $indicador = 'a';
           if($dbProgenitor->genero=='Masculino'){
             $indicador = 'o';
           }
           $mpdf->WriteHTML('<p class="justificado"><strong>'.$dbProgenitor->nombre.' '.$dbProgenitor->apellido.'</strong> de '.$conversor->to_word($edad,null,true).'
-          años de edad, profesión u oficio, '.strtolower($dbProgenitor->profesion).', originari'.$indicador.' de '.$dbProgenitor->codMunicipio->nombre.',
-          Departamento de '.$dbProgenitor->codMunicipio->codDepartamento->nombre.', del domicilio de '.$dbProgenitor->direccion.',
+          años de edad, profesión u oficio, '.strtolower($dbProgenitor->profesion).', originari'.$indicador.' de '.$dbProgenitor->codMunOrigen->nombre.',
+          Departamento de '.$dbProgenitor->codMunOrigen->codDepartamento->nombre.', del domicilio de '.$dbProgenitor->direccion.',
           de Nacionalidad '.$dbProgenitor->codNacionalidad->nombre.', quién se identifica por medio de '.$tipo_doc.'
           número; '.$conversor->convertirSeparado($num_doc).'.</p>');
         }
@@ -227,16 +275,20 @@ class RegistroController extends Controller
           $indicador = 'del inscrito';
           $comp = 'o';
         }
-        $tipo_ase = 'Plantares de Recién Nacid'.$comp;
+        $tipo_ase = $param['doc_presentado'];
+        if(reset(explode(' ',$param['doc_presentado']))=='Plantares'){
+          $tipo_ase.= $comp;
+        }
         $dbInformante = Informante::find()->where('codigo = '.$param['cod_informante'])->one();
         $mpdf->WriteHTML('<p class="centrado">DATOS DEL INFORMANTE</p>');
         $mpdf->WriteHTML('<p class="justificado">Dio los datos; <strong>'.$dbInformante->nombre.'</strong>, quién se identifica por medio de '
         .$dbInformante->tipo_documento.' número; '.$conversor->convertirSeparado($dbInformante->numero_documento).'. Manifestando ser '.$param['rel_informante'].'
         '.$indicador.' y para constancia firma, se asienta con base a '.$tipo_ase.' de fecha '.fechaATexto($param['fecha_suceso']).'.
         Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
-
+        $firmai = strtolower($dbInformante->genero).'/'.$dbInformante->firma;
+        $mpdf->WriteHTML('<p id="finfori" class="firmal"><img style="width:220px;" src="../firmas/'.$firmai.'" /></p><p id="fjrfi" class="firmal"><img style="width:220px;" src="../web/images/firma_jref.png" /></p>');
         $mpdf->WriteHTML('<p id="finforl" class="firmal">F._________________________</p><p id="fjrfl" class="firmal">F._______________________________________</p>');
-        $mpdf->WriteHTML('<p id="finfort" class="firmat">Firma del Informante</p><p id="fjrft" class="firmat">Jefe del Registro del Estado Familiar</p>');
+        $mpdf->WriteHTML('<p id="finfort" class="firmat">Firma del Informante</p><p id="fjrft" class="firmat">'.$titulo.'del Registro del Estado Familiar</p>');
       break;
       case 'defuncion':
         $mpdf->WriteHTML('<p class="centrado cabecera">LIBRO DE PARTIDAS DE DEFUNCIÓN NÚMERO '.$conversor->to_word($param['num_libro'],null,false,true).' DEL</p>');
@@ -256,7 +308,7 @@ class RegistroController extends Controller
           $tipo_doc = $arr[0];
           $num_doc = $arr[1];
         }
-        $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).'; <strong>'.$dbDifunto->nombre.' '.$dbDifunto->apellido.'</strong>.- sexo '
+        $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['numero'],null,true,true)).'; <strong>'.$dbDifunto->nombre.' '.$dbDifunto->apellido.'</strong>.- sexo '
         .strtolower($dbDifunto->genero).', de '.$conversor->to_word(calcularEdad($dbDifunto->fecha_nacimiento),null,true).' años de edad; Profesión u Oficio; '.$dbDifunto->profesion.'; Estado Familiar: '.$dbDifunto->codEstadoCivil->nombre.';'
         .' Del domicilio de '.$dbDifunto->direccion.', de Nacionalidad '.$dbDifunto->codNacionalidad->nombre.', Documento de Identidad del Fallecido: '.$tipo_doc.'; Documento Número '
         .$conversor->convertirSeparado($num_doc).'. Falleció en el '.$param['lugar_suceso'].'. '.$dbMunicipio->nombre.', Departamento de '.$dbMunicipio->codDepartamento->nombre.', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos del día '

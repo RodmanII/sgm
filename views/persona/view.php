@@ -35,6 +35,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'codigo',
             'nombre',
             'apellido',
+            'apellido_casada',
+            [
+              'attribute'=>'empleado',
+              'format'=>'raw',
+              'value'=>convertirBool($model->empleado),
+            ],
             'dui',
             'nit',
             [
@@ -50,6 +56,11 @@ $this->params['breadcrumbs'][] = $this->title;
               'attribute'=>'cod_municipio',
               'format'=>'raw',
               'value'=>retornarDato($model, 'Municipio'),
+            ],
+            [
+              'attribute'=>'cod_mun_origen',
+              'format'=>'raw',
+              'value'=>retornarDato($model, 'Municipio', true),
             ],
             [
               'attribute'=>'cod_nacionalidad',

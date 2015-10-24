@@ -19,12 +19,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Eliminar', ['delete', 'id' => $model->codigo], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => '¿Esta seguro de que desea eliminar este registro?',
                 'method' => 'post',
             ],
         ]) ?>
     </p>
 
+    <?php require_once('../auxiliar/Auxiliar.php'); ?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -33,7 +34,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'tipo_documento',
             'numero_documento',
             'genero',
-            'cod_persona',
+            [
+              'attribute'=>'cod_persona',
+              'format'=>'raw',
+              'value'=>retornarDato($model, 'Persona'),
+            ],
+            'firma',
         ],
     ]) ?>
 
