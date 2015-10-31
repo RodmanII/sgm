@@ -1,14 +1,7 @@
 $('#procesar').click(function(){
   var reg = /^\d+$/;
   var firmac = $('input:radio[name="informante"]:checked').val();
-  if($('#numdoca').val()!=''){
-    if (!reg.test($('#numdoca').val())){
-      alert("El documento alternativo solo debe contener números");
-      return;
-    }
-  }
   if(firmac == 'Si'){
-    // Si es informante la firma no puede estar
     var firma = $('#firin').val();
     if(firma == ''){
       alert("Debe especificar el archivo de firma");
@@ -22,8 +15,8 @@ $('#procesar').click(function(){
     }
   }
   if(firmac == 'Si'){
-    if($('#persona-dui').val() == '' && ($('#nomdoca').val() == '' || $('#numdoca').val() == '')){
-      alert('Debe especificar DUI o un Documento Alternativo');
+    if($('#persona-dui').val() == '' && $('#persona-carnet_minoridad').val() == ''){
+      alert('Debe especificar DUI o Carnet de Minoridad');
       return;
     }
   }

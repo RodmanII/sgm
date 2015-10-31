@@ -82,10 +82,16 @@
   var disp3 = document.querySelector('#matches3')
   var elemento3 = document.getElementById('partida-cod_informante');
 
+  var inp4  = document.querySelector('#nrwr4')
+  var sel4  = document.querySelector('#defuncion-alc_partida')
+  var disp4 = document.querySelector('#matches4')
+  var elemento4 = document.getElementById('defuncion-alc_partida');
+
   // kick it off
   var listado1 = []
   var listado2 = []
   var listado3 = []
+  var listado4 = []
 
   for(var i = 0;i<elemento1.length;i++){
     listado1.push([]);
@@ -102,14 +108,21 @@
     listado3[i].push(elemento3.options[i].value);
     listado3[i].push(elemento3.options[i].innerHTML);
   }
+  for(var i = 0;i<elemento4.length;i++){
+    listado4.push([]);
+    listado4[i].push(elemento4.options[i].value);
+    listado4[i].push(elemento4.options[i].innerHTML);
+  }
 
   var nrwr1 = new Narrower(inp1, sel1, disp1, listado1)
   var nrwr2 = new Narrower(inp2, sel2, disp2, listado2)
   var nrwr3 = new Narrower(inp3, sel3, disp3, listado3)
+  var nrwr4 = new Narrower(inp4, sel4, disp4, listado4)
 
   nrwr1.init()
   nrwr2.init()
   nrwr3.init()
+  nrwr4.init()
 
   $("#edit-difunto").click(function(){
     window.open('/sgm/web/persona/index');
@@ -154,10 +167,11 @@
     if(archivo){
       gar = '&guardar=true';
     }
+    var asistencia = ';con_asistencia*'+$('input:radio[name="Defuncion[con_asistencia]"]:checked').val();
     if(ventana){
-      window.open('generar?tipo=defuncion'+gar+cadena+familiares);
+      window.open('generar?tipo=defuncion'+gar+cadena+asistencia+familiares);
     }else{
-      $.get('generar','tipo=defuncion'+gar+cadena+familiares);
+      $.get('generar','tipo=defuncion'+gar+cadena+asistencia+familiares);
     }
   }
 
@@ -171,6 +185,15 @@
   });
 
   $('#guardar').click(function(){
+    var valor = $('input:radio[name="Defuncion[tipo_doc]"]:checked').val();
+    if(valor == 'Partida de Nacimiento'){
+      //Si el documento es partida de nacimiento se tiene que haber especificado la alcaldia de origen y el numero
+      if($('#defuncion-alc_partida').val()==null || $('#defuncion-datos_partida').val()==''){
+        alert('Tiene que especificar los datos de la partida');
+        return;
+      }
+    }
+
     var long = $("#tfamiliares tbody").children().length;
     var contenido = '';
     if(long > 0){
@@ -182,6 +205,11 @@
         }
         contenido += elemento.find(".nom").html()+':'+elemento.find(".rel").html()+anex;
       });
+      var diferencia = daydiff(parseDate($('#partida-fecha_suceso').val()), parseDate($('#partida-fecha_emision').val()));
+      if(diferencia > 15){
+        alert('La diferencia entre la fecha de defunción y la fecha de emisión no puede ser mayor a 15 días');
+        return;
+      }
       $('#ifam').val(contenido);
       enviarParametros(true,false);
       $('#idefuncion').submit();
@@ -212,6 +240,8 @@ $('#reload-informante').click(function(){
 if(window.sessionStorage.getItem('recargado')=='true'){
   $('#'+window.sessionStorage.getItem('destino')).focus();
   window.sessionStorage.setItem('recargado',false);
+}else{
+  $('#defuncion-cod_difunto').focus();
 }
 
 $('#agfamiliar').click(function(){
@@ -252,6 +282,20 @@ $('#agfamiliar').click(function(){
     }
   }else{
     alert('El nombre no puede estar vacio');
+  }
+});
+
+$('#doc_fall').change(function(){
+  var valor = $('input:radio[name="Defuncion[tipo_doc]"]:checked').val();
+  if(valor == 'Partida de Nacimiento'){
+    //Si el documento es partida de nacimiento debo habilitar los campos que correspondan
+    $('#defuncion-alc_partida').removeAttr("disabled");
+    $('#defuncion-datos_partida').prop('readonly', false);
+  }else{
+    $('#defuncion-alc_partida').attr("disabled", "disabled");
+    $('#defuncion-datos_partida').prop('readonly', true);
+    $('#defuncion-alc_partida').val('');
+    $('#defuncion-datos_partida').val('');
   }
 });
 

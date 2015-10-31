@@ -251,6 +251,8 @@ $('#reload-hospital').click(function(){
 if(window.sessionStorage.getItem('recargado')=='true'){
   $('#'+window.sessionStorage.getItem('destino')).focus();
   window.sessionStorage.setItem('recargado',false);
+}else{
+  $('#nacimiento-cod_asentado').focus();
 }
 
 }(this, this.document))

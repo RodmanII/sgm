@@ -36,29 +36,26 @@ AppAsset::register($this);
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
                     ['label' => 'Inicio', 'url' => ['/site/index']],
-                    ['label' => 'Misión y Visión', 'url' => ['/site/mision']],
-                    ['label' => 'Solicitudes', 'visible'=>!Yii::$app->user->isGuest &&
-                    (Yii::$app->user->identity->codRol->nombre=='Usuario'), 'items'=>[
-                      ['label' => 'Solicitar Partida', 'url' => ['/registro/solicitarp']],
-                      ['label' => 'Ver Solicitudes', 'url' => ['/registro/vsolicitudes']],
-                      ]],
                     ['label' => 'Registro Familiar', 'visible'=>!Yii::$app->user->isGuest &&
                     (Yii::$app->user->identity->codRol->nombre=='EmpleadoRF'||Yii::$app->user->identity->codRol->nombre=='Administrador'), 'items'=>[
                       ['label' => 'Nacimiento', 'url' => ['/registro/nacimiento']],
                       ['label' => 'Defunción', 'url' => ['/registro/defuncion']],
                       ['label' => 'Matrimonio', 'url' => ['/registro/matrimonio']],
                       ['label' => 'Divorcio', 'url' => ['/registro/divorcio']],
-                      ['label' => 'Emisión de Partidas', 'url' => ['/registro/emision']],
-                      ['label' => 'Gestión de Solicitudes', 'url' => ['/registro/gsolicitud']],
-                      ]],
+                      ['label' => 'Emisión de Certificadas', 'url' => ['/registro/emision']],
+                    ]],
                     ['label' => 'Recolección de Desechos', 'visible'=>!Yii::$app->user->isGuest &&
                     (Yii::$app->user->identity->codRol->nombre=='EmpleadoRD'||Yii::$app->user->identity->codRol->nombre=='Administrador'), 'items'=>[
                       ['label' => 'Bitácora de Recolección', 'url' => ['/recoleccion/brecoleccion']],
-                      ['label' => 'Recargas y Averias', 'url' => ['/recoleccion/recave']],
-                      ['label' => 'Vehículo y Cuadrillas', 'url' => ['/recoleccion/vehcua']],
-                      ['label' => 'Rutas, Lugares y Turnos', 'url' => ['/recoleccion/rulutu']],
-                      ['label' => 'Rutas y Días', 'url' => ['/recoleccion/rudia']],
-                      ]],
+                      ['label' => 'Recargas', 'url' => ['/recoleccion/recarga']],
+                      ['label' => 'Averías', 'url' => ['/recoleccion/averia']],
+                    ]],
+                    ['label' => 'Vehículo', 'visible'=>!Yii::$app->user->isGuest &&
+                    (Yii::$app->user->identity->codRol->nombre=='EmpleadoRD'||Yii::$app->user->identity->codRol->nombre=='Administrador'), 'items'=>[
+                        ['label'=>'Cuadrillas', 'url' => ['/recoleccion/cuadrilla']],
+                        ['label'=>'Lugares', 'url' => ['/recoleccion/lugares']],
+                        ['label'=>'Días', 'url' => ['/recoleccion/dias']],
+                    ]],
                     ['label' => 'Administración', 'visible'=>!Yii::$app->user->isGuest &&
                       (Yii::$app->user->identity->codRol->nombre=='Administrador'), 'items'=>[
                       ['label' => 'Mantenimientos', 'url' => ['/admin/mantenimientos']],

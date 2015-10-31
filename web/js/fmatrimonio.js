@@ -208,10 +208,10 @@ if(window.sessionStorage.getItem('recargado')=='true'){
 $('#matrimonio-ape').change(function(){
   var valor = $('input[name=adop_casada]:checked').val();
   if(valor == 'Si'){
-    $("#matrimonio-acas").prop('readonly', false);
+    $("#matrimonio-apellido_casada").prop('readonly', false);
   }else{
-    $("#matrimonio-acas").prop('readonly', true);
-    $("#matrimonio-acas").val('');
+    $("#matrimonio-apellido_casada").prop('readonly', true);
+    $("#matrimonio-apellido_casada").val('');
   }
 });
 

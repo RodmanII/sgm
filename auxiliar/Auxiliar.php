@@ -34,9 +34,17 @@ function obtenerParams($parametros){
   return $param;
 }
 
-function calcularEdad($fechanacimiento){
-    list($Y,$m,$d) = explode("-",$fechanacimiento);
-    return( date("md") < $m.$d ? date("Y")-$Y-1 : date("Y")-$Y );
+function calcularEdad($fechaNacimiento,$fechaLimite = null){
+    if($fechaLimite == null){
+      list($Y,$m,$d) = explode("-",$fechaNacimiento);
+      return( date("md") < $m.$d ? date("Y")-$Y-1 : date("Y")-$Y );
+    }else{
+      //Caso contrario calculo la diferencia de anos entre las dos fechas
+      $d1 = new DateTime(fechaMySQL($fechaLimite));
+      $d2 = new DateTime(fechaMySQL($fechaNacimiento));
+      $diff = $d2->diff($d1);
+      return $diff->y;
+    }
 }
 
 function fechaATexto($fecha){

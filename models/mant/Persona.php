@@ -14,7 +14,7 @@ use Yii;
 * @property integer $empleado
 * @property string $dui
 * @property string $nit
-* @property string $otro_doc
+* @property string $carnet_minoridad
 * @property string $fecha_nacimiento
 * @property string $genero
 * @property string $direccion
@@ -61,12 +61,18 @@ class Persona extends \yii\db\ActiveRecord
       [['empleado', 'cod_municipio', 'cod_nacionalidad', 'cod_estado_civil', 'cod_mun_origen'], 'integer'],
       [['fecha_nacimiento'], 'safe'],
       [['nombre', 'apellido', 'apellido_casada', 'genero', 'profesion', 'estado', 'nombre_usuario'], 'string', 'max' => 50],
+      [['dui'], 'string', 'min' => 9],
       [['dui'], 'string', 'max' => 9],
+      [['nit'], 'string', 'min' => 14],
       [['nit'], 'string', 'max' => 14],
-      [['otro_doc'], 'string', 'max' => 80],
+      [['carnet_minoridad'], 'string', 'min' => 7],
+      [['carnet_minoridad'], 'string', 'max' => 7],
+      [['dui', 'nit', 'carnet_minoridad'], 'match', 'pattern' => '/^[0-9]+$/', 'message' => '{attribute} solo admite números'],
+      [['dui'], 'string', 'max' => 20],
       [['direccion'], 'string', 'max' => 200],
       [['dui'], 'unique'],
-      [['nit'], 'unique'],
+      [['dui'], 'unique'],
+      [['carnet_minoridad'], 'unique'],
       [['nombre_usuario'], 'unique']
     ];
   }
@@ -91,7 +97,7 @@ class Persona extends \yii\db\ActiveRecord
       'cod_estado_civil' => 'Estado Civil',
       'nombre_usuario' => 'Usuario',
       'cod_mun_origen' => 'Originario de',
-      'otro_doc' => 'Documento Alternativo',
+      'carnet_minoridad' => 'Carnet de Minoridad',
     ];
   }
 

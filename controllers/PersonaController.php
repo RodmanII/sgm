@@ -76,12 +76,8 @@ class PersonaController extends Controller
               }
             }
             try{
-              $model->otro_doc = null;
-              $model->estado = 'Activo';
-              if($_POST['nomda'] != '' && $_POST['numda'] != ''){
-                $model->otro_doc = $_POST['nomda'].':'.$_POST['numda'];
-              }
               $model->fecha_nacimiento = fechaMySQL($model->fecha_nacimiento);
+              $model->estado = 'Activo';
               if($model->save()){
                 if($_POST['informante']=='Si'){
                   $ulid = $conexion->getLastInsertID();
@@ -114,8 +110,8 @@ class PersonaController extends Controller
                         $informanteModel->tipo_documento = 'Documento Único de Identidad';
                         $informanteModel->numero_documento = $model->dui;
                       }else{
-                        $informanteModel->tipo_documento = $_POST['nomda'];
-                        $informanteModel->numero_documento = $_POST['numda'];
+                        $informanteModel->tipo_documento = 'Carnet de Minoridad';
+                        $informanteModel->numero_documento = $model->carnet_minoridad;
                       }
 
                       if($informanteModel->save()){
@@ -168,9 +164,6 @@ class PersonaController extends Controller
                 $model[$llave] = null;
               }
             }
-            if($_POST['nomda'] != '' && $_POST['numda'] != ''){
-              $model->otro_doc = $_POST['nomda'].':'.$_POST['numda'];
-            }
             $model->fecha_nacimiento = fechaMySQL($model->fecha_nacimiento);
             try{
               $informanteModel = Informante::find()->where('cod_persona = :valor',[':valor'=>$model->codigo])->one();
@@ -179,13 +172,6 @@ class PersonaController extends Controller
                   //Si tiene un informante asociada, habra que actualizarlo también
                   $informanteModel->nombre = $model->nombre.' '.$model->apellido;
                   $informanteModel->genero = $model->genero;
-                  if(!empty($model->dui)){
-                    $informanteModel->tipo_documento = 'Documento Único de Identidad';
-                    $informanteModel->numero_documento = $model->dui;
-                  }else{
-                    $informanteModel->tipo_documento = $_POST['nomda'];
-                    $informanteModel->numero_documento = $_POST['numda'];
-                  }
                   if(!$informanteModel->save()){
                     throw new UserException('No se pudo actualizar el registro de informante asociado, intente nuevamente');
                   }

@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'cod_nacionalidad',
             // 'cod_estado_civil',
             // 'nombre_usuario',
-            // 'otro_doc',
+            // 'carnet_minoridad',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

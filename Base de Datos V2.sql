@@ -516,7 +516,7 @@ create table `persona` (
 	`empleado` tinyint(1) not null default 0,
 	`dui` char(9) null,
 	`nit` char(14) null,
-	`otro_doc` varchar(80) null,
+	`carnet_minoridad` varchar(20) null,
 	`fecha_nacimiento` date not null,
 	`genero` varchar(50) not null,
 	`direccion` varchar(200) not null,
@@ -553,14 +553,14 @@ values('Maria Eleonora', 'Mejía Cortez', '0215173547', '05161027362304', '1990-
 insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Sonia Elena', 'Greyskull', '3312173847', '05161111356304', '1988-02-08', 'Femenino', 'Santo Domingo Guzmán, Departamento de Sonsonate', 'Soldado', 'Activo', 26, 54, 3, 4, null);
 -- Menos de 18 que van a figurar como padres
-insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('William Eduardo', 'Castro Paz', 'Carnet de Minoridad:34581', '1998-07-22', 'Masculino', 'Chiltiupán, Departamento de La Libertad', 'Mecánico Soldador', 'Activo', 101, 94, 2, 3, null);
-insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Cristina Angelica', 'Gomez Garcia', 'Carnet de Minoridad:21345', '1998-01-14', 'Femenino', 'San Antonio Pajonal, Departamento de Santa Ana', 'Asistente de oficina', 'Activo', 36, 73, 1, 1, null);
-insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Fernando Wilfredo', 'Carrillo Padilla', 'Carnet de Minoridad:82712', '1997-09-25', 'Masculino', 'San Fernando, Departamento de Chalatenango', 'Dependiente de comercio', 'Activo', 72, 145, 1, 1, null);
-insert into persona(nombre, apellido, otro_doc, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Maria Susana', 'Sanchéz Beltrán', 'Carnet de Minoridad:11312', '1999-02-06', 'Femenino', 'Joateca, Departamento de Morazán', 'Estudiante', 'Activo', 185, 12, 1, 1, null);
+insert into persona(nombre, apellido, carnet_minoridad, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('William Eduardo', 'Castro Paz', '34581', '1998-07-22', 'Masculino', 'Chiltiupán, Departamento de La Libertad', 'Mecánico Soldador', 'Activo', 101, 94, 2, 3, null);
+insert into persona(nombre, apellido, carnet_minoridad, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Cristina Angelica', 'Gomez Garcia', '21345', '1998-01-14', 'Femenino', 'San Antonio Pajonal, Departamento de Santa Ana', 'Asistente de oficina', 'Activo', 36, 73, 1, 1, null);
+insert into persona(nombre, apellido, carnet_minoridad, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Fernando Wilfredo', 'Carrillo Padilla', '82712', '1997-09-25', 'Masculino', 'San Fernando, Departamento de Chalatenango', 'Dependiente de comercio', 'Activo', 72, 145, 1, 1, null);
+insert into persona(nombre, apellido, carnet_minoridad, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
+values('Maria Susana', 'Sanchéz Beltrán', '11312', '1999-02-06', 'Femenino', 'Joateca, Departamento de Morazán', 'Estudiante', 'Activo', 185, 12, 1, 1, null);
 insert into persona(nombre, apellido, dui, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Daniel Ortega', 'Gomez Gaspan', '987012365', '1996-08-16', 'Masculino', 'Agua Caliente, Departamento de Chalatenango', 'Técnico de Hardware', 'Activo', 51, 27, 4, 1, null);
 -- Menores de 1 que van a figurar como asentados
@@ -590,8 +590,8 @@ create table `informante` (
 alter table `informante` add constraint `fk_informante_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
 INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('Claudia Maribel Flores Valle','Documento Único de Identidad','562101627','Femenino',4,'btDW_x8-xKp1-fAjQsHA_pcOoKK3-L4F.png');
 INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('Daniel Ortega Gomez Gaspan','Documento Único de Identidad','987012365','Masculino',10,'ai9Ch0dL2SDf5kRhJICZ16rOxmlL8reg.png');
-INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('Maria Susana Sanchéz Beltrán','Carnet de Minoridad','11312','Femenino',22,'og0n3X_QUiVMuwVX4Vgh7GNHrQG7mksz.png');
-INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('William Eduardo Castro Paz','Carnet de Minoridad','34581','Masculino',19,'1UnaUy0frGoY54cMPrVH9-lskWz41wpX.png');
+INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('Maria Susana Sanchéz Beltrán','Carnet de Minoridad','1131202','Femenino',22,'og0n3X_QUiVMuwVX4Vgh7GNHrQG7mksz.png');
+INSERT INTO `informante` (`nombre`,`tipo_documento`,`numero_documento`,`genero`,`cod_persona`,`firma`) VALUES ('William Eduardo Castro Paz','Carnet de Minoridad','3458145','Masculino',19,'1UnaUy0frGoY54cMPrVH9-lskWz41wpX.png');
 
 create table `empleado` (
 	`codigo` int auto_increment,
@@ -707,6 +707,7 @@ create table `matrimonio` (
 	`madre_contrayente_m` varchar(50) null,
 	`est_civ_h` varchar(50) not null,
 	`est_civ_m` varchar(50) not null,
+	`apellido_casada` varchar(50) null,
 	`cod_reg_patrimonial` int not null,
 	`cod_partida` int not null,
 	`num_etr_publica` int not null,
@@ -719,7 +720,10 @@ alter table `matrimonio` add constraint `fk_matrimonio_partida_cod_partida` fore
 create table `defuncion` (
 	`codigo` int auto_increment,
 	`determino_causa` varchar(100) not null,
+	`alc_partida` varchar(100) null,
+	`datos_partida` varchar(300) null,
 	`familiares` varchar(300) not null,
+	`con_asistencia` tinyint(1) not null,
 	`cod_difunto` int not null,
 	`cod_causa` int not null,
 	`cod_partida` int not null,
@@ -871,19 +875,6 @@ create table `matrimonio_persona` (
 );
 alter table `matrimonio_persona` add constraint `fk_matrimonio_persona_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
 alter table `matrimonio_persona` add constraint `fk_matrimonio_persona_matrimonio_cod_matrimonio` foreign key (`cod_matrimonio`) references `matrimonio`(`codigo`) on delete cascade on update cascade;
-
-create table `carnet_minoridad` (
-	`codigo` int auto_increment,
-	`fecha_emision` date not null,
-	`fecha_expiracion` date null,
-	`fotografia` varchar(200) not null,
-	`cod_empleado` int not null,
-	`cod_persona` int not null,
-	constraint pk_CarnetMinoridad primary key(`codigo`),
-	constraint unq_CarnetMinoridad_fotografia unique(fotografia)
-);
-alter table `carnet_minoridad` add constraint `fk_carnet_minoridad_empleado_cod_empleado` foreign key (`cod_empleado`) references `empleado`(`codigo`) on delete no action on update cascade;
-alter table `carnet_minoridad` add constraint `fk_carnet_minoridad_persona_cod_persona` foreign key (`cod_persona`) references `persona`(`codigo`) on delete cascade on update cascade;
 
 -- Tabla de Auditoria
 create table `auditoria` (

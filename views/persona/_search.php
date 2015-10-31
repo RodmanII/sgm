@@ -43,7 +43,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'nombre_usuario') ?>
 
-    <?php // echo $form->field($model, 'otro_doc') ?>
+    <?php // echo $form->field($model, 'carnet_minoridad') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary']) ?>

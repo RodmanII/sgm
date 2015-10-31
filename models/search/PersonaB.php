@@ -19,7 +19,7 @@ class PersonaB extends Persona
     {
         return [
             [['codigo', 'cod_municipio', 'cod_nacionalidad', 'cod_estado_civil'], 'integer'],
-            [['nombre', 'apellido', 'dui', 'nit', 'fecha_nacimiento', 'genero', 'direccion', 'profesion', 'estado', 'nombre_usuario', 'otro_doc'], 'safe'],
+            [['nombre', 'apellido', 'dui', 'nit', 'fecha_nacimiento', 'genero', 'direccion', 'profesion', 'estado', 'nombre_usuario', 'carnet_minoridad'], 'safe'],
         ];
     }
 
@@ -72,7 +72,7 @@ class PersonaB extends Persona
             ->andFilterWhere(['like', 'profesion', $this->profesion])
             ->andFilterWhere(['like', 'estado', $this->estado])
             ->andFilterWhere(['like', 'nombre_usuario', $this->nombre_usuario])
-            ->andFilterWhere(['like', 'otro_doc', $this->otro_doc]);
+            ->andFilterWhere(['like', 'carnet_minoridad', $this->carnet_minoridad]);
 
         return $dataProvider;
     }

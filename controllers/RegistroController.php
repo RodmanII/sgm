@@ -90,16 +90,15 @@ class RegistroController extends Controller
     $transaccion = $conexion->beginTransaction();
     if($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())){
       require_once('../auxiliar/Auxiliar.php');
-      $partidaModelo->cod_libro = 1;
       $partidaModelo->cod_empleado = Yii::$app->user->identity->persona->codEmpleado->codigo;
       $partidaModelo->tipo = "Nacimiento";
       $model->cod_partida = 0;
       $model->edad_padre = calcularEdad(Persona::find()->where('codigo = '.$model->cod_padre)->one()->fecha_nacimiento);
       $model->edad_madre = calcularEdad(Persona::find()->where('codigo = '.$model->cod_madre)->one()->fecha_nacimiento);
+      $codlibro = Libro::find()->select('codigo')->where("tipo = 'Nacimiento'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
+      $partidaModelo->cod_libro = $codlibro;
       if($model->validate() && $partidaModelo->validate()){
         try{
-          $codlibro = Libro::find()->select('codigo')->where("tipo = 'Nacimiento'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
-          $partidaModelo->cod_libro = $codlibro;
           $partidaModelo->fecha_emision = fechaMySQL($partidaModelo->fecha_emision);
           $partidaModelo->fecha_suceso = fechaMySQL($partidaModelo->fecha_suceso);
           $partidaModelo->hora_suceso = horaMySQL($partidaModelo->hora_suceso);
@@ -301,18 +300,24 @@ class RegistroController extends Controller
         $dbMunicipio = Municipio::find()->where('codigo = '.$param['cod_municipio'])->one();
         $nomInscrito = $dbDifunto->nombre.' '.$dbDifunto->apellido;
         if($dbDifunto->dui!=null){
-          $tipo_doc = 'Documento Único de Identidad';
-          $num_doc = $dbDifunto->dui;
+          $compDoc = 'Documento Único de Identidad; Documento Número '.$conversor->convertirSeparado($dbDifunto->dui);
         }else{
-          $arr = explode(':',$dbDifunto->otro_doc);
-          $tipo_doc = $arr[0];
-          $num_doc = $arr[1];
+          $compDoc = 'Partida de Nacimiento de la Alcaldía de '.$param['alc_partida'].', '.$param['datos_partida'];
         }
+        $indicador = 'a';
+        if($dbDifunto->genero=='Masculino'){
+          $indicador = 'o';
+        }
+        $asistido = 'sin';
+        if($param['con_asistencia']){
+          $asistido = 'con';
+        }
+        $estCivil = substr($dbDifunto->codEstadoCivil->nombre, 0, -1).$indicador;
         $mpdf->WriteHTML('<p class="justificado">Partida Número '.trim($conversor->to_word($param['numero'],null,true,true)).'; <strong>'.$dbDifunto->nombre.' '.$dbDifunto->apellido.'</strong>.- sexo '
-        .strtolower($dbDifunto->genero).', de '.$conversor->to_word(calcularEdad($dbDifunto->fecha_nacimiento),null,true).' años de edad; Profesión u Oficio; '.$dbDifunto->profesion.'; Estado Familiar: '.$dbDifunto->codEstadoCivil->nombre.';'
-        .' Del domicilio de '.$dbDifunto->direccion.', de Nacionalidad '.$dbDifunto->codNacionalidad->nombre.', Documento de Identidad del Fallecido: '.$tipo_doc.'; Documento Número '
-        .$conversor->convertirSeparado($num_doc).'. Falleció en el '.$param['lugar_suceso'].'. '.$dbMunicipio->nombre.', Departamento de '.$dbMunicipio->codDepartamento->nombre.', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos del día '
-        .fechaATexto($param['fecha_suceso']).'. Causa del fallecimiento: '.$dbCausa->nombre.'. Nombre del profesional quién determino la causa: '
+        .strtolower($dbDifunto->genero).', de '.$conversor->to_word(calcularEdad($dbDifunto->fecha_nacimiento,$param['fecha_suceso']),null,true).' años de edad; Profesión u Oficio; '.$dbDifunto->profesion.'; Estado Familiar: '.$estCivil.'; '
+        .'Originari'.$indicador.' de '.$dbDifunto->codMunOrigen->nombre.', Departamento de '.$dbDifunto->codMunOrigen->codDepartamento->nombre.', del domicilio de '.$dbDifunto->direccion.', de Nacionalidad '
+        .$dbDifunto->codNacionalidad->nombre.', Documento de Identidad del Fallecido: '.$compDoc.'. Falleció en '.$param['lugar_suceso'].'. '.$dbMunicipio->nombre.', Departamento de '.$dbMunicipio->codDepartamento->nombre.', a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos del día '
+        .fechaATexto($param['fecha_suceso']).', '.$asistido.' Asistencia Médica, Causa del fallecimiento: '.$dbCausa->nombre.'. Nombre del profesional quién determino la causa: '
         .$param['determino_causa'].'.</p>');
 
         $mpdf->WriteHTML('<p class="centrado">DATOS FAMILIARES</p>');
@@ -335,9 +340,10 @@ class RegistroController extends Controller
         $mpdf->WriteHTML('<p class="justificado">Dio los datos: <strong>'.$dbInformante->nombre.'</strong>, quién se identifica por medio de '
         .$dbInformante->tipo_documento.' número; '.$conversor->convertirSeparado($dbInformante->numero_documento).'. '.$indinf.' informante manifiesta '
         .'que está de acuerdo con los datos consignados y para constancia firma. Alcaldía Municipal de Ilopango, '.fechaATexto($param['fecha_emision']).'.</p>');
-
+        $firmai = strtolower($dbInformante->genero).'/'.$dbInformante->firma;
+        $mpdf->WriteHTML('<p id="finfori" class="firmal"><img style="width:220px;" src="../firmas/'.$firmai.'" /></p><p id="fjrfi" class="firmal"><img style="width:220px;" src="../web/images/firma_jref.png" /></p>');
         $mpdf->WriteHTML('<p id="finforl" class="firmal">F._________________________</p><p id="fjrfl" class="firmal">F._______________________________________</p>');
-        $mpdf->WriteHTML('<p id="finfort" class="firmat">Firma del Informante</p><p id="fjrft" class="firmat">Jefe del Registro del Estado Familiar</p>');
+        $mpdf->WriteHTML('<p id="finfort" class="firmat">Firma del Informante</p><p id="fjrft" class="firmat">'.$titulo.'del Registro del Estado Familiar</p>');
       break;
       case 'matrimonio':
         $mpdf->WriteHTML('<p class="centrado cabecera">LIBRO DE PARTIDAS DE MATRIMONIO NÚMERO '.$conversor->to_word($param['num_libro'],null,false,true).' DEL</p>');
@@ -353,9 +359,9 @@ class RegistroController extends Controller
         }
         $nomInscrito = $dbConh->nombre.' '.$dbConh->apellido.'-'.$dbConm->nombre.' '.$dbConm->apellido;
         $complemento = '';
-        if($param['ape_casada']!=''){
+        if($param['apellido_casada']!=''){
           $ape = strtok($dbConm->apellido, " ");
-          $complemento = 'El nombre que la contrayente usará de conformidad al artículo ventiuno de la Ley del Nombre de la Persona Natural será: <strong>'.$dbConm->nombre.' '.$ape.' '.$param['ape_casada'].'</strong>.';
+          $complemento = 'El nombre que la contrayente usará de conformidad al artículo ventiuno de la Ley del Nombre de la Persona Natural será: <strong>'.$dbConm->nombre.' '.$ape.' '.$param['apellido_casada'].'</strong>.';
         }
         $pahom = '';
         if($param['madre_contrayente_h']!=''){
@@ -378,10 +384,10 @@ class RegistroController extends Controller
         $dbConm->codEstadoCivil->nombre = rtrim($dbConm->codEstadoCivil->nombre,'o').'a';
         $testigos = explode('-',$param['testigos']);
         $reg_pat = RegimenPatrimonial::find()->where('codigo = '.$param['cod_reg_patrimonial'])->one()->nombre;
-        $mpdf->WriteHTML('<p class="justificado" style="font-size:16.5px">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).': <strong>'.$nomConh.' y '.$nomConm.'</strong>. El Contrayente de '
-        .$conversor->to_word(calcularEdad($dbConh->fecha_nacimiento),null,true).' años de edad, '.(($dbConh->empleado) ? 'Empleado':'Desempleado').', '.$dbConh->codEstadoCivil->nombre.', '
+        $mpdf->WriteHTML('<p class="justificado" style="font-size:16.5px">Partida Número '.trim($conversor->to_word($param['numero'],null,true,true)).': <strong>'.$nomConh.' y '.$nomConm.'</strong>. El Contrayente de '
+        .$conversor->to_word(calcularEdad($dbConh->fecha_nacimiento,$param['fecha_suceso']),null,true).' años de edad, '.(($dbConh->empleado) ? 'Empleado':'Desempleado').', '.$dbConh->codEstadoCivil->nombre.', '
         .'originario de '.$dbConh->codMunOrigen->nombre.', Departamento de '.$dbConh->codMunOrigen->codDepartamento->nombre.', del Domicilio de '.$dbConh->direccion.', de Nacionalidad '.$dbConh->codNacionalidad->nombre.', '
-        .$pahom.', la Contrayente: de '.$conversor->to_word(calcularEdad($dbConm->fecha_nacimiento),null,true).' años de edad, '
+        .$pahom.', la Contrayente: de '.$conversor->to_word(calcularEdad($dbConm->fecha_nacimiento,$param['fecha_suceso']),null,true).' años de edad, '
         .(($dbConm->empleado) ? 'Empleada':'Desempleada').', '.$dbConm->codEstadoCivil->nombre.', originaria de '.$dbConm->codMunOrigen->nombre.', Departamento de '.$dbConm->codMunOrigen->codDepartamento->nombre.', del Domicilio de '.$dbConm->direccion.', de Nacionalidad '
         .$dbConm->codNacionalidad->nombre.', '.$pamuj.'. Contrajeron matrimonio en la ciudad de Ilopango, Departamento de San Salvador, ante los oficios '
         .$indicador.' '.$param['notario'].'. Según escritura pública de matrimonio número: '.$conversor->to_word($param['num_etr_publica'],null,true).', otorgada a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos del día '
@@ -490,13 +496,13 @@ class RegistroController extends Controller
     $transaccion = $conexion->beginTransaction();
     if($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())){
       require_once('../auxiliar/Auxiliar.php');
-      $model->cod_partida = 0;
-      $partidaModelo->cod_libro = 1;
       $partidaModelo->cod_empleado = Yii::$app->user->identity->persona->codEmpleado->codigo;
+      $partidaModelo->tipo = "Defuncion";
+      $model->cod_partida = 0;
+      $codlibro = Libro::find()->select('codigo')->where("tipo = 'Defuncion'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
+      $partidaModelo->cod_libro = $codlibro;
       if ($model->validate() && $partidaModelo->validate()) {
         try{
-          $codlibro = Libro::find()->select('codigo')->where("tipo = 'Defuncion'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
-          $partidaModelo->cod_libro = $codlibro;
           $partidaModelo->fecha_emision = fechaMySQL($partidaModelo->fecha_emision);
           $partidaModelo->fecha_suceso = fechaMySQL($partidaModelo->fecha_suceso);
           $partidaModelo->hora_suceso = horaMySQL($partidaModelo->hora_suceso);
@@ -545,18 +551,20 @@ class RegistroController extends Controller
     if($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())) {
       require_once('../auxiliar/Auxiliar.php');
       $model->cod_partida = 0;
-      $partidaModelo->cod_libro = 1;
       $partidaModelo->cod_empleado = Yii::$app->user->identity->persona->codEmpleado->codigo;
       $partidaModelo->lugar_suceso = 'Ilopango';
       $partidaModelo->cod_municipio = 151;
+      $partidaModelo->tipo = 'Matrimonio';
+      $model->est_civ_h = Persona::find()->where('codigo = '.$_POST['MatrimonioPersona']['cod_conhom'])->one()->cod_estado_civil;
+      $model->est_civ_m = Persona::find()->where('codigo = '.$_POST['MatrimonioPersona']['cod_conmuj'])->one()->cod_estado_civil;
+      $codlibro = Libro::find()->select('codigo')->where("tipo = 'Matrimonio'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
+      $partidaModelo->cod_libro = $codlibro;
+      //Apellido casada si se establece pero va vacio, tiene sentido porque no lo indico nada, pero que hace que falle la validacion del modelo?
       if($model->validate() && $partidaModelo->validate()){
         try{
-          $codlibro = Libro::find()->select('codigo')->where("tipo = 'Matrimonio'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
-          $partidaModelo->cod_libro = $codlibro;
           $partidaModelo->fecha_emision = fechaMySQL($partidaModelo->fecha_emision);
           $partidaModelo->fecha_suceso = fechaMySQL($partidaModelo->fecha_suceso);
           $partidaModelo->hora_suceso = horaMySQL($partidaModelo->hora_suceso);
-          $partidaModelo->tipo = 'Matrimonio';
           if($partidaModelo->save()){
             //Recupero el valor de id con el cual se inserto
             $ulid = $conexion->getLastInsertID();
@@ -590,8 +598,8 @@ class RegistroController extends Controller
               $dbCon = Persona::find()->where('codigo = '.$modelMpm->cod_persona)->one();
               $dbCon->cod_estado_civil = 2;
               //Debo guardar el apellido de casada?
-              if($_POST['Matrimonio']['ape_casada']!=''){
-                $dbCon->apellido_casada = strtok($dbCon->apellido, " ").' '.$_POST['Matrimonio']['ape_casada'];
+              if($_POST['Matrimonio']['apellido_casada']!=''){
+                $dbCon->apellido_casada = strtok($dbCon->apellido, " ").' '.$_POST['Matrimonio']['apellido_casada'];
               }
               if(!$dbCon->save()){
                 throw new UserException('No se pudo actualizar el estado civil de la contrayente, intente nuevamente');

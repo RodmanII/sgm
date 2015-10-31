@@ -36,7 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
       $dbLibro = Libro::find()->where('tipo = "Nacimiento"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
       $dbPartida = Partida::find()->where('cod_libro = '.$dbLibro->codigo)->orderBy(['numero'=>SORT_DESC])->limit(1)->one();
-      // $dbPartida = Nacimiento::find()->orderBy(['codigo'=>SORT_DESC])->limit(1)->one();
       if(count($dbPartida)>0){
           $num_partida = $dbPartida->numero+1;
       }else{
@@ -117,7 +116,15 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="cflex">
       <span style="order: 1; flex-grow: 1; margin-right:10px;">
-        <?= $form->field($partida, 'cod_informante')->dropDownList(ArrayHelper::map(Informante::find()->orderBy(['nombre'=>SORT_ASC])->all(), 'codigo', 'nombre')) ?>
+        <?php
+          $query = new Query;
+          $query->select(['i.codigo','i.nombre'])->from('informante i')
+          ->join('INNER JOIN', 'persona p', 'p.codigo = i.cod_persona')
+          ->where('p.estado = "Activo"')->orderBy(['i.nombre'=>SORT_ASC]);
+          $command = $query->createCommand();
+          $data = $command->queryAll();
+        ?>
+        <?= $form->field($partida, 'cod_informante')->dropDownList(ArrayHelper::map($data, 'codigo', 'nombre')) ?>
         <div class="form-group">
           <?= Html::textInput('finformante','',array('id'=>'nrwr3','class'=>'form-control')); ?>
           <span id="matches3" style="display:none"></span>

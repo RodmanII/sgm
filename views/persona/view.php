@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'value'=>retornarDato($model, 'EstadoCivil'),
             ],
             'nombre_usuario',
-            'otro_doc',
+            'carnet_minoridad',
         ],
     ]) ?>
 

@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use app\models\mant\Persona;
 use app\models\mant\Informante;
 use app\models\mant\Departamento;
+use app\models\mant\Partida;
 use app\models\mant\Municipio;
 use app\models\mant\Matrimonio;
 use app\models\mant\Libro;
@@ -34,15 +35,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
   <?php $form = ActiveForm::begin(['id'=>'imatrimonio']); ?>
   <?php
-  $dbLibro = Libro::find()->where('tipo = "Matrimonio"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
-  $dbMatrimonio = Matrimonio::find()->orderBy(['codigo'=>SORT_DESC])->limit(1)->one();
-  if(count($dbMatrimonio)>0){
-    $num_partida = $dbMatrimonio->codigo+1;
-  }else{
-    $num_partida = 1;
-  }
-  $partida->cod_libro = $dbLibro->codigo;
-  $partida->folio = $dbLibro->folio_actual + 1;
+    $dbLibro = Libro::find()->where('tipo = "Matrimonio"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
+    $dbPartida = Partida::find()->where('cod_libro = '.$dbLibro->codigo)->orderBy(['numero'=>SORT_DESC])->limit(1)->one();
+    if(count($dbPartida)>0){
+      $num_partida = $dbPartida->numero+1;
+    }else{
+      $num_partida = 1;
+    }
+    $partida->cod_libro = $dbLibro->codigo;
+    $partida->folio = $dbLibro->folio_actual + 1;
   ?>
   <div class="cflex">
     <span style="order: 1; flex-grow: 1; margin-right:10px;">
@@ -55,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
       <?= $form->field($partida, 'folio')->textInput(array('readOnly'=>true)) ?>
     </span>
     <span style="order: 3; flex-grow: 1; margin-right:10px;">
-      <?= $form->field($model, 'codigo')->textInput(array('readOnly'=>true,'value'=>$num_partida)) ?>
+      <?= $form->field($partida, 'numero')->textInput(array('readOnly'=>true,'value'=>$num_partida)) ?>
     </span>
   </div>
   <?= Html::hiddenInput('Matrimonio[testigos]','',['id'=>'ites']); ?>
@@ -200,8 +201,7 @@ $this->params['breadcrumbs'][] = $this->title;
           <?= Html::radioList('adop_casada','No',['Si'=>'Si','No'=>'No'],['id'=>'matrimonio-ape']) ?>
         </span>
         <span style="order: 2; flex-grow: 1; margin-right:10px;">
-          <?= Html::label('Apellido de Casada', 'matrimonio-acas'); ?>
-          <?= Html::textInput('Matrimonio[ape_casada]', null, ['id'=>'matrimonio-acas', 'readonly'=>'true', 'class'=>'form-control', 'placeholder'=>'Especifique el apellido de casada']) ?>
+          <?= $form->field($model, 'apellido_casada')->textInput(['readOnly'=>true,'placeholder'=>'Especifique el apellido de casada']) ?>
         </span>
       </div>
       <div class="form-group">

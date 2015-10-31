@@ -155,28 +155,7 @@ use yii\web\View;
       }
     ?>
 
-    <div class="cflex">
-        <?php
-          $tipodoc = '';
-          $numdoc = '';
-          if(!$model->isNewRecord){
-            if(!empty($model->otro_doc)){
-              $arreglo = explode(':',$model->otro_doc);
-              $tipodoc = $arreglo[0];
-              $numdoc = $arreglo[1];
-            }
-          }
-          echo '<span style="order: 1; flex-grow: 1; margin-right:10px;">';
-          echo Html::label('Documento Alternativo', 'nomdoca');
-          echo Html::dropDownList('nomda',$tipodoc,ArrayHelper::map(TipoDocIdentidad::find()->where("nombre <> 'Documento Único de Identidad'")->all(), 'nombre', 'nombre'),['id'=>'nomdoca', 'class'=>'form-control', 'prompt'=>'Especifique un documento alternativo']);
-          echo '</span>';
-          echo '<span style="order: 2; flex-grow: 1; margin-right:10px;">';
-          echo Html::label('Número Doc. Alternativo', 'numdoca');
-          echo Html::textInput('numda',$numdoc,['id'=>'numdoca', 'class'=>'form-control']);
-          echo '</span>';
-        ?>
-      </div>
-    </div>
+    <?= $form->field($model, 'carnet_minoridad')->textInput(['maxlength' => true]) ?>
 
     <?php
         echo '<div class="cflex">';

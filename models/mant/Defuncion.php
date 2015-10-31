@@ -9,13 +9,16 @@ use Yii;
  *
  * @property integer $codigo
  * @property string $determino_causa
+ * @property string $alc_partida
+ * @property string $datos_partida
  * @property string $familiares
+ * @property integer $con_asistencia
  * @property integer $cod_difunto
  * @property integer $cod_causa
  * @property integer $cod_partida
  *
  * @property CausaDefuncion $codCausa
- * @property Partida $Partida
+ * @property Partida $codPartida
  * @property Persona $codDifunto
  */
 class Defuncion extends \yii\db\ActiveRecord
@@ -34,10 +37,10 @@ class Defuncion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['determino_causa', 'cod_difunto', 'cod_causa', 'cod_partida'], 'required'],
-            [['cod_difunto', 'cod_causa', 'cod_partida'], 'integer'],
-            [['determino_causa'], 'string', 'max' => 100],
-            [['familiares'], 'string', 'max' => 300],
+            [['determino_causa', 'familiares', 'con_asistencia', 'cod_difunto', 'cod_causa', 'cod_partida'], 'required'],
+            [['con_asistencia', 'cod_difunto', 'cod_causa', 'cod_partida'], 'integer'],
+            [['determino_causa', 'alc_partida'], 'string', 'max' => 100],
+            [['datos_partida', 'familiares'], 'string', 'max' => 300],
             [['cod_difunto'], 'unique'],
             [['cod_partida'], 'unique']
         ];
@@ -46,17 +49,20 @@ class Defuncion extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
-        return [
-            'codigo' => 'Número',
-            'determino_causa' => 'Profesional quién determino la causa',
-            'familiares' => 'Familiares',
-            'cod_difunto' => 'Difunto',
-            'cod_causa' => 'Causa de Defunción',
-            'cod_partida' => 'Número',
-        ];
-    }
+     public function attributeLabels()
+     {
+       return [
+         'codigo' => 'Código',
+         'determino_causa' => 'Profesional quién determino la causa',
+         'familiares' => 'Familiares',
+         'cod_difunto' => 'Difunto',
+         'cod_causa' => 'Causa de Defunción',
+         'cod_partida' => 'Número',
+         'alc_partida' => 'Alcaldía de Origen de la Partida',
+         'datos_partida' => 'Datos de Partida',
+         'con_asistencia' => 'Recibió Asistencia',
+       ];
+     }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -69,7 +75,7 @@ class Defuncion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getcodPartida()
+    public function getCodPartida()
     {
         return $this->hasOne(Partida::className(), ['codigo' => 'cod_partida']);
     }
