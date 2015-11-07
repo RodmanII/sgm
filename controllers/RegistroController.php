@@ -351,6 +351,8 @@ class RegistroController extends Controller
         $mpdf->WriteHTML('<p class="derecha cabecera">FOLIO '.$conversor->to_word($param['folio']).'</p>');
         $dbConh = Persona::find()->where('codigo = '.$param['cod_conhom'])->one();
         $dbConm = Persona::find()->where('codigo = '.$param['cod_conmuj'])->one();
+        $est_civ_h = $dbConh->codEstadoCivil->nombre;
+        $est_civ_m = $dbConm->codEstadoCivil->nombre;
         $nomConh = $dbConh->nombre.' '.$dbConh->apellido;
         $nomConm = $dbConm->nombre.' '.$dbConm->apellido;
         $indicador = 'del notario';
@@ -385,10 +387,10 @@ class RegistroController extends Controller
         $testigos = explode('-',$param['testigos']);
         $reg_pat = RegimenPatrimonial::find()->where('codigo = '.$param['cod_reg_patrimonial'])->one()->nombre;
         $mpdf->WriteHTML('<p class="justificado" style="font-size:16.5px">Partida Número '.trim($conversor->to_word($param['numero'],null,true,true)).': <strong>'.$nomConh.' y '.$nomConm.'</strong>. El Contrayente de '
-        .$conversor->to_word(calcularEdad($dbConh->fecha_nacimiento,$param['fecha_suceso']),null,true).' años de edad, '.(($dbConh->empleado) ? 'Empleado':'Desempleado').', '.$dbConh->codEstadoCivil->nombre.', '
+        .$conversor->to_word(calcularEdad($dbConh->fecha_nacimiento,$param['fecha_suceso']),null,true).' años de edad, '.(($dbConh->empleado) ? 'Empleado':'Desempleado').', '.$est_civ_h.', '
         .'originario de '.$dbConh->codMunOrigen->nombre.', Departamento de '.$dbConh->codMunOrigen->codDepartamento->nombre.', del Domicilio de '.$dbConh->direccion.', de Nacionalidad '.$dbConh->codNacionalidad->nombre.', '
         .$pahom.', la Contrayente: de '.$conversor->to_word(calcularEdad($dbConm->fecha_nacimiento,$param['fecha_suceso']),null,true).' años de edad, '
-        .(($dbConm->empleado) ? 'Empleada':'Desempleada').', '.$dbConm->codEstadoCivil->nombre.', originaria de '.$dbConm->codMunOrigen->nombre.', Departamento de '.$dbConm->codMunOrigen->codDepartamento->nombre.', del Domicilio de '.$dbConm->direccion.', de Nacionalidad '
+        .(($dbConm->empleado) ? 'Empleada':'Desempleada').', '.substr($est_civ_m, 0, -1).'a, originaria de '.$dbConm->codMunOrigen->nombre.', Departamento de '.$dbConm->codMunOrigen->codDepartamento->nombre.', del Domicilio de '.$dbConm->direccion.', de Nacionalidad '
         .$dbConm->codNacionalidad->nombre.', '.$pamuj.'. Contrajeron matrimonio en la ciudad de Ilopango, Departamento de San Salvador, ante los oficios '
         .$indicador.' '.$param['notario'].'. Según escritura pública de matrimonio número: '.$conversor->to_word($param['num_etr_publica'],null,true).', otorgada a las '.$conversor->to_word($tiempo[0],null,true).' horas '.$minutos.' minutos del día '
         .fechaATexto($param['fecha_suceso']).', con asistencia de los testigos: '.$testigos[0].' y '.$testigos[1].'. '.$complemento
@@ -447,7 +449,7 @@ class RegistroController extends Controller
         $dbConm->codEstadoCivil->nombre = rtrim($dbConm->codEstadoCivil->nombre,'o').'a';
         $testigos = explode('-',$dbMatp[0]->codMatrimonio->testigos);
         $reg_pat = $dbMatp[0]->codMatrimonio->codRegPatrimonial->nombre;
-        $mpdf->WriteHTML('<p class="justificado" style="font-size:16.5px">Partida Número '.trim($conversor->to_word($param['codigo'],null,true,true)).': <strong>'.$nomConh.' y '.$nomConm.'</strong>. El Contrayente de '
+        $mpdf->WriteHTML('<p class="justificado" style="font-size:16.5px">Partida Número '.trim($conversor->to_word($param['numero'],null,true,true)).': <strong>'.$nomConh.' y '.$nomConm.'</strong>. El Contrayente de '
         .$conversor->to_word(calcularEdad($dbConh->fecha_nacimiento),null,true).' años de edad, '.(($dbConh->empleado) ? 'Empleado':'Desempleado').', '.$dbConh->codEstadoCivil->nombre.', '
         .'originario de '.$dbConh->codMunOrigen->nombre.', Departamento de '.$dbConh->codMunOrigen->codDepartamento->nombre.', del Domicilio de '.$dbConh->direccion.', de Nacionalidad '.$dbConh->codNacionalidad->nombre.', '
         .$pahom.', la Contrayente: de '.$conversor->to_word(calcularEdad($dbConm->fecha_nacimiento),null,true).' años de edad, '
@@ -551,16 +553,23 @@ class RegistroController extends Controller
     if($model->load(Yii::$app->request->post()) && $partidaModelo->load(Yii::$app->request->post())) {
       require_once('../auxiliar/Auxiliar.php');
       $model->cod_partida = 0;
+      if($model->apellido_casada == ''){
+        $model->apellido_casada = null;
+      }
       $partidaModelo->cod_empleado = Yii::$app->user->identity->persona->codEmpleado->codigo;
       $partidaModelo->lugar_suceso = 'Ilopango';
       $partidaModelo->cod_municipio = 151;
       $partidaModelo->tipo = 'Matrimonio';
+      $indicador = 'del notario';
+      if($_POST['gen_notario']=='Femenino'){
+        $indicador = 'de la notaria';
+      }
+      $model->notario = $indicador.' '.$model->notario;
       $model->est_civ_h = Persona::find()->where('codigo = '.$_POST['MatrimonioPersona']['cod_conhom'])->one()->cod_estado_civil;
       $model->est_civ_m = Persona::find()->where('codigo = '.$_POST['MatrimonioPersona']['cod_conmuj'])->one()->cod_estado_civil;
       $codlibro = Libro::find()->select('codigo')->where("tipo = 'Matrimonio'")->andWhere("anyo = :an",[':an'=>date('Y')])->andWhere('numero = :valor',[':valor'=>$_POST['Partida']['num_libro']])->one()->codigo;
       $partidaModelo->cod_libro = $codlibro;
-      //Apellido casada si se establece pero va vacio, tiene sentido porque no lo indico nada, pero que hace que falle la validacion del modelo?
-      if($model->validate() && $partidaModelo->validate()){
+      if($partidaModelo->validate() && $model->validate()){
         try{
           $partidaModelo->fecha_emision = fechaMySQL($partidaModelo->fecha_emision);
           $partidaModelo->fecha_suceso = fechaMySQL($partidaModelo->fecha_suceso);
@@ -605,6 +614,8 @@ class RegistroController extends Controller
                 throw new UserException('No se pudo actualizar el estado civil de la contrayente, intente nuevamente');
               }
             }else{
+              // print_r($model->getErrors());
+              // exit;
               throw new UserException('No se pudo guardar el registro de matrimonio, intente nuevamente');
             }
             //Actualizar el folio actual del libro

@@ -106,7 +106,7 @@
     window.open('/sgm/web/persona/index');
   });
 
-  function enviarParametros(archivo,ventana){
+  function enviarParametros(archivo,ventana,guardar){
     archivo = typeof archivo !== 'undefined' ? archivo : false;
     ventana = typeof ventana !== 'undefined' ? ventana : true;
     var dmatrimonio = $('[id^=matrimonio]').serializeArray();
@@ -142,6 +142,7 @@
       window.open('generar?tipo=matrimonio'+gar+cadena+testigos);
     }else{
       $.get('generar','tipo=matrimonio'+gar+cadena+testigos);
+      setTimeout(guardar(), 1500);
     }
   }
 
@@ -174,8 +175,10 @@
             contenido += elemento.find(".nom").html()+anex;
           });
           $('#ites').val(contenido);
-          enviarParametros(true,false);
-          $('#imatrimonio').submit();
+          enviarParametros(true,false,function(){
+            alert('Generando partida, espere');
+            $('#imatrimonio').submit();
+          });
         }else{
           alert('Tiene que especificar a dos testigos');
         }

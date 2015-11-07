@@ -42,7 +42,7 @@ AppAsset::register($this);
                       ['label' => 'Defunción', 'url' => ['/registro/defuncion']],
                       ['label' => 'Matrimonio', 'url' => ['/registro/matrimonio']],
                       ['label' => 'Divorcio', 'url' => ['/registro/divorcio']],
-                      ['label' => 'Emisión de Certificadas', 'url' => ['/registro/emision']],
+                      ['label' => 'Emisión de Partidas', 'url' => ['/registro/emision']],
                     ]],
                     ['label' => 'Recolección de Desechos', 'visible'=>!Yii::$app->user->isGuest &&
                     (Yii::$app->user->identity->codRol->nombre=='EmpleadoRD'||Yii::$app->user->identity->codRol->nombre=='Administrador'), 'items'=>[
@@ -59,7 +59,6 @@ AppAsset::register($this);
                     ['label' => 'Administración', 'visible'=>!Yii::$app->user->isGuest &&
                       (Yii::$app->user->identity->codRol->nombre=='Administrador'), 'items'=>[
                       ['label' => 'Mantenimientos', 'url' => ['/admin/mantenimientos']],
-                      ['label' => 'Consultas', 'url' => ['/admin/consultas']],
                       ['label' => 'Reportes', 'url' => ['/admin/reportes']],
                       ]],
                     Yii::$app->user->isGuest ?

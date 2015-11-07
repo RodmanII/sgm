@@ -13,9 +13,8 @@ use app\models\mant\Divorcio;
 use app\models\mant\Matrimonio;
 use app\models\mant\ModalidadDivorcio;
 use app\models\mant\Libro;
-use kartik\grid\GridView;
-use yii\data\ArrayDataProvider;
-use yii\grid\ActionColumn;
+use app\models\mant\Partida;
+use yii\db\Query;
 
 $this->title = 'Inscripción de Divorcio';
 $this->params['breadcrumbs'][] = $this->title;
@@ -36,9 +35,9 @@ $this->params['breadcrumbs'][] = $this->title;
   <?php $form = ActiveForm::begin(['id'=>'idivorcio']); ?>
   <?php
   $dbLibro = Libro::find()->where('tipo = "Divorcio"')->andWhere('cerrado = 0')->andWhere('anyo = :valor',[':valor'=>date("Y")])->one();
-  $dbDivorcio = Divorcio::find()->orderBy(['codigo'=>SORT_DESC])->limit(1)->one();
-  if(count($dbDivorcio)>0){
-    $num_partida = $dbDivorcio->codigo+1;
+  $dbPartida = Partida::find()->where('cod_libro = '.$dbLibro->codigo)->orderBy(['numero'=>SORT_DESC])->limit(1)->one();
+  if(count($dbPartida)>0){
+    $num_partida = $dbPartida->numero+1;
   }else{
     $num_partida = 1;
   }
@@ -56,17 +55,26 @@ $this->params['breadcrumbs'][] = $this->title;
       <?= $form->field($partida, 'folio')->textInput(array('readOnly'=>true)) ?>
     </span>
     <span style="order: 3; flex-grow: 1; margin-right:10px;">
-      <?= $form->field($model, 'codigo')->textInput(array('readOnly'=>true,'value'=>$num_partida)) ?>
+      <?= $form->field($partida, 'numero')->textInput(array('readOnly'=>true,'value'=>$num_partida)) ?>
     </span>
   </div>
   <div class="cflex">
     <span style="order: 1; flex-grow: 1; margin-right:10px;">
-      <?= $form->field($model, 'cod_matrimonio')->dropDownList(ArrayHelper::map(Matrimonio::find()->where('NOT EXISTS
+      <?php
+        $query = new Query;
+        $query->select(["m.codigo", "concat('Partida ',p.numero,', Libro ',l.numero,' del Año ',l.anyo) as 'datos'"])->from('matrimonio m')
+        ->join('INNER JOIN', 'partida p', 'm.cod_partida = p.codigo')
+        ->join('INNER JOIN', 'libro l', 'p.cod_libro = l.codigo')
+        ->where('not exists
         (
-        SELECT  null
-        FROM    divorcio
-        WHERE   divorcio.cod_matrimonio = matrimonio.codigo
-        )')->all(), 'codigo', 'codigo')) ?>
+        select  null
+        from    divorcio d
+        where   d.cod_matrimonio = m.codigo
+        )');
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+      ?>
+      <?= $form->field($model, 'cod_matrimonio')->dropDownList(ArrayHelper::map($data, 'codigo', 'datos')) ?>
       <div class="form-group">
         <?= Html::textInput('fparm','',array('id'=>'nrwr1','class'=>'form-control')); ?>
         <span id="matches1" style="display:none"></span>

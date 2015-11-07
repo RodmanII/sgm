@@ -43,8 +43,8 @@ class Matrimonio extends \yii\db\ActiveRecord
     {
         return [
             [['notario', 'testigos', 'est_civ_h', 'est_civ_m', 'cod_reg_patrimonial', 'cod_partida', 'num_etr_publica'], 'required'],
-            [['cod_reg_patrimonial', 'cod_partida', 'num_etr_publica'], 'integer'],
-            [['notario', 'padre_contrayente_h', 'madre_contrayente_h', 'padre_contrayente_m', 'madre_contrayente_m', 'est_civ_h', 'est_civ_m', 'apellido_casada'], 'string', 'max' => 50],
+            [['cod_reg_patrimonial', 'cod_partida', 'num_etr_publica', 'est_civ_h', 'est_civ_m'], 'integer'],
+            [['notario', 'padre_contrayente_h', 'madre_contrayente_h', 'padre_contrayente_m', 'madre_contrayente_m', 'apellido_casada'], 'string', 'max' => 50],
             [['testigos'], 'string', 'max' => 300],
             [['cod_partida'], 'unique']
         ];

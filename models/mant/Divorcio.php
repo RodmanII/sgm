@@ -14,7 +14,6 @@ use Yii;
  * @property integer $cod_partida
  * @property integer $cod_mod_divorcio
  * @property integer $cod_matrimonio
- *
  * @property Matrimonio $codMatrimonio
  * @property ModalidadDivorcio $codModDivorcio
  * @property Partida $codPartida
@@ -51,7 +50,7 @@ class Divorcio extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
       return [
-          'codigo' => 'Número',
+          'codigo' => 'Código',
           'juez' => 'Juez',
           'fecha_ejecucion' => 'Fecha de Ejecución de Sentencia',
           'detalle' => 'Detalles Adicionales',

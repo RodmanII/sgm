@@ -516,7 +516,7 @@ create table `persona` (
 	`empleado` tinyint(1) not null default 0,
 	`dui` char(9) null,
 	`nit` char(14) null,
-	`carnet_minoridad` varchar(20) null,
+	`carnet_minoridad` char(7) null,
 	`fecha_nacimiento` date not null,
 	`genero` varchar(50) not null,
 	`direccion` varchar(200) not null,
@@ -554,13 +554,13 @@ insert into persona(nombre, apellido, dui, nit, fecha_nacimiento, genero, direcc
 values('Sonia Elena', 'Greyskull', '3312173847', '05161111356304', '1988-02-08', 'Femenino', 'Santo Domingo Guzmán, Departamento de Sonsonate', 'Soldado', 'Activo', 26, 54, 3, 4, null);
 -- Menos de 18 que van a figurar como padres
 insert into persona(nombre, apellido, carnet_minoridad, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('William Eduardo', 'Castro Paz', '34581', '1998-07-22', 'Masculino', 'Chiltiupán, Departamento de La Libertad', 'Mecánico Soldador', 'Activo', 101, 94, 2, 3, null);
+values('William Eduardo', 'Castro Paz', '3458123', '1998-07-22', 'Masculino', 'Chiltiupán, Departamento de La Libertad', 'Mecánico Soldador', 'Activo', 101, 94, 2, 3, null);
 insert into persona(nombre, apellido, carnet_minoridad, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Cristina Angelica', 'Gomez Garcia', '21345', '1998-01-14', 'Femenino', 'San Antonio Pajonal, Departamento de Santa Ana', 'Asistente de oficina', 'Activo', 36, 73, 1, 1, null);
+values('Cristina Angelica', 'Gomez Garcia', '2134512', '1998-01-14', 'Femenino', 'San Antonio Pajonal, Departamento de Santa Ana', 'Asistente de oficina', 'Activo', 36, 73, 1, 1, null);
 insert into persona(nombre, apellido, carnet_minoridad, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Fernando Wilfredo', 'Carrillo Padilla', '82712', '1997-09-25', 'Masculino', 'San Fernando, Departamento de Chalatenango', 'Dependiente de comercio', 'Activo', 72, 145, 1, 1, null);
+values('Fernando Wilfredo', 'Carrillo Padilla', '8271221', '1997-09-25', 'Masculino', 'San Fernando, Departamento de Chalatenango', 'Dependiente de comercio', 'Activo', 72, 145, 1, 1, null);
 insert into persona(nombre, apellido, carnet_minoridad, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
-values('Maria Susana', 'Sanchéz Beltrán', '11312', '1999-02-06', 'Femenino', 'Joateca, Departamento de Morazán', 'Estudiante', 'Activo', 185, 12, 1, 1, null);
+values('Maria Susana', 'Sanchéz Beltrán', '1131233', '1999-02-06', 'Femenino', 'Joateca, Departamento de Morazán', 'Estudiante', 'Activo', 185, 12, 1, 1, null);
 insert into persona(nombre, apellido, dui, fecha_nacimiento, genero, direccion, profesion, estado, cod_municipio, cod_mun_origen, cod_nacionalidad, cod_estado_civil,nombre_usuario)
 values('Daniel Ortega', 'Gomez Gaspan', '987012365', '1996-08-16', 'Masculino', 'Agua Caliente, Departamento de Chalatenango', 'Técnico de Hardware', 'Activo', 51, 27, 4, 1, null);
 -- Menores de 1 que van a figurar como asentados
@@ -705,8 +705,8 @@ create table `matrimonio` (
 	`madre_contrayente_h` varchar(50) null,
 	`padre_contrayente_m` varchar(50) null,
 	`madre_contrayente_m` varchar(50) null,
-	`est_civ_h` varchar(50) not null,
-	`est_civ_m` varchar(50) not null,
+	`est_civ_h` int not null,
+	`est_civ_m` int not null,
 	`apellido_casada` varchar(50) null,
 	`cod_reg_patrimonial` int not null,
 	`cod_partida` int not null,
@@ -781,8 +781,7 @@ create table `ruta` (
 	`codigo` int auto_increment,
 	`nombre` varchar(50) not null,
 	`cod_turno` int not null,
-	constraint pk_Ruta primary key(`codigo`),
-	constraint unq_Ruta_cod_turno unique(cod_turno)
+	constraint pk_Ruta primary key(`codigo`)
 );
 alter table `ruta` add constraint `fk_ruta_turno_cod_turno` foreign key (`cod_turno`) references `turno`(`codigo`) on delete cascade on update cascade;
 
